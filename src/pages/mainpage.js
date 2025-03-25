@@ -47,7 +47,7 @@ function MainPage() {
             alignItems: 'center',           // 수직 정렬 (선택)
             gap: '200px',                    // 박스 간 간격
             marginTop: '60px',
-            height: '450px'   // 중앙에 보이게 하기 위한 높이 조정
+            height: '500px'   // 중앙에 보이게 하기 위한 높이 조정
                }}>
           <NoticeBox title="공지사항" />
           <NoticeBox title="커뮤니티" />
