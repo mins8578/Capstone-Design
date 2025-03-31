@@ -1,6 +1,7 @@
 .header {
   width: 100%;
-  background-color: white; /* 불투명 흰색 배경 */
+  background-color: white;
+  /* 불투명 흰색 배경 */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -24,5 +25,12 @@
 }
 
 .user-icon {
-  font-size: 24px;
+  font-size: 30px;
+  color: black;
+  padding-right: 20px;
+}
+
+.user-icon:hover {
+  transform: scale(1.1);
+  /* 살짝 커지는 효과 */
 }
