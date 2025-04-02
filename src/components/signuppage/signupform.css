@@ -1,0 +1,92 @@
+.signup-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .signup-logo {
+    width: 100px;
+    margin-bottom: 30px;
+  }
+  
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 320px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    font-size: 16px;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+  
+  .email-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .email-group input {
+    flex: 1;
+    padding: 8px;
+    font-size: 15px;
+  }
+  
+  .email-fixed {
+    font-size: 15px;
+  }
+  
+  .cert-button {
+    padding: 8px 10px;
+    font-size: 13px;
+    border: none;
+    background-color: #4a61d3;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-left: 15px;
+  }
+  
+  input {
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .submit-button {
+    margin-top: 20px;
+    padding: 12px;
+    font-size: 16px;
+    background-color: #5f7efc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #3f5ae0;
+  }
+
+  .signup-form select {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    margin-top: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  

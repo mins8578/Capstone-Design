@@ -1,0 +1,68 @@
+.terms-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .logo {
+    width: 100px;
+    margin-bottom: 30px;
+  }
+  
+  .terms-section {
+    width: 90%;
+    max-width: 600px;
+    margin-bottom: 30px;
+  }
+  
+  .terms-section label {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .terms-section input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  
+  .terms-section strong {
+    color: #4a4aff; /* 파란 강조 색 */
+    margin-right: 5px;
+  }
+  
+  .terms-section textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    resize: none;
+    border-radius: 15px;
+    border: 1.5px solid #333;
+    font-size: 15px;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  
+  .next-button {
+    width: 300px;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #5552e9;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+  
+  .next-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
