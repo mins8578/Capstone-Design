@@ -2,8 +2,11 @@ import React from 'react';
 import Header from '../components/mainpage/header';
 import NoticeBox from '../components/mainpage/noticebox';
 import bgImage from '../asset/한림대학교.jpg';
+import { useNavigate } from 'react-router-dom';
+
 
 function MainPage() {
+  const navigate = useNavigate();
     return (
       <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
         {/* ✅ 선명한 배경 이미지 (opacity ❌, filter ❌) */}
@@ -51,7 +54,9 @@ function MainPage() {
                }}>
           <NoticeBox title="공지사항" />
           <NoticeBox title="커뮤니티" />
-          <NoticeBox title="졸업자가진단" />
+          <div onClick={() => navigate('/grad-check')} style={{ cursor: 'pointer' }}>
+            <NoticeBox title="졸업자가진단" />
+          </div>
         </main>
       </div>
     </div>

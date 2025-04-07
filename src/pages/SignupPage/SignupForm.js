@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import hallymLogo from '../../asset/한림대학교 로고2.jpg';
 import '../../components/signuppage/signupform.css';
+import { useNavigate } from 'react-router-dom';
 
 const SignupForm = () => {
   const [form, setForm] = useState({
@@ -10,10 +11,15 @@ const SignupForm = () => {
     confirmPassword: '',
     name: '',
     studentId: '',
-    major: '', // ✅ 전공 추가
+    major: '',
   });
 
+  const navigate = useNavigate();
+
+
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [showCodeInput, setShowCodeInput] = useState(false);
+  const [code, setCode] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,26 +28,46 @@ const SignupForm = () => {
 
   const handleSendVerification = async () => {
     const emailToSend = `${form.email}@hallym.ac.kr`;
-
     if (!form.email) {
       alert("이메일을 입력하세요.");
       return;
     }
+    alert("테스트용: 인증코드 입력창이 나타납니다.");
+    setShowCodeInput(true); // 인증창 바로 보여줌
 
     try {
-      const response = await axios.post("http://localhost:8080/api/send-email", {
+      const response = await axios.post("http://localhost:8080/api/send-code", {
         email: emailToSend,
       });
 
       if (response.data.success) {
-        alert("인증 메일을 보냈습니다. 메일함을 확인하세요.");
-        // setIsEmailVerified(true); // ✅ 실제 구현 시 인증 후에 true로 변경
+        alert("6자리 인증코드를 이메일로 보냈습니다.");
+        setShowCodeInput(true);
       } else {
-        alert("메일 발송에 실패했습니다.");
+        alert("메일 전송에 실패했습니다.");
       }
     } catch (error) {
       console.error("메일 전송 오류:", error);
       alert("메일 전송 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    const email = `${form.email}@hallym.ac.kr`;
+    try {
+      const res = await axios.post("http://localhost:8080/api/verify-code", {
+        email,
+        code,
+      });
+
+      if (res.data.verified) {
+        alert("인증이 완료되었습니다.");
+        setIsEmailVerified(true);
+      } else {
+        alert("인증코드가 올바르지 않습니다.");
+      }
+    } catch (err) {
+      alert("인증 확인 중 오류가 발생했습니다.");
     }
   };
 
@@ -58,8 +84,9 @@ const SignupForm = () => {
       return;
     }
 
-    alert('회원가입 요청이 준비되었습니다.');
-    // 추후: axios.post로 회원가입 요청 백엔드에 전송
+    alert('회원가입이 완료되었습니다.');
+    // TODO: axios.post() 로 회원가입 정보 전송
+    navigate('/login'); // 회원가입 후 로그인 페이지로 이동
   };
 
   return (
@@ -82,6 +109,21 @@ const SignupForm = () => {
             <button type="button" className="cert-button" onClick={handleSendVerification}>인증</button>
           </div>
         </div>
+
+        {showCodeInput && (
+          <div className="form-group">
+            <label>인증코드 입력</label>
+            <div className="code-group">
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="6자리 코드"
+              />
+              <button type="button" onClick={handleVerifyCode}>인증 확인</button>
+            </div>
+          </div>
+        )}
 
         <div className="form-group">
           <label>비밀번호 입력</label>

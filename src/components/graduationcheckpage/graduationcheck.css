@@ -1,0 +1,139 @@
+/* 전체 레이아웃 */
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: 'Pretendard', 'Noto Sans KR', 'Arial', sans-serif;
+  color: #000;
+  padding-bottom: 80px;
+}
+
+/* 상단 헤더 */
+.page-header {
+  display: flex;
+  align-items: center;              /* 수직 중앙 정렬 */
+  justify-content: space-between;   /* 로고-제목-아이콘 정렬 */
+  padding: 10px 0;
+}
+
+.page-header h1 {
+  flex: 1;
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  margin: 0;
+}
+
+.logo {
+  position: relative;
+  top: 15px;  /* 로고 수동으로 밑으로 내림 */
+  height: 40px;
+  display: block;
+  object-fit: contain;
+}
+
+.home-icon {
+  height: 28px;
+  display: block;
+  cursor: pointer;
+}
+
+/* 제목 아래 구분선 */
+.divider {
+  border: none;
+  border-top: 2px solid #ccc;
+  margin: 0;
+}
+
+/* 공통 섹션 스타일 */
+.section {
+  margin-top: 70px;
+}
+
+.section h2 {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* 제목들 스타일 */
+h1, h2, h3 {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* 공통 테이블 스타일 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+td {
+  border: 1px solid #ccc;
+  text-align: center;
+  padding: 8px;
+  font-size: 14px;
+}
+
+/* 회색 헤더행 */
+.gray-row {
+  background-color: #f1f1f1;
+  font-weight: normal;
+}
+
+/* 바깥 테두리만 굵은 테이블 (이수현황) */
+.strong-border {
+  border: 2px solid #000;
+}
+
+/* 학점 테이블 (2칸 나란히) */
+.credit-table td {
+  width: 50%;
+}
+
+/* 교양 박스 영역 */
+.gyoyang-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 100px;
+  margin: 30px 0;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.gyoyang-box {
+  flex: 1;
+  text-align: center;
+}
+
+.gyoyang-box h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* 테이블 스타일 */
+.gyoyang-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #f8f8f8;
+}
+
+.gyoyang-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  font-size: 14px;
+  text-align: center;
+  background-color: #f5f5f5;
+}
+
+.gyoyang-table tr:nth-child(2) td {
+  font-size: 12px;
+  color: #555;
+  background-color: #fff;
+}
+
+
+

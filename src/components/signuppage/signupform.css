@@ -4,6 +4,7 @@
     align-items: center;
     margin-top: 60px;
     font-family: 'Arial', sans-serif;
+    padding-bottom: 80px;
   }
   
   .signup-logo {
@@ -37,7 +38,7 @@
   
   .email-group input {
     flex: 1;
-    padding: 8px;
+    padding: 10px;
     font-size: 15px;
   }
   
@@ -55,6 +56,33 @@
     cursor: pointer;
     white-space: nowrap;
     margin-left: 15px;
+  }
+  
+  /* 인증코드 입력 스타일 추가 */
+  .code-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  
+  .code-group input {
+    flex: 1;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .code-group button {
+    padding: 8px 10px;
+    font-size: 13px;
+    background-color: #4a61d3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
   }
   
   input {
@@ -79,7 +107,7 @@
   .submit-button:hover {
     background-color: #3f5ae0;
   }
-
+  
   .signup-form select {
     width: 100%;
     padding: 10px;
@@ -88,5 +116,6 @@
     border: 1px solid #ccc;
     border-radius: 4px;
   }
+  
   
   
