@@ -29,14 +29,14 @@ public class UserService {
         //Repository의 save메서드 호출 (조건. entity객체를 넘겨줘야 함)
     }
 
-    public String login(String email, String rawPassword) {
-        UserEntity user = userRepository.findById(email)
+    public UserEntity login(String userID, String rawPassword) {
+        UserEntity user = userRepository.findById(userID)
                 .orElseThrow(() -> new RuntimeException("가입되지 않은 이메일입니다."));
 
         if (!passwordEncoder.matches(rawPassword, user.getPwd())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
-        return "로그인 성공"; // 현재는 세션 X, 나중에 JWT 토큰 방식 쓸 예정
+        return user; // 현재는 세션 X, 나중에 JWT 토큰 방식 쓸 예정
     }
 }

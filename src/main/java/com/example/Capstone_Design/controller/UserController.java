@@ -7,22 +7,22 @@ import com.example.Capstone_Design.service.MailService;
 import com.example.Capstone_Design.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.beans.Transient;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -32,102 +32,98 @@ public class UserController {
 
 
     // 회원가입 페이지 출력 요청 - GetMapping으로 출력 요청 -> PostMapping에서 form에 대한 action 수행
-    @GetMapping("/save")
-    public String saveForm() {
-        return "save";
-    }
+//    @GetMapping("/save")
+//    public String saveForm() {
+//        return "save";
+//    }
 
-    @PostMapping("/save")
-    public String join(@ModelAttribute UserDTO userDTO, Model model) {
-        if (!userDTO.getPwd().equals(userDTO.getPasswordCheck())) {
-            model.addAttribute("error", "비밀번호가 일치하지 않습니다.");
-            return "save";
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
 
-        }
-
-        // 아이디와 이메일을 동일하게 처리
         String email = userDTO.getUserID();  // 아이디 = 이메일
 
-        //Optional<EmailAuth> emailAuthOptional = emailAuthRepository.findByEmail(email);
-        List<EmailAuth> authList = emailAuthRepository.findAllByEmailOrderByCreatedAtDesc(email);
+        if (!userDTO.getPwd().equals(userDTO.getPasswordCheck())) {
+//            model.addAttribute("error", "비밀번호가 일치하지 않습니다.");
+//            return "save";
+              return ResponseEntity.badRequest().body("비밀번호가 일치하지 않습니다.");
 
-
-        if (authList.isEmpty() || !authList.get(0).isVerified()) {
-            model.addAttribute("error", "이메일 인증이 완료되지 않았습니다.");
-            return "email-confirm";  // 인증 페이지로 리다이렉트
         }
 
-        // 랜덤 인증 코드 생성 (6자리)
-       // String authCode = UUID.randomUUID().toString().substring(0, 6);
+        if (userService.existsByUserID(userDTO.getUserID())) {
+            return ResponseEntity.badRequest().body("이미 가입된 이메일입니다.");
+        }
 
-        // 이메일 전송
-       // mailService.sendVerificationEmail(userDTO.getUserID(), authCode);
+        //Optional<EmailAuth> emailAuthOptional = emailAuthRepository.findByEmail(email);
+        List<EmailAuth> authList = emailAuthRepository.findAllByEmailOrderByCreatedAtDesc(userDTO.getUserID());
+        if (authList.isEmpty() || !authList.get(0).isVerified()) {
+            return ResponseEntity.badRequest().body("이메일 인증이 완료되지 않았습니다.");
+        }
 
-//        EmailAuth auth = EmailAuth.builder()
-//                .email(email)
-//                .code(authCode)
-//                .createdAt(LocalDateTime.now())
-//                .verified(false)
-//                .build();
-//
-//        emailAuthRepository.save(auth);
-
-        System.out.println("UserController.save");
-        System.out.println("userDTO = " + userDTO);
         userService.save(userDTO);
-
-        return "index";
+        return ResponseEntity.ok("회원가입 성공");
     }
 
 
-    @PostMapping("/send-email-code")
-    @ResponseBody
-    public String sendAuthCode(@RequestParam String email) {
+    @PostMapping("/send-code")
+    public ResponseEntity<Map<String, Object>> sendEmailCode(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+
+        Map<String, Object> response = new HashMap<>();
 
         if (userService.existsByUserID(email)) {
-            return "이미 가입된 이메일입니다. 로그인해주세요.";
+            response.put("success", false);
+            response.put("message", "이미 가입된 이메일입니다.");
+            return ResponseEntity.badRequest().body(response);
         }
 
-        String authCode = UUID.randomUUID().toString().substring(0, 6);
+        String code = UUID.randomUUID().toString().substring(0, 6);
+        mailService.sendVerificationEmail(email, code);
 
-        // ✅ 메일 전송
-        mailService.sendVerificationEmail(email, authCode);
-
-        // ✅ 인증 코드 DB 저장
         EmailAuth auth = EmailAuth.builder()
                 .email(email)
-                .code(authCode)
+                .code(code)
                 .createdAt(LocalDateTime.now())
                 .verified(false)
                 .build();
-
         emailAuthRepository.save(auth);
-
-        return "인증 메일이 발송되었습니다.";
+        response.put("success", true);
+        response.put("message", "인증 메일이 발송되었습니다.");
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/verify")
-    @ResponseBody
-    public String verifyEmailCode(@RequestParam String email, @RequestParam String code) {
+    @PostMapping("/verify-code")
+    public ResponseEntity<Map<String, Object>> verifyEmailCode(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String code = request.get("code");
+
+        Map<String, Object> response = new HashMap<>();
+
         List<EmailAuth> authList = emailAuthRepository.findAllByEmailOrderByCreatedAtDesc(email);
         if (authList.isEmpty()) {
-            return "이메일 정보가 없습니다.";
+            response.put("verified", false);
+            response.put("message", "이메일 정보가 없습니다.");
+            return ResponseEntity.badRequest().body(response);
         }
 
         EmailAuth auth = authList.get(0);
-
-        //EmailAuth auth = optional.get();
         if (auth.isVerified()) {
-            return "이미 인증된 사용자입니다.";
+            response.put("verified", false);
+            response.put("message", "이미 인증된 사용자입니다.");
+            return ResponseEntity.badRequest().body(response);
         }
-        if (!auth.getCode().equals(code)) {
-            return "인증 코드가 일치하지 않습니다.";
-        }
-        auth.setVerified(true);
 
+        if (!auth.getCode().equals(code)) {
+            response.put("verified", false);
+            response.put("message", "인증 코드가 일치하지 않습니다.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        auth.setVerified(true);
         emailAuthRepository.save(auth);
-        System.out.println("이메일 인증 코드가 DB에 저장되었습니다.");
-        return "이메일 인증이 완료되었습니다!";
+
+        response.put("verified", true);
+        response.put("message", "이메일 인증이 완료되었습니다!");
+        return ResponseEntity.ok(response);
     }
 
 }

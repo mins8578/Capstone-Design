@@ -1,34 +1,40 @@
 package com.example.Capstone_Design.controller;
 
+import com.example.Capstone_Design.dto.LoginDTO;
+import com.example.Capstone_Design.entity.UserEntity;
 import com.example.Capstone_Design.service.UserService;
+import com.example.Capstone_Design.token.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class LoginController {
-
     private final UserService userService;
-
-    @GetMapping("/login")
-    public String loginForm() {
-        return "login"; // templates/login.html 보여줌
-    }
+    private final JwtProvider jwtProvider;
 
     @PostMapping("/login")
-    public String login(@RequestParam String email,
-                        @RequestParam String password,
-                        Model model) {
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
         try {
-            userService.login(email, password);
-            return "redirect:/index"; // 로그인 성공 시 메인으로 이동
+            UserEntity user = userService.login(loginDTO.getUserID(), loginDTO.getPwd());
+            String token = jwtProvider.createToken(user.getUserID());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("username", user.getUserName());
+
+            return ResponseEntity.ok(Collections.singletonMap("token", token));
         } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            return "login"; // 로그인 실패 시 다시 로그인 페이지로
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 }
