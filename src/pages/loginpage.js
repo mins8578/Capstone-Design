@@ -63,7 +63,7 @@ const LoginPage = () => {
 
             <div className="login-links">
                 <Link to="/find-password/email" style={{ color: "black", textDecoration: "none" }}>
-                    PW찾기
+                    ID/PW찾기
                 </Link>
                 <Link to="/signup/terms" style={{ color: "black", textDecoration: "none" }}>
                     회원가입
