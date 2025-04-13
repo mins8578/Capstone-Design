@@ -18,13 +18,13 @@ public class UserEntity {
     @Column(name = "userid")
     private String userID;
 
-    @Column(length = 100)
+    @Column(length = 255)
     private String pwd;
 
-    @Column(length = 100)
+    @Column(length = 255)
     private String userName;
 
-    @Column(length = 100)
+    @Column(length = 255)
 //    private String userEmail;
     private String studentNumber;
     private String major;
