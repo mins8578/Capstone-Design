@@ -24,9 +24,8 @@
   margin: 0;
 }
 
-.logo {
+.graduationcheck-logo {
   position: relative;
-  top: 15px;  /* 로고 수동으로 밑으로 내림 */
   height: 40px;
   display: block;
   object-fit: contain;

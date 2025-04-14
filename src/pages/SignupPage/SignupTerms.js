@@ -19,7 +19,7 @@ const SignupTerms = () => {
   
     return (
       <div className="terms-container">
-        <img src={hallymLogo} alt="로고" className="logo" />
+        <img src={hallymLogo} alt="로고" className="signupterms-logo" />
   
         <div className="terms-section">
           <label>

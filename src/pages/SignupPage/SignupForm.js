@@ -32,7 +32,7 @@ const SignupForm = () => {
       alert("이메일을 입력하세요.");
       return;
     }
-    alert("테스트용: 인증코드 입력창이 나타납니다.");
+    alert("인증코드 입력창이 나타납니다.");
     setShowCodeInput(true); // 인증창 바로 보여줌
 
     try {
@@ -44,11 +44,15 @@ const SignupForm = () => {
         alert("6자리 인증코드를 이메일로 보냈습니다.");
         setShowCodeInput(true);
       } else {
-        alert("메일 전송에 실패했습니다.");
+        alert(response.data.message);
       }
     } catch (error) {
       console.error("메일 전송 오류:", error);
-      alert("메일 전송 중 오류가 발생했습니다.");
+      if (error.response && error.response.data && error.response.data.message) {
+        alert(error.response.data.message);
+      } else {
+        alert("메일 전송 중 오류가 발생했습니다.");
+      }
     }
   };
 
@@ -71,22 +75,35 @@ const SignupForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!isEmailVerified) {
       alert("아이디(이메일) 인증이 완료되지 않았습니다.");
       return;
     }
-
+  
     if (form.password !== form.confirmPassword) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
-
-    alert('회원가입이 완료되었습니다.');
-    // TODO: axios.post() 로 회원가입 정보 전송
-    navigate('/login'); // 회원가입 후 로그인 페이지로 이동
+  
+    try {
+      await axios.post("http://localhost:8080/api/register", {
+        userID: `${form.email}@hallym.ac.kr`,     // ✅ 이메일
+        pwd: form.password,                       // ✅ 비밀번호
+        passwordCheck: form.confirmPassword,      // ✅ 비밀번호 확인
+        userName: form.name,                      // ✅ 이름
+        studentNumber: form.studentId,            // ✅ 학번
+        major: form.major,                        // ✅ 전공
+      });
+  
+      alert("회원가입이 완료되었습니다!");
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+      alert("회원가입에 실패했습니다.");
+    }
   };
 
   return (

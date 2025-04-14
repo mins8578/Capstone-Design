@@ -27,7 +27,7 @@ function Header() {
 
   return (
     <header className="header">
-      <div className="logo">
+      <div className="mainpage-logo">
         <img src={hallymLogo} alt="한림대 로고" />
         <div className="logo-text">한림대학교 소프트웨어학부 홈페이지</div>
       </div>
