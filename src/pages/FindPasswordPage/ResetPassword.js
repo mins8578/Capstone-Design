@@ -15,6 +15,7 @@ function ResetPassword() {
         }
         if (newPassword !== confirmPassword) {
             alert('비밀번호가 일치하지 않습니다.');
+            window.location.reload(); // 새로고침
             return;
         }
 

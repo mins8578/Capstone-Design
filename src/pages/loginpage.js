@@ -9,25 +9,29 @@ const LoginPage = () => {
     const [pw, setPw] = useState("");
     const navigate = useNavigate();
 
+
     const handleLogin = async () => {
-        try { //백엔드 연결
+        try {
             const response = await axios.post("http://localhost:8080/api/login", {
-                id: id,
-                password: pw,
+                userID: id, // ✅ 백엔드 DTO와 맞춰서 key를 userID로 수정
+                pwd: pw,    // ✅ 백엔드 DTO와 맞춰서 pwd로 수정
             });
 
-            if (response.data.status === "success") {
-                alert(`${response.data.username}님 환영합니다!`);
-                // 로그인 성공 후 메인 페이지로 이동
-                navigate("/");
-            } else {
-                alert(response.data.message);
-                window.location.reload(); // 웹페이지 새로고침
-            }
+            const token = response.data.token; // ✅ JWT 토큰을 받음
+            const username = response.data.username;
+
+            alert(`${username}님 반갑습니다!`);
+
+            // 토큰을 localStorage에 저장 (로그인 유지 목적)
+            localStorage.setItem("token", token);
+
+            navigate("/");
         } catch (error) {
-            alert("아이디 또는 비밀번호가 잘못 입력되었습니다.");
-            console.error(error);
-            window.location.reload(); // 웹페이지 새로고침
+            if (error.response && error.response.data.error) {
+                alert(error.response.data.error);  // 백엔드에서 보낸 에러 메시지 표시
+            } else {
+                alert("로그인 처리 중 오류가 발생했습니다.");
+            }
         }
     };
 
@@ -62,8 +66,8 @@ const LoginPage = () => {
             </button>
 
             <div className="login-links">
-                <Link to="/find-password/email" style={{ color: "black", textDecoration: "none" }}>
-                    PW찾기
+                <Link to="/find-password" style={{ color: "black", textDecoration: "none" }}>
+                    ID/PW찾기
                 </Link>
                 <Link to="/signup/terms" style={{ color: "black", textDecoration: "none" }}>
                     회원가입
@@ -74,4 +78,5 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
 

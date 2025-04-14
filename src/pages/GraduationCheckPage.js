@@ -10,7 +10,7 @@ const GraduationCheckPage = () => {
   return (
     <div className="container">
       <header className="page-header">
-        <img src={logo} alt="한림대학교 로고" className="logo" />
+        <img src={logo} alt="한림대학교 로고" className="graduationcheck-logo" />
         <h1>한림대학교 소프트웨어학부 졸업 자가 진단</h1>
         <img src={home} alt="Home" className="home-icon" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
       </header>

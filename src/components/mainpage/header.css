@@ -9,22 +9,23 @@
   border-bottom: 1px solid #ccc;
 }
 
-.logo {
+.mainpage-logo {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.logo img {
-  height: 32px;
-  margin-top: 22px;
+.mainpage-logo img {
+  height: 40px;
 }
 
 .logo-text {
   font-size: 20px;
   font-weight: bold;
   white-space: nowrap;
-  margin-top: 22px;
+  margin: 0;
+  padding: 0;
+  line-height: 1;     
 }
 
 .user-icon {
