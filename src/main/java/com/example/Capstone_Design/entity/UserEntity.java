@@ -29,6 +29,9 @@ public class UserEntity {
     private String studentNumber;
     private String major;
 
+    @Column(name = "role_id", nullable = false)
+    private Integer roleId;
+
     @Builder
     public static UserEntity toUserEntity(UserDTO userDto) {
         UserEntity userEntity = new UserEntity();

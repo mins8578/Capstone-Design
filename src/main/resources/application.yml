@@ -25,9 +25,12 @@ spring:
 
 
   logging:
+
     level:
       org.springframework.mail: DEBUG
 
+  server:
+    address: 0.0.0.0
 
 
 

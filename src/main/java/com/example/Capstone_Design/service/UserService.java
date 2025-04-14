@@ -25,6 +25,8 @@ public class UserService {
 
         // request -> DTO -> Entity -> Repository에서 save
         UserEntity userEntity = UserEntity.toUserEntity(userDTO);
+        // ✅ 기본 권한 USER (role_id = 1)
+        userEntity.setRoleId(1);
         userRepository.save(userEntity);
         //Repository의 save메서드 호출 (조건. entity객체를 넘겨줘야 함)
     }

@@ -1,5 +1,6 @@
 package com.example.Capstone_Design.controller;
 
+import com.example.Capstone_Design.dto.UserDTO;
 import com.example.Capstone_Design.entity.EmailAuth;
 import com.example.Capstone_Design.entity.UserEntity;
 import com.example.Capstone_Design.repository.EmailAuthRepository;
@@ -9,9 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+
+
 
 @RestController
 @RequestMapping("/api")
@@ -27,20 +31,28 @@ public class FindPasswordController {
      * 비밀번호 재설정용 인증코드 이메일 전송
      */
     @PostMapping("/find-send-code")
-    public ResponseEntity<Map<String, Object>> sendResetCode(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, Object>> sendResetCode(@RequestBody UserDTO userDTO) {
+        //System.out.println("🔥 받은 userID = " + userDTO.getUserID()); 확인용
         Map<String, Object> response = new HashMap<>();
-        String email = request.get("email");
 
-        Optional<UserEntity> userOpt = userRepository.findById(email);
+        String email = userDTO.getUserID();  // 아이디 = 이메일
+
+        // DB에서 userID가 존재하는지 확인
+        Optional<UserEntity> userOpt = userRepository.findById(email);  // userID가 PK인 경우
+
         if (userOpt.isEmpty()) {
             response.put("success", false);
             response.put("message", "가입되지 않은 이메일입니다.");
             return ResponseEntity.badRequest().body(response);
         }
 
+        // 인증 코드 생성
         String code = UUID.randomUUID().toString().substring(0, 6);
-        mailService.sendVerificationEmail(email, code);
 
+        // 이메일 전송
+        mailService.sendVerificationEmail(email, code);  // email = userID
+
+        // 인증 정보 저장
         EmailAuth auth = EmailAuth.builder()
                 .email(email)
                 .code(code)

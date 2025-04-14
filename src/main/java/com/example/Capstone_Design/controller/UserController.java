@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -39,11 +40,11 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
-
+        System.out.println("✅ 받은 비밀번호: " + userDTO.getPwd());
         String email = userDTO.getUserID();  // 아이디 = 이메일
 
-        if (!userDTO.getPwd().equals(userDTO.getPasswordCheck())) {
-              return ResponseEntity.badRequest().body("비밀번호가 일치하지 않습니다.");
+        if (userDTO.getPwd() == null || !userDTO.getPwd().equals(userDTO.getPasswordCheck())) {
+            return ResponseEntity.badRequest().body("비밀번호가 일치하지 않습니다.");
         }
 
         if (userService.existsByUserID(userDTO.getUserID())) {
