@@ -12,7 +12,7 @@ const LoginPage = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post("http://localhost:8080/api/login", {
+            const response = await axios.post("http://192.168.219.48:8080/api/login", {
                 userID: id, // ✅ 백엔드 DTO와 맞춰서 key를 userID로 수정
                 pwd: pw,    // ✅ 백엔드 DTO와 맞춰서 pwd로 수정
             });
@@ -66,8 +66,8 @@ const LoginPage = () => {
             </button>
 
             <div className="login-links">
-                <Link to="/find-password" style={{ color: "black", textDecoration: "none" }}>
-                    ID/PW찾기
+                <Link to="/find-password/email" style={{ color: "black", textDecoration: "none" }}>
+                    PW찾기
                 </Link>
                 <Link to="/signup/terms" style={{ color: "black", textDecoration: "none" }}>
                     회원가입

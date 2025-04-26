@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../../components/findpasswordpage/FindPasswordEmail.css';
 import hallymLogo from '../../asset/한림대학교 로고2.jpg';
 
@@ -7,14 +8,31 @@ function FindPasswordEmail() {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!email) {
       alert('이메일을 입력해주세요.');
       return;
     }
 
-    // 이메일 형식 체크도 추가 가능
-    navigate('/find-password/code');
+    const fullEmail = `${email}@hallym.ac.kr`;
+
+    try {
+      const response = await axios.post('http://192.168.219.48:8080/api/find-send-code', {
+        userID: fullEmail,
+      });
+
+      // ✅ success 값 기준으로 처리
+      if (response.data.success === true) {
+        alert('인증코드를 이메일로 전송했습니다.');
+        sessionStorage.setItem("email", fullEmail);
+        navigate('/find-password/code');
+      } else {
+        alert(`회원이 없습니다: ${response.data.message}`);
+      }
+    } catch (error) {
+      console.error(error);
+      alert('서버와의 연결 중 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -26,7 +44,7 @@ function FindPasswordEmail() {
       <div className="form-area">
         <p className="label">아이디(이메일)을 입력해주세요.</p>
         <input
-          type="email"
+          type="text"
           className="email-input"
           placeholder="@hallym.ac.kr"
           value={email}
@@ -39,7 +57,3 @@ function FindPasswordEmail() {
 }
 
 export default FindPasswordEmail;
-
-
-
-
