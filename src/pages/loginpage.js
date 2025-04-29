@@ -4,7 +4,7 @@ import axios from "axios";
 import "../components/loginpage/loginpage.css";
 import hallymLogo from "../asset/한림대학교 로고2.jpg";
 
-const LoginPage = () => {
+const Loginpage = () => {
     const [id, setId] = useState("");
     const [pw, setPw] = useState("");
     const navigate = useNavigate();
@@ -12,7 +12,7 @@ const LoginPage = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post("http://localhost:8080/api/login", {
+            const response = await axios.post("/api/login", {
                 userID: id, // ✅ 백엔드 DTO와 맞춰서 key를 userID로 수정
                 pwd: pw,    // ✅ 백엔드 DTO와 맞춰서 pwd로 수정
             });
@@ -77,6 +77,6 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default Loginpage;
 
 
