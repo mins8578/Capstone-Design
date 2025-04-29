@@ -1,0 +1,12 @@
+version: '3'
+services:
+  backend:
+    image: wtgs9817/test-capstone-design-backend01
+    expose:
+      - 8080
+    networks:
+      - test-project-network
+
+networks:
+  test-project-network:
+    external: true
