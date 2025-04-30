@@ -30,6 +30,8 @@ function MyPage() {
           <p>아이디(이메일) : XXXXXXX@hallym.ac.kr</p>
           <p>비밀번호 : XXXXXXXX</p>
           <p>학번 : XXXXXXXX</p>
+          <p>주전공 : XXXXXXXX</p>
+          <p>복수전공 : XXXXXXXX</p>
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import FindPasswordEmail from './pages/FindPasswordPage/FindPasswordEmail';   //
 import FindPasswordCode from './pages/FindPasswordPage/FindPasswordCode';   // 비밀번호찾기 이메일 코드 페이지
 import ResetPassword from './pages/FindPasswordPage/ResetPassword';   // 비밀번호찾기 새비밀번호 생성 페이지
 import MyPage from './pages/MyPage';  // 나의 정보 페이지
+import NoticePage from './pages/NoticePage/NoticePage';   // 공지사항 페이지지
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/find-password/code" element={<FindPasswordCode />} />
         <Route path="/find-password/reset" element={<ResetPassword />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/noticepage" element={<NoticePage />} />
       </Routes>
     </Router>
   );

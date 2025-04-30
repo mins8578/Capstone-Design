@@ -1,0 +1,41 @@
+.notice-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .notice-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .notice-logo {
+    height: 50px;
+  }
+  
+  .notice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .notice-table th,
+  .notice-table td {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .pagination {
+    text-align: center;
+    margin: 10px 0;
+  }
+  
+  .search-area {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
