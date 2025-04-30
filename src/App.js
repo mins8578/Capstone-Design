@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MainPage from './pages/MainPage';  // 메인 페이지
-import LoginPage from './pages/LoginPage';  // 로그인 페이지
+import MainPage from './pages/Mainpage';  // 메인 페이지
+import Loginpage from './pages/Loginpage';  // 로그인 페이지
 import SignupTerms from './pages/SignupPage/SignupTerms';   // 약관 동의 페이지
 import SignupForm from './pages/SignupPage/SignupForm';     // 회원정보 입력 페이지
 import GraduationCheckPage from './pages/GraduationCheckPage';    // 졸업자가진단 페이지
@@ -15,7 +15,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<Loginpage />} />
         <Route path="/signup/terms" element={<SignupTerms />} />
         <Route path="/signup/form" element={<SignupForm />} />
         <Route path="/grad-check" element={<GraduationCheckPage />} />

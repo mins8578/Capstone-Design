@@ -36,7 +36,9 @@ const SignupForm = () => {
     setShowCodeInput(true); // 인증창 바로 보여줌
 
     try {
-      const response = await axios.post("http://192.168.219.48:8080/api/send-code", {
+
+      const response = await axios.post("/api/send-code", {
+
         email: emailToSend,
       });
 
@@ -59,7 +61,8 @@ const SignupForm = () => {
   const handleVerifyCode = async () => {
     const email = `${form.email}@hallym.ac.kr`;
     try {
-      const res = await axios.post("http://192.168.219.48:8080/api/verify-code", {
+
+      const res = await axios.post("/api/verify-code", {
         email,
         code,
       });
@@ -89,7 +92,8 @@ const SignupForm = () => {
     }
   
     try {
-      await axios.post("http://192.168.219.48:8080/api/register", {
+
+      await axios.post("api/register", {
         userID: `${form.email}@hallym.ac.kr`,     // ✅ 이메일
         pwd: form.password,                       // ✅ 비밀번호
         passwordCheck: form.confirmPassword,      // ✅ 비밀번호 확인
