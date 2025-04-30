@@ -8,6 +8,7 @@ import GraduationCheckPage from './pages/GraduationCheckPage';    // 졸업자�
 import FindPasswordEmail from './pages/FindPasswordPage/FindPasswordEmail';   // 비밀번호찾기 이메일 입력 페이지
 import FindPasswordCode from './pages/FindPasswordPage/FindPasswordCode';   // 비밀번호찾기 이메일 코드 페이지
 import ResetPassword from './pages/FindPasswordPage/ResetPassword';   // 비밀번호찾기 새비밀번호 생성 페이지
+import MyPage from './pages/MyPage';  // 나의 정보 페이지
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/find-password/email" element={<FindPasswordEmail />} />
         <Route path="/find-password/code" element={<FindPasswordCode />} />
         <Route path="/find-password/reset" element={<ResetPassword />} />
+        <Route path="/mypage" element={<MyPage />} />
       </Routes>
     </Router>
   );

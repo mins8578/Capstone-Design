@@ -36,7 +36,9 @@ const SignupForm = () => {
     setShowCodeInput(true); // 인증창 바로 보여줌
 
     try {
+
       const response = await axios.post("/api/send-code", {
+
         email: emailToSend,
       });
 
@@ -59,6 +61,7 @@ const SignupForm = () => {
   const handleVerifyCode = async () => {
     const email = `${form.email}@hallym.ac.kr`;
     try {
+
       const res = await axios.post("/api/verify-code", {
         email,
         code,
@@ -89,6 +92,7 @@ const SignupForm = () => {
     }
   
     try {
+
       await axios.post("api/register", {
         userID: `${form.email}@hallym.ac.kr`,     // ✅ 이메일
         pwd: form.password,                       // ✅ 비밀번호
@@ -190,9 +194,9 @@ const SignupForm = () => {
           <label>전공 선택</label>
           <select name="major" value={form.major} onChange={handleChange} required>
             <option value="">전공을 선택하세요</option>
-            <option value="빅데이터학과">빅데이터학과</option>
-            <option value="콘텐츠IT학과">콘텐츠IT학과</option>
-            <option value="스마트IoT학과">스마트IoT학과</option>
+            <option value="빅데이터">빅데이터학과</option>
+            <option value="콘텐츠IT">콘텐츠IT학과</option>
+            <option value="스마트IoT">스마트IoT학과</option>
           </select>
         </div>
 

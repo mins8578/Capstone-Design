@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../../components/findpasswordpage/ResetPassword.css';
 import hallymLogo from '../../asset/한림대학교 로고2.jpg';
 
@@ -8,19 +9,43 @@ function ResetPassword() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!newPassword || !confirmPassword) {
             alert('모든 항목을 입력해주세요.');
             return;
         }
+
         if (newPassword !== confirmPassword) {
             alert('비밀번호가 일치하지 않습니다.');
-            window.location.reload(); // 새로고침
+            window.location.reload();
             return;
         }
 
-        // TODO: 비밀번호 변경 API 연결
-        navigate('/login');
+        const email = sessionStorage.getItem('email');
+        if (!email) {
+            alert('이메일 정보가 없습니다. 처음부터 다시 시도해주세요.');
+            navigate('/find-password/email');
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://192.168.219.48:8080/api/reset', {
+                email: email,
+                newPassword: newPassword,
+                confirmPassword: confirmPassword
+            });
+
+            if (response.data.success === true) {
+                alert('비밀번호가 성공적으로 변경되었습니다.');
+                sessionStorage.removeItem('email'); // 인증 정보 정리
+                navigate('/login');
+            } else {
+                alert(response.data.message || '비밀번호 변경 실패');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('서버와의 연결 중 오류가 발생했습니다.');
+        }
     };
 
     return (

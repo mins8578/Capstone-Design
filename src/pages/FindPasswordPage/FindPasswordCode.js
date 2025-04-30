@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../../components/findpasswordpage/FindPasswordCode.css';
 import hallymLogo from '../../asset/한림대학교 로고2.jpg';
 
@@ -7,14 +8,30 @@ function FindPasswordCode() {
   const [code, setCode] = useState('');
   const navigate = useNavigate();
 
-  const handleVerify = () => {
+
+  const handleVerify = async () => {
     if (!code) {
       alert('인증코드를 입력해주세요.');
       return;
     }
 
-    // TODO: 인증 코드 확인 API 연결
-    navigate('/find-password/reset');
+    const email = sessionStorage.getItem('email');
+
+    try {
+      const response = await axios.post('http://192.168.219.48:8080/api/password-verify-code', {
+        email: email,
+        code: code,
+      });
+
+      if (response.data.success === true) {
+        alert(response.data.message);
+        navigate('/find-password/reset');
+      } else {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      alert('서버오류가 발생했습니다.');
+    }
   };
 
   return (
