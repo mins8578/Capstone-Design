@@ -52,9 +52,10 @@ function MainPage() {
             marginTop: '60px',
             height: '500px'   // 중앙에 보이게 하기 위한 높이 조정
           }}>
-          <div onClick={() => navigate('/noticepage')} style={{ cursor: 'pointer' }}>
+          <div onClick={() => window.open('https://sw.hallym.ac.kr/index.php?mp=5_1', '_blank')} style={{ cursor: 'pointer' }}>
             <NoticeBox title="공지사항" />
           </div>
+
           <NoticeBox title="커뮤니티" />
 
           <div onClick={() => navigate('/grad-check')} style={{ cursor: 'pointer' }}>

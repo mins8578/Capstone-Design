@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MainPage from './pages/Mainpage';  // 메인 페이지
-import Loginpage from './pages/Loginpage';  // 로그인 페이지
+import MainPage from './pages/MainPage';  // 메인 페이지
+import Loginpage from './pages/LoginPage';  // 로그인 페이지
 import SignupTerms from './pages/SignupPage/SignupTerms';   // 약관 동의 페이지
 import SignupForm from './pages/SignupPage/SignupForm';     // 회원정보 입력 페이지
 import GraduationCheckPage from './pages/GraduationCheckPage';    // 졸업자가진단 페이지
@@ -9,7 +9,6 @@ import FindPasswordEmail from './pages/FindPasswordPage/FindPasswordEmail';   //
 import FindPasswordCode from './pages/FindPasswordPage/FindPasswordCode';   // 비밀번호찾기 이메일 코드 페이지
 import ResetPassword from './pages/FindPasswordPage/ResetPassword';   // 비밀번호찾기 새비밀번호 생성 페이지
 import MyPage from './pages/MyPage';  // 나의 정보 페이지
-import NoticePage from './pages/NoticePage/NoticePage';   // 공지사항 페이지지
 
 function App() {
   return (
@@ -24,7 +23,6 @@ function App() {
         <Route path="/find-password/code" element={<FindPasswordCode />} />
         <Route path="/find-password/reset" element={<ResetPassword />} />
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="/noticepage" element={<NoticePage />} />
       </Routes>
     </Router>
   );
