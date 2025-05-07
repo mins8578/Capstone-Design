@@ -56,7 +56,9 @@ function MainPage() {
             <NoticeBox title="공지사항" />
           </div>
 
+          <div onClick={() => navigate('/communityboard')} style={{ cursor: 'pointer' }}>
           <NoticeBox title="커뮤니티" />
+          </div>
 
           <div onClick={() => navigate('/grad-check')} style={{ cursor: 'pointer' }}>
             <NoticeBox title="졸업자가진단" />
