@@ -10,7 +10,7 @@ function FindPasswordEmail() {
 
   const handleNext = async () => {
     if (!email) {
-      alert('이메일을 입력해주세요.');
+      alert('학번을 입력해주세요.');
       return;
     }
 
@@ -42,11 +42,11 @@ function FindPasswordEmail() {
       </div>
 
       <div className="form-area">
-        <p className="label">아이디(이메일)을 입력해주세요.</p>
+        <p className="label">학번을 입력해주세요.</p>
         <input
           type="text"
           className="email-input"
-          placeholder="@hallym.ac.kr"
+          placeholder="ex) 2020XXXX"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />

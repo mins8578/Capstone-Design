@@ -134,5 +134,25 @@ td {
   background-color: #fff;
 }
 
+.subject-button {
+  color: black;
+  font-size: 18px;
+  font-weight: 900;
+  background-color: #86bce9;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  box-shadow: 3px 3px 4px rgba(0,0,0,0.2);
+  cursor: pointer;
+  margin: 0 auto;
+  display: block;
+  margin-bottom: 30px;
+}
+
+.subject-button:hover {
+  background-color: #4c99eb;
+}
+
+
 
 

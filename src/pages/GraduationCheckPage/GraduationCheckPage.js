@@ -1,11 +1,13 @@
-import React from 'react';
-import '../components/graduationcheckpage/graduationcheck.css';
-import logo from '../asset/한림대학교 로고.png';
-import home from '../asset/Home.png';
+import React, { useState } from 'react';
+import '../../components/graduationcheckpage/graduationcheck.css';
+import SubjectModal from '../../pages/GraduationCheckPage/SubjectModal';
+import logo from '../../asset/한림대학교 로고.png';
+import home from '../../asset/Home.png';
 import { useNavigate } from 'react-router-dom';
 
 const GraduationCheckPage = () => {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="container">
@@ -15,6 +17,18 @@ const GraduationCheckPage = () => {
         <img src={home} alt="Home" className="home-icon" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
       </header>
       <hr className="divider" />
+      <section className="section">
+        <button
+          className="subject-button"
+          onClick={() => setIsModalOpen(true)}
+        >
+          현재 이수 과목 등록/수정
+        </button>
+      </section>
+
+      {isModalOpen && <SubjectModal onClose={() => setIsModalOpen(false)} />}
+
+
       <section className="section">
         <h2>XXX님의 현재 이수현황!</h2>
         <table className="check-table strong-border">

@@ -9,10 +9,10 @@ function Header() {
   const navigate = useNavigate();
 
   // 로그인했다고 가정
-  const isLoggedIn = true; // 항상 true로 설정!
+ // const isLoggedIn = true; // 항상 true로 설정!
 
   // 로그인 여부 판단 (예: 토큰이 있으면 로그인된 상태라고 가정)
-  //const isLoggedIn = !!localStorage.getItem('token');
+  const isLoggedIn = !!localStorage.getItem('token');
 
   const handleIconClick = () => {
     if (!isLoggedIn) {
