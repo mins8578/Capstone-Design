@@ -25,14 +25,14 @@ public interface StudentSubjectRepository extends JpaRepository<StudentSubjectEn
             "FROM StudentSubjectEntity ss " +
             "WHERE ss.studentSubjectId.studentNumber = :studentNumber " +
             "AND ss.subjectEntity.majorCode IN :majorCodes")
-    Integer subjectScore(@Param("studentNumber") String studentNumber, @Param("majorCode") List<String> majorCodes);
+    Integer subjectScore(@Param("studentNumber") String studentNumber, @Param("majorCodes") List<String> majorCodes);
 
 
     // 과 별로 필수전공 조회
     @Query("SELECT new com.example.Capstone_Design.dto.GraduationCheckDTO(se.subjectCode, se.subjectName, se.score) " +
             "FROM SubjectEntity se " +
-            "WHERE se.majorCode IN :majorCodes ")
-    List<GraduationCheckDTO> graduationSubject(@Param("majorCodes")List<String> majorCodes);
+            "WHERE se.majorCode LIKE CONCAT('%', :majorCode, '%')")
+    List<GraduationCheckDTO> graduationSubject(@Param("majorCode")String majorCode);
 
 
 
