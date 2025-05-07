@@ -1,7 +1,7 @@
 package com.example.Capstone_Design.controller;
 
 import com.example.Capstone_Design.dto.UserDTO;
-import com.example.Capstone_Design.entity.EmailAuth;
+import com.example.Capstone_Design.entity.EmailAuthEntity;
 import com.example.Capstone_Design.entity.UserEntity;
 import com.example.Capstone_Design.repository.EmailAuthRepository;
 import com.example.Capstone_Design.repository.UserRepository;
@@ -53,7 +53,7 @@ public class FindPasswordController {
         mailService.sendVerificationEmail(email, code);  // email = userID
 
         // 인증 정보 저장
-        EmailAuth auth = EmailAuth.builder()
+        EmailAuthEntity auth = EmailAuthEntity.builder()
                 .email(email)
                 .code(code)
                 .createdAt(LocalDateTime.now())
@@ -76,14 +76,14 @@ public class FindPasswordController {
         String email = request.get("email");
         String code = request.get("code");
 
-        List<EmailAuth> authList = emailAuthRepository.findAllByEmailOrderByCreatedAtDesc(email);
+        List<EmailAuthEntity> authList = emailAuthRepository.findAllByEmailOrderByCreatedAtDesc(email);
         if (authList.isEmpty()) {
             response.put("success", false);
             response.put("message", "이메일 정보가 없습니다.");
             return ResponseEntity.badRequest().body(response);
         }
 
-        EmailAuth auth = authList.get(0);
+        EmailAuthEntity auth = authList.get(0);
         if (auth.isVerified()) {
             response.put("success", false);
             response.put("message", "이미 인증이 완료된 이메일입니다.");
@@ -122,7 +122,7 @@ public class FindPasswordController {
         }
 
         // 인증 여부 확인
-        List<EmailAuth> authList = emailAuthRepository.findAllByEmailOrderByCreatedAtDesc(email);
+        List<EmailAuthEntity> authList = emailAuthRepository.findAllByEmailOrderByCreatedAtDesc(email);
         if (authList.isEmpty() || !authList.get(0).isVerified()) {
             response.put("success", false);
             response.put("message", "이메일 인증이 완료되지 않았습니다.");

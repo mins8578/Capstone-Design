@@ -8,8 +8,9 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
-public class Comment {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CommentEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(columnDefinition = "TEXT")
@@ -18,10 +19,10 @@ public class Comment {
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @JoinColumn(name = "board_id")
+    private BoardEntity board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid")
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 }

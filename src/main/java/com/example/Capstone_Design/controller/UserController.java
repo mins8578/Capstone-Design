@@ -1,24 +1,18 @@
 package com.example.Capstone_Design.controller;
 
 import com.example.Capstone_Design.dto.UserDTO;
-import com.example.Capstone_Design.entity.EmailAuth;
+import com.example.Capstone_Design.entity.EmailAuthEntity;
 import com.example.Capstone_Design.repository.EmailAuthRepository;
 import com.example.Capstone_Design.service.MailService;
 import com.example.Capstone_Design.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.ui.Model;
 
-import java.beans.Transient;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -52,7 +46,7 @@ public class UserController {
         }
 
         //Optional<EmailAuth> emailAuthOptional = emailAuthRepository.findByEmail(email);
-        List<EmailAuth> authList = emailAuthRepository.findAllByEmailOrderByCreatedAtDesc(userDTO.getUserID());
+        List<EmailAuthEntity> authList = emailAuthRepository.findAllByEmailOrderByCreatedAtDesc(userDTO.getUserID());
         if (authList.isEmpty() || !authList.get(0).isVerified()) {
             return ResponseEntity.badRequest().body("이메일 인증이 완료되지 않았습니다.");
         }
@@ -77,7 +71,7 @@ public class UserController {
         String code = UUID.randomUUID().toString().substring(0, 6);
         mailService.sendVerificationEmail(email, code);
 
-        EmailAuth auth = EmailAuth.builder()
+        EmailAuthEntity auth = EmailAuthEntity.builder()
                 .email(email)
                 .code(code)
                 .createdAt(LocalDateTime.now())
@@ -96,14 +90,14 @@ public class UserController {
 
         Map<String, Object> response = new HashMap<>();
 
-        List<EmailAuth> authList = emailAuthRepository.findAllByEmailOrderByCreatedAtDesc(email);
+        List<EmailAuthEntity> authList = emailAuthRepository.findAllByEmailOrderByCreatedAtDesc(email);
         if (authList.isEmpty()) {
             response.put("verified", false);
             response.put("message", "이메일 정보가 없습니다.");
             return ResponseEntity.badRequest().body(response);
         }
 
-        EmailAuth auth = authList.get(0);
+        EmailAuthEntity auth = authList.get(0);
         if (auth.isVerified()) {
             response.put("verified", false);
             response.put("message", "이미 인증된 사용자입니다.");
