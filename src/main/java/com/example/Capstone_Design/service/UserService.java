@@ -41,4 +41,11 @@ public class UserService {
 
         return user; // 현재는 세션 X, 나중에 JWT 토큰 방식 쓸 예정
     }
+
+    public UserEntity findByUserName(String userName) {
+        UserEntity user = userRepository.findByUserName(userName).orElseThrow(() -> new RuntimeException("해당 유저 없음"));
+
+        return user;
+    }
+
 }
