@@ -1,6 +1,8 @@
 package com.example.Capstone_Design.service;
 
 
+import com.example.Capstone_Design.Exception.BadRequestException;
+import com.example.Capstone_Design.Exception.MajorCodeNotFoundException;
 import com.example.Capstone_Design.dto.GraduationCheckDTO;
 import com.example.Capstone_Design.dto.MajorDTO;
 import com.example.Capstone_Design.entity.MajorEntity;
@@ -43,20 +45,22 @@ public class GraduationCheckService {
     }
 
 
-
-    /*
     // 학생이 수강하는 전공필수 과목 조회
-    public Map<String, GraduationCheckDTO> graduationCheck(String studentNumber, List<GraduationCheckDTO> graduationCheckDTO) {
+    public List<GraduationCheckDTO> graduationCheck(String studentNumber, String majorCode) {
+        List<GraduationCheckDTO> graduationCheckDTO = studentSubjectRepository.graduationCheck(studentNumber, majorCode);
 
-
-
-
+        return graduationCheckDTO;
     }
-    */
+
 
      //학과 코드 리턴
     public String getMajorCode(String major) {
-        MajorEntity majorEntity = majorRepository.findByMajor(major).orElseThrow( ()-> new RuntimeException("해당 학과에 대한 학과코드가 존재하지 않습니다.")  );
+        if(major == null || major.isBlank()) {
+            throw new BadRequestException("프론트엔드에서 major가 정상적으로 넘어오지 않음.");
+        }
+
+
+        MajorEntity majorEntity = majorRepository.findByMajor(major).orElseThrow( ()-> new MajorCodeNotFoundException("입력하신 학과에 대한 학과코드가 존재하지 않습니다.") );
 
         MajorDTO majorDTO = new MajorDTO();
         majorDTO.setMajorCode(majorEntity.getMajorCode());
