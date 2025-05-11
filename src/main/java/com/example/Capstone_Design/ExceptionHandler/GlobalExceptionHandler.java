@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MajorCodeNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleMajorNotFound(MajorCodeNotFoundException e) {
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
     }
 
 }
