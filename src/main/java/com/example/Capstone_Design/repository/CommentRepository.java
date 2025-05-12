@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     List<CommentEntity> findByBoardId(Long boardId);
+    int countByBoardId(Long boardId);
 }

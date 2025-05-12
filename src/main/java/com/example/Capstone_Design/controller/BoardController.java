@@ -1,8 +1,10 @@
 package com.example.Capstone_Design.controller;
 
+import com.example.Capstone_Design.dto.BoardDTO;
 import com.example.Capstone_Design.entity.BoardEntity;
 import com.example.Capstone_Design.entity.UserEntity;
 import com.example.Capstone_Design.repository.BoardRepository;
+import com.example.Capstone_Design.repository.CommentRepository;
 import com.example.Capstone_Design.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,16 +24,28 @@ public class BoardController {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     @GetMapping
-    public List<BoardEntity> getAllBoards() {
-        return boardRepository.findAll();
-    }
+    public ResponseEntity<?> getAllBoards() {
+        List<BoardEntity> boards = boardRepository.findAll();
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getBoard(@PathVariable Long id) {
-        BoardEntity board = boardRepository.findById(id).orElseThrow();
-        return ResponseEntity.ok(board);
+        List<BoardDTO> result = boards.stream().map(board -> {
+            int commentCount = commentRepository.countByBoardId(board.getId());
+            String author = board.getUser().getUserName();
+
+            return new BoardDTO(
+                    board.getId(),
+                    board.getTitle(),
+                    board.getContent(),
+                    board.getLikeCount(),
+                    commentCount,
+                    author,
+                    board.getCreatedAt()
+            );
+        }).toList();
+
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping
@@ -51,6 +65,7 @@ public class BoardController {
         if (!board.getUser().getUserID().equals(user.getUserID())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("작성자만 수정할 수 있습니다.");
         }
+        board.setTitle(updatedBoard.getTitle());
         board.setContent(updatedBoard.getContent());
         board.setUpdatedAt(LocalDateTime.now());
         return ResponseEntity.ok(boardRepository.save(board));

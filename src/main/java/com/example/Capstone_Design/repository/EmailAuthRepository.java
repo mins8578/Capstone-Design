@@ -1,12 +1,13 @@
 package com.example.Capstone_Design.repository;
 
 
-import com.example.Capstone_Design.entity.EmailAuthEntity;
+import com.example.Capstone_Design.entity.EmailAuth;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface EmailAuthRepository extends JpaRepository<EmailAuthEntity, Long> {
+public interface EmailAuthRepository extends JpaRepository<EmailAuth, Long> {
     //Optional<EmailAuth> findByEmail(String email);
-    List<EmailAuthEntity> findAllByEmailOrderByCreatedAtDesc(String email);
+    List<EmailAuth> findAllByEmailOrderByCreatedAtDesc(String email);
 }

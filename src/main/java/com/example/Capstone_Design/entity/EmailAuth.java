@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "email_auth")
-public class EmailAuthEntity {
+public class EmailAuth {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class EmailAuthEntity {
 
     // Builder 패턴을 위한 생성자
     @Builder
-    public EmailAuthEntity(String email, String code, LocalDateTime createdAt, boolean verified) {
+    public EmailAuth(String email, String code, LocalDateTime createdAt, boolean verified) {
         this.email = email;
         this.code = code;
         this.createdAt = createdAt;

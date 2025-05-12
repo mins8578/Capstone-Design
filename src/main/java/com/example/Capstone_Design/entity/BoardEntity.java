@@ -15,6 +15,10 @@ public class BoardEntity {
     @Column(name = "board_id")
     private Long id;
 
+    //DB title 테이블 추가해야 됨.
+    @Column(length = 255)
+    private String title;
+
     @Column(columnDefinition = "TEXT")
     private String content;
 
@@ -28,6 +32,7 @@ public class BoardEntity {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    //업데이트 시간 넣을까 말까
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
