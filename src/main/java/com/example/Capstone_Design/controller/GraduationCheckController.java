@@ -1,12 +1,15 @@
 package com.example.Capstone_Design.controller;
 
 
+import com.example.Capstone_Design.Exception.UserNotFoundException;
 import com.example.Capstone_Design.dto.GraduationCheckDTO;
+import com.example.Capstone_Design.dto.UserDTO;
 import com.example.Capstone_Design.entity.UserEntity;
 import com.example.Capstone_Design.service.GraduationCheckService;
 import com.example.Capstone_Design.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,41 +35,34 @@ public class GraduationCheckController {
     public ResponseEntity<Map<String, Integer>> totalSubjectScore(@AuthenticationPrincipal UserDetails userDetails) {
         Map<String, Integer> map = new HashMap<>();
 
-        try{
-            String username = userDetails.getUsername();
-            UserEntity user = userService.findByUserName(username);
 
-            String studentNumber = user.getStudentNumber();
+        String username = userDetails.getUsername();
+        UserDTO user = userService.findByUserName(username);
 
-            int totalScore = graduationCheckService.totalSubjectScore(studentNumber);
-            map.put("총 학점 ", totalScore);
+        String studentNumber = user.getStudentNumber();
 
-            return ResponseEntity.ok(map);
-        }
-        catch(RuntimeException e){
-            return ResponseEntity.badRequest().body(Collections.singletonMap("Error", -1));
-        }
+        int totalScore = graduationCheckService.totalSubjectScore(studentNumber);
+        map.put("총 학점 ", totalScore);
+
+        return ResponseEntity.ok(map);
+
+
 
     }
 
     @PostMapping("/subject-score")
     public ResponseEntity<Map<String, Integer>> subjectScore(@AuthenticationPrincipal UserDetails userDetails, @RequestParam List<String> majorCodes) {
         Map<String, Integer> map = new HashMap<>();
-        try {
-            String userName = userDetails.getUsername();
-            UserEntity user = userService.findByUserName(userName);
-            String studentNumber = user.getStudentNumber();
 
-            int subjectScore = graduationCheckService.subjectScore(studentNumber, majorCodes);
-            map.put("총 학점", subjectScore);
+        String userName = userDetails.getUsername();
+        UserDTO user = userService.findByUserName(userName);
+        String studentNumber = user.getStudentNumber();
 
-            return ResponseEntity.ok(map);
 
-        }
-        catch(RuntimeException e){
-            return ResponseEntity.badRequest().body(Collections.singletonMap("Error", -1));
-        }
+        int subjectScore = graduationCheckService.subjectScore(studentNumber, majorCodes);
+        map.put("총 학점", subjectScore);
 
+        return ResponseEntity.ok(map);
 
     }
 
@@ -75,29 +71,30 @@ public class GraduationCheckController {
     @PostMapping("/graduation-subject")
     public ResponseEntity<List<GraduationCheckDTO>> graduationSubject(@AuthenticationPrincipal UserDetails userDetails) {
 
-        try {
-            String userName = userDetails.getUsername();
-            UserEntity user = userService.findByUserName(userName);
+        String userName = userDetails.getUsername();
+        UserDTO user = userService.findByUserName(userName);
 
-            String major = user.getMajor();
-            String majorCode = graduationCheckService.getMajorCode(major);
+        String major = user.getMajor();
+        String majorCode = graduationCheckService.getMajorCode(major);
 
-            List<GraduationCheckDTO> list = graduationCheckService.graduationSubject(majorCode);
-            return ResponseEntity.ok(list);
-        }
-        catch(RuntimeException e){
-            return null;
-        }
+        List<GraduationCheckDTO> list = graduationCheckService.graduationSubject(majorCode);
+        return ResponseEntity.ok(list);
+
     }
 
 
     //학생이 수강하고 있는 과목중에서 과에 맞는 필수전공 리스트
-/*
+
     @PostMapping("/graduation-check")
     public ResponseEntity<List<GraduationCheckDTO>> graduationCheck(@AuthenticationPrincipal UserDetails userDetails) {
 
+        String userName = userDetails.getUsername();
+        UserDTO user = userService.findByUserName(userName);
 
+        List<GraduationCheckDTO> list = graduationCheckService.graduationCheck(user.getStudentNumber(), user.getMajor());
+
+        return ResponseEntity.ok(list);
     }
-*/
+
 
 }
