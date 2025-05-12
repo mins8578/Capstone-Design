@@ -72,7 +72,7 @@ const CommunityBoard = () => {
                 <span>💬 {post.comments}</span>
               </div>
               <div className="footer-right">
-                <span className="date">🕒 {post.date}</span>
+                <span className="date">🕒 {new Date(post.createdAt).toLocaleString()}</span>
               </div>
             </div>
           </div>

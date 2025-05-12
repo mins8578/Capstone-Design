@@ -9,7 +9,7 @@ import FindPasswordEmail from './pages/FindPasswordPage/FindPasswordEmail';   //
 import FindPasswordCode from './pages/FindPasswordPage/FindPasswordCode';   // 비밀번호찾기 이메일 코드 페이지
 import ResetPassword from './pages/FindPasswordPage/ResetPassword';   // 비밀번호찾기 새비밀번호 생성 페이지
 import MyPage from './pages/MyPage';  // 나의 정보 페이지
-import CommunityBoard from './pages/CommunityPage';
+import CommunityBoard from './pages/CommunityPage';   // 커뮤니티 게시판 페이지지
 
 function App() {
   return (

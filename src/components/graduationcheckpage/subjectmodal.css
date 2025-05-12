@@ -10,7 +10,7 @@
   }
   
   .modal-content.large-modal {
-    position: relative; /* ✅ X 버튼 위치 기준 설정 */
+    position: relative; 
     background-color: #fff;
     width: 700px;
     max-height: 90vh;
