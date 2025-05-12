@@ -30,10 +30,10 @@ public class SecurityConfig {
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    @Bean
-    public static UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(); // 또는 직접 구현한 CustomUserDetailsService
-    }
+//    @Bean  // DB가 아닌 메모리에 임시로 등록한 사용자만 인증 대상 -> DB 조회 로직 무시
+//    public static UserDetailsService userDetailsService() {
+//        return new InMemoryUserDetailsManager(); // 또는 직접 구현한 CustomUserDetailsService
+//    }
 
 //    @Bean
 //    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
