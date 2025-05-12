@@ -1,5 +1,7 @@
 package com.example.Capstone_Design.service;
 
+import com.example.Capstone_Design.Exception.BadRequestException;
+import com.example.Capstone_Design.Exception.UserNotFoundException;
 import com.example.Capstone_Design.dto.UserDTO;
 import com.example.Capstone_Design.entity.UserEntity;
 import com.example.Capstone_Design.repository.UserRepository;
@@ -42,10 +44,15 @@ public class UserService {
         return user; // 현재는 세션 X, 나중에 JWT 토큰 방식 쓸 예정
     }
 
-    public UserEntity findByUserName(String userName) {
-        UserEntity user = userRepository.findByUserName(userName).orElseThrow(() -> new RuntimeException("해당 유저 없음"));
+    public UserDTO findByUserName(String userName) {
 
-        return user;
+        if(userName == null || userName.isBlank()) {
+            throw new BadRequestException("프론트엔드에서 userName이 정상적으로 넘어오지 않음.");
+        }
+
+        UserEntity user = userRepository.findByUserName(userName).orElseThrow(() -> new UserNotFoundException("입력하신 회원이 존재하지 않습니다."));
+
+        return UserDTO.toUserDTO(user);
     }
 
 }

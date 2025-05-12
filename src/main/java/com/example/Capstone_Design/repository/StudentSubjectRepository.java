@@ -36,12 +36,17 @@ public interface StudentSubjectRepository extends JpaRepository<StudentSubjectEn
 
 
 
+    //학생이 수강하는 과목 중 필수전공 과목 조회
+    @Query("SELECT new com.example.Capstone_Design.dto.GraduationCheckDTO(se.subjectCode, se.subjectName, se.score) " +
+            "FROM StudentSubjectEntity sse " +
+            "JOIN sse.subjectEntity se " +
+            "WHERE sse.studentSubjectId.studentNumber = :studentNumber " +
+            "AND se.majorCode LIKE CONCAT('%', :majorCode, '%')")
+    List<GraduationCheckDTO> graduationCheck(@Param("studentNumber") String studentNumber,
+                                             @Param("majorCode") String majorCode);
 
-    // 졸업 자가진단 각 과마다 필수전공 수강 여부 체크
-    @Query("SELECT new com.example.Capstone_Design.dto.GraduationCheckDTO(s.subjectCode, s.subjectName, s.score) " +
-            "FROM StudentSubjectEntity ss " +
-            "JOIN ss.subjectEntity s " +
-            "WHERE ss.studentSubjectId.studentNumber = :studentNumber " +
-            "AND ss.studentSubjectId.subjectName = :subjectNames")
-    List<GraduationCheckDTO> graduationCheck(@Param("studentNumber") String studentNumber, @Param("subjectNames") List<String> subjectNames);
+
+
+
 }
+
