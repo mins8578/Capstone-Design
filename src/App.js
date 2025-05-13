@@ -9,7 +9,8 @@ import FindPasswordEmail from './pages/FindPasswordPage/FindPasswordEmail';   //
 import FindPasswordCode from './pages/FindPasswordPage/FindPasswordCode';   // 비밀번호찾기 이메일 코드 페이지
 import ResetPassword from './pages/FindPasswordPage/ResetPassword';   // 비밀번호찾기 새비밀번호 생성 페이지
 import MyPage from './pages/MyPage';  // 나의 정보 페이지
-import CommunityBoard from './pages/CommunityPage';
+import CommunityBoard from './pages/CommunityPage/CommunityPage';   // 커뮤니티 게시판 페이지
+import BoardDetailPage from './pages/CommunityPage/BoardDetailPage';   // 게시글 페이지
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/find-password/reset" element={<ResetPassword />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/communityboard" element={<CommunityBoard />} />
+        <Route path="/board/:id" element={<BoardDetailPage />} />
       </Routes>
     </Router>
   );
