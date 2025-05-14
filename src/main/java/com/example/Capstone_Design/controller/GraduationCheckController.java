@@ -36,8 +36,8 @@ public class GraduationCheckController {
         Map<String, Integer> map = new HashMap<>();
 
 
-        String username = userDetails.getUsername();
-        UserDTO user = userService.findByUserName(username);
+        String userID = userDetails.getUsername();
+        UserDTO user = userService.getUser(userID);
 
         String studentNumber = user.getStudentNumber();
 
@@ -50,16 +50,18 @@ public class GraduationCheckController {
 
     }
 
-    @PostMapping("/subject-score")
-    public ResponseEntity<Map<String, Integer>> subjectScore(@AuthenticationPrincipal UserDetails userDetails, @RequestParam List<String> majorCodes) {
+    @PostMapping("/subject-score")   //수강 과목별 학점 조회 (임시코드 수정 필요)
+    public ResponseEntity<Map<String, Integer>> subjectScore(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String category) {
         Map<String, Integer> map = new HashMap<>();
 
-        String userName = userDetails.getUsername();
-        UserDTO user = userService.findByUserName(userName);
+        String userID = userDetails.getUsername();
+        UserDTO user = userService.getUser(userID);
+
+
         String studentNumber = user.getStudentNumber();
 
 
-        int subjectScore = graduationCheckService.subjectScore(studentNumber, majorCodes);
+        int subjectScore = graduationCheckService.subjectScore(studentNumber,category );
         map.put("총 학점", subjectScore);
 
         return ResponseEntity.ok(map);
@@ -71,8 +73,8 @@ public class GraduationCheckController {
     @PostMapping("/graduation-subject")
     public ResponseEntity<List<GraduationCheckDTO>> graduationSubject(@AuthenticationPrincipal UserDetails userDetails) {
 
-        String userName = userDetails.getUsername();
-        UserDTO user = userService.findByUserName(userName);
+        String userID = userDetails.getUsername();
+        UserDTO user = userService.getUser(userID);
 
         String major = user.getMajor();
         String majorCode = graduationCheckService.getMajorCode(major);
@@ -88,10 +90,12 @@ public class GraduationCheckController {
     @PostMapping("/graduation-check")
     public ResponseEntity<List<GraduationCheckDTO>> graduationCheck(@AuthenticationPrincipal UserDetails userDetails) {
 
-        String userName = userDetails.getUsername();
-        UserDTO user = userService.findByUserName(userName);
+        String userID = userDetails.getUsername();
+        UserDTO user = userService.getUser(userID);
 
-        List<GraduationCheckDTO> list = graduationCheckService.graduationCheck(user.getStudentNumber(), user.getMajor());
+        String majorCode = graduationCheckService.getMajorCode(user.getMajor());
+
+        List<GraduationCheckDTO> list = graduationCheckService.graduationCheck(user.getStudentNumber(), majorCode);
 
         return ResponseEntity.ok(list);
     }

@@ -30,10 +30,10 @@ public class SecurityConfig {
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    @Bean
-    public static UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(); // 또는 직접 구현한 CustomUserDetailsService
-    }
+//    @Bean  // DB가 아닌 메모리에 임시로 등록한 사용자만 인증 대상 -> DB 조회 로직 무시
+//    public static UserDetailsService userDetailsService() {
+//        return new InMemoryUserDetailsManager(); // 또는 직접 구현한 CustomUserDetailsService
+//    }
 
 //    @Bean
 //    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -55,24 +55,32 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // ✅ OPTIONS 허용
-                        .requestMatchers("/**").permitAll()                    // ✅ 전체 허용 (개발 중)
+                        .requestMatchers("/api/login",
+                                "/api/register",
+                                "/api/send-code",
+                                "/api/verify-code",
+                                "/api/find-send-code",
+                                "/api/password-verify-code",
+                                "/api/reset").permitAll().anyRequest().authenticated()                    // ✅ 로그인, 회원가입, 이메일 인증, 비밀번호 변경 외에 요청은 인증 필요
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 }
 
-
+/*
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("http://localhost:3000")// ✅ 이렇게 변경
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                        .allowedOrigins("http://13.124.105.231")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .exposedHeaders("Authorization") // 프론트가 토큰 읽을 수 있게
                         .allowCredentials(true);
             }
         };
-    }
+    }*/
 }

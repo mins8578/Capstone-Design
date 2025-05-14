@@ -1,5 +1,6 @@
 package com.example.Capstone_Design.entity;
 
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import lombok.ToString;
 @Table(name = "student_subject")
 public class StudentSubjectEntity {
 
+
     @EmbeddedId
     StudentSubjectId studentSubjectId;
 
@@ -22,7 +24,8 @@ public class StudentSubjectEntity {
     // subject 테이블에서 subject_name이 같은 레코드를 찾아서
     // 그 전체 행을 subjectEntity 객체로 자동 매핑
     @ManyToOne
-    @JoinColumn(name = "subject_name", referencedColumnName = "subject_name", insertable = false, updatable = false)
+    @MapsId("subjectName")
+    @JoinColumn(name = "subject_name", referencedColumnName = "subjectName", insertable = false, updatable = false)
     private SubjectEntity subjectEntity;
 
 

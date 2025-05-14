@@ -8,6 +8,8 @@ import com.example.Capstone_Design.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -123,6 +125,20 @@ public class UserController {
         response.put("message", "이메일 인증이 완료되었습니다!");
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/user-name")
+    public ResponseEntity<Map<String, String>> getUserName(@AuthenticationPrincipal UserDetails userDetails) {
+        Map<String, String> map = new HashMap<>();
+
+        String userID = userDetails.getUsername();
+        UserDTO userDTO  = userService.getUser(userID);
+        String userName = userDTO.getUserName();
+
+        map.put("userName", userName);
+
+        return ResponseEntity.ok(map);
+    }
+
 
 }
 

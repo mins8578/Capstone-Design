@@ -29,9 +29,9 @@ public class GraduationCheckService {
         return result;
     }
 
-    // 수강하고 있는 과목 카테고리 별 총점
-    public int subjectScore(String studentNumber, List<String> majorCodes) {
-        Integer score = studentSubjectRepository.subjectScore(studentNumber, majorCodes);
+    // 수강하고 있는 전공과목 카테고리 별 총점
+    public int subjectScore(String studentNumber, String category) {
+        Integer score = studentSubjectRepository.subjectScore(studentNumber, category);
         int result = score == null ? 0 : score;
 
         return result;

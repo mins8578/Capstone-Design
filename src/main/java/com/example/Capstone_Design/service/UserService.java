@@ -44,15 +44,17 @@ public class UserService {
         return user; // 현재는 세션 X, 나중에 JWT 토큰 방식 쓸 예정
     }
 
-    public UserDTO findByUserName(String userName) {
-
-        if(userName == null || userName.isBlank()) {
+    public UserDTO getUser(String userID) {
+        if(userID == null || userID.isBlank()) {
             throw new BadRequestException("프론트엔드에서 userName이 정상적으로 넘어오지 않음.");
         }
 
-        UserEntity user = userRepository.findByUserName(userName).orElseThrow(() -> new UserNotFoundException("입력하신 회원이 존재하지 않습니다."));
+        UserEntity user = userRepository.findByUserID(userID).orElseThrow(() -> new UserNotFoundException("입력하신 회원이 존재하지 않습니다."));
 
         return UserDTO.toUserDTO(user);
+
     }
+
+
 
 }
