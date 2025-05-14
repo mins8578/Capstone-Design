@@ -22,6 +22,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         // Header에서 Token 가져오기
         String token = jwtProvider.resolveToken(request);
+        //logger.info("📥 Authorization Header: " + token);
+
+
 
         // 토큰이 유효하다면,
         if (token != null && jwtProvider.validateToken(token)) {
@@ -29,6 +32,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = jwtProvider.getAuthentication(token);
             // SecurityContext 객체에 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            //logger.info("✅ 인증 성공, 사용자 정보 = " + authentication.getName());
+        }
+        else {
+            logger.info("❌ 인증 실패");
         }
 
         filterChain.doFilter(request, response); // 다음 filter 실행

@@ -1,75 +1,98 @@
 package com.example.Capstone_Design.token;
 
+import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 
+import javax.crypto.SecretKey;
+import io.jsonwebtoken.*;
+
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-import java.util.Base64;
-
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
-    private String secretKey = "CD jwt secret key";
-    private final long tokenValidTime = 60 * 60 * 1000L; // 유효 시간 60분
+
+    private static final String RAW_SECRET = "cd_jwt_secret_key_should_be_long_enough_123456";
+    private final long tokenValidTime = 60 * 60 * 1000L; // 60분
+
+    private SecretKey secretKey;
+
     private final UserDetailsService userDetailsService;
 
-    // 객체 초기화 시 secretKey를 Base64로 encoding
     @PostConstruct
     protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        // ✅ 문자열을 byte[]로 바꾸고 Key 객체로 생성
+        this.secretKey = Keys.hmacShaKeyFor(RAW_SECRET.getBytes(StandardCharsets.UTF_8));
+
+        //log.info("🔐 SecretKey 초기화 완료 (HS256)");
     }
 
     // JWT 생성
-    public String createToken(String userID) { // List<String> roles
-        Claims claims = Jwts.claims().setSubject(userID); // JWT payload에 저장되는 정보 단위
-        // claims.put("roles", roles);
+    public String createToken(String userID) {
+        Claims claims = Jwts.claims().setSubject(userID);
         Date now = new Date();
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secretKey, SignatureAlgorithm.HS256)  // ✅ Key 객체로 서명
                 .compact();
     }
 
     // 인증 정보 조회
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserID(token));
+        String pureToken = parsePureToken(token); // ✅ Bearer 제거
+        UserDetails userDetails = userDetailsService.loadUserByUsername(getUserID(pureToken));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
-    // token에서 UserID 뽑기
-    public String getUserID(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
-    // 토큰 유효성, 만료 일자 확인
-    public boolean validateToken(String jwt) {
-        try {
-            if (!jwt.substring(0, "BEARER ".length()).equalsIgnoreCase("BEARER ")) {
-                return false;
-            } else {
-                jwt = jwt.split(" ")[1].trim();
-            }
 
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt);
+    // JWT에서 userID 추출
+    public String getUserID(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    // 토큰 유효성 검증
+    public boolean validateToken(String token) {
+        try {
+            String pureToken = parsePureToken(token);
+            Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(pureToken);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch(Exception e) {
+        } catch (JwtException | IllegalArgumentException e) {
+            //log.warn("❌ JWT 검증 실패: {}", e.getMessage());
             return false;
         }
     }
-    // request의 header에서 token 가져오기
+
+    // Header에서 Token 추출
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("Authorization");
+    }
+
+    // "Bearer " 접두사 제거
+    private String parsePureToken(String token) {
+        if (token != null && token.toLowerCase().startsWith("bearer ")) {
+            return token.substring(7).trim();
+        }
+        return token;
     }
 }

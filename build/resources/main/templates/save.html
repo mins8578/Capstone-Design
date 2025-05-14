@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입</title>
+  <script>
+    function sendEmailCode() {
+      const email = document.getElementById("userID").value;
+      if (!email) {
+        alert("이메일을 입력해주세요.");
+        return;
+      }
+
+      fetch("/send-email-code", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: "email=" + encodeURIComponent(email),
+      })
+      .then(response => response.text())
+      .then(message => alert(message));
+    }
+
+    function verifyEmailCode() {
+      const email = document.getElementById("userID").value;
+      const code = document.getElementById("emailCode").value;
+
+      fetch("/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: "email=" + encodeURIComponent(email) + "&code=" + encodeURIComponent(code),
+      })
+      .then(response => response.text())
+      .then(message => alert(message));
+    }
+  </script>
+</head>
+<body>
+<form action="/save" method="post">
+  <p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
+  아이디(이메일): <input type="text" name="userID" id="userID">
+  <button type="button" onclick="sendEmailCode()">인증 코드 보내기</button><br>
+
+  인증 코드 입력: <input type="text" id="emailCode">
+  <button type="button" onclick="verifyEmailCode()">코드 확인</button><br>
+
+  비밀번호: <input type="password" name="pwd"> <br>
+  비밀번호 확인: <input type="password" name="passwordCheck"><br>
+  이름: <input type="text" name="userName"> <br>
+  학번: <input type="text" name="studentNumber"><br>
+  전공:
+  <select name="major">
+    <option value="빅데이터학과">빅데이터학과</option>
+    <option value="콘텐츠IT학과">콘텐츠IT학과</option>
+    <option value="스마트IoT학과">스마트IoT학과</option>
+  </select><br>
+
+  <input type="submit" value="회원가입">
+</form>
+</body>
+</html>

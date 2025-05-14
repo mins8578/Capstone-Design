@@ -55,14 +55,20 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // ✅ OPTIONS 허용
-                        .requestMatchers("/**").permitAll()                    // ✅ 전체 허용 (개발 중)
+                        .requestMatchers("/api/login",
+                                "/api/register",
+                                "/api/send-code",
+                                "/api/verify-code",
+                                "/api/find-send-code",
+                                "/api/password-verify-code",
+                                "/api/reset").permitAll().anyRequest().authenticated()                    // ✅ 로그인, 회원가입, 이메일 인증, 비밀번호 변경 외에 요청은 인증 필요
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 }
 
-
+/*
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -76,5 +82,5 @@ public class SecurityConfig {
                         .allowCredentials(true);
             }
         };
-    }
+    }*/
 }
