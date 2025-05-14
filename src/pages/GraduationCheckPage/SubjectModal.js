@@ -27,8 +27,8 @@ const subjectsByCategory = {
 
 const SubjectModal = ({ onClose }) => {
   return (
-    <div className="modal-overlay">
-      <div className="modal-content large-modal">
+    <div className="subject-modal-overlay">
+      <div className="subject-modal-content large-modal">
         <button className="close-button" onClick={onClose}>×</button> {/* X 버튼 */}
 
         {Object.entries(subjectsByCategory).map(([category, subjects], index) => (

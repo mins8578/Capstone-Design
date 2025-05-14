@@ -1,4 +1,4 @@
-.modal-overlay {
+.subject-modal-overlay {
     position: fixed;
     top: 0; left: 0;
     width: 100vw; height: 100vh;
@@ -9,7 +9,7 @@
     z-index: 999;
   }
   
-  .modal-content.large-modal {
+  .subject-modal-content.large-modal {
     position: relative; 
     background-color: #fff;
     width: 700px;
