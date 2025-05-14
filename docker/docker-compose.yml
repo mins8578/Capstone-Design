@@ -4,4 +4,3 @@ services:
     image: wtgs9817/test-capston-design-backend04
     expose:
       - 8080
-    
