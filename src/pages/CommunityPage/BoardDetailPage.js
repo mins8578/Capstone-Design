@@ -101,7 +101,7 @@ const BoardDetailPage = () => {
       <button onClick={() => navigate(-1)}>← 목록으로</button>
       <h2>{post.title}</h2>
       <p className="meta">👤 {post.author} | 🕒 {new Date(post.createdAt).toLocaleString()}</p>
-      <p className="content">{post.content}</p>
+      <p className="board-content">{post.content}</p>
 
       <hr />
       <h3>💬 댓글</h3>
