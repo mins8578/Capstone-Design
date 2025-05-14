@@ -39,8 +39,6 @@ const GraduationCheckPage = () => {
             </tr>
             <tr><td>주전공 필수</td><td>충족? 불충족?</td></tr>
             <tr><td>복수전공 필수</td><td>충족? 불충족?</td></tr>
-            <tr><td>필수 교양</td><td>충족? 불충족?</td></tr>
-            <tr><td>선택필수 교양</td><td>충족? 불충족?</td></tr>
             <tr><td>전체취득 학점</td><td>충족? 불충족?</td></tr>
           </tbody>
         </table>
@@ -62,41 +60,7 @@ const GraduationCheckPage = () => {
         </table>
       </section>
 
-      <section className="gyoyang-section">
-        <div className="gyoyang-box">
-          <h3>필수 교양</h3>
-          <table className="gyoyang-table">
-            <tbody>
-              <tr>
-                <td>정보 소통</td>
-                <td>생애 설계</td>
-              </tr>
-              <tr>
-                <td>전공 학점</td>
-                <td>전체 학점</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div className="gyoyang-box">
-          <h3>선택필수 교양</h3>
-          <table className="gyoyang-table">
-            <tbody>
-              <tr>
-                <td>의사소통</td>
-                <td>글로벌 소통</td>
-                <td>스포츠 웰니스</td>
-              </tr>
-              <tr>
-                <td>전공 학점</td>
-                <td>전체 학점</td>
-                <td>전체 학점</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+      
 
 
       <section className="section">

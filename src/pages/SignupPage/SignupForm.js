@@ -12,6 +12,7 @@ const SignupForm = () => {
     name: '',
     studentId: '',
     major: '',
+    scdmajor: '',
   });
 
   const navigate = useNavigate();
@@ -99,7 +100,8 @@ const SignupForm = () => {
         passwordCheck: form.confirmPassword,      // ✅ 비밀번호 확인
         userName: form.name,                      // ✅ 이름
         studentNumber: form.studentId,            // ✅ 학번
-        major: form.major,                        // ✅ 전공
+        major: form.major,                        // ✅ 주전공
+        scdmajor: form.scdmajor,                  // ✅ 복수전공
       });
   
       alert("회원가입이 완료되었습니다!");
@@ -191,9 +193,19 @@ const SignupForm = () => {
         </div>
 
         <div className="form-group">
-          <label>전공 선택</label>
+          <label>주전공 선택</label>
           <select name="major" value={form.major} onChange={handleChange} required>
-            <option value="">전공을 선택하세요</option>
+            <option value="">주전공을 선택하세요</option>
+            <option value="빅데이터">빅데이터학과</option>
+            <option value="콘텐츠IT">콘텐츠IT학과</option>
+            <option value="스마트IoT">스마트IoT학과</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>복수전공 선택</label>
+          <select name="major" value={form.scdmajor} onChange={handleChange} required>
+            <option value="">복수전공을 선택하세요</option>
             <option value="빅데이터">빅데이터학과</option>
             <option value="콘텐츠IT">콘텐츠IT학과</option>
             <option value="스마트IoT">스마트IoT학과</option>
