@@ -32,6 +32,9 @@ public class UserEntity {
     @Column(name = "role_id", nullable = false)
     private Integer roleId;
 
+    @Column(name="scd_major")
+    private String scdMajor;
+
     @Builder
     public static UserEntity toUserEntity(UserDTO userDto) {
         UserEntity userEntity = new UserEntity();
@@ -42,6 +45,7 @@ public class UserEntity {
 //        userEntity.userEmail = userDto.getUserEmail();
         userEntity.studentNumber = userDto.getStudentNumber();
         userEntity.major = userDto.getMajor();
+        userEntity.scdMajor = userDto.getScdMajor();
 
         return userEntity;
     }
