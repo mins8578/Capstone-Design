@@ -17,7 +17,7 @@ function FindPasswordEmail() {
     const fullEmail = `${email}@hallym.ac.kr`;
 
     try {
-      const response = await axios.post('http://192.168.219.48:8080/api/find-send-code', {
+      const response = await axios.post('/api/find-send-code', {
         userID: fullEmail,
       });
 
