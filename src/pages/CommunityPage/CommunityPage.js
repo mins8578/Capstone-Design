@@ -1,32 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import '../../components/communitypage/communitypage.css';
 import logo from '../../asset/한림대학교 로고.png';
 import home from '../../asset/Home.png';
 import { useNavigate } from 'react-router-dom';
-import WritePostModal from '../../pages//CommunityPage/WritePostModal';
+import WritePostModal from '../../pages/CommunityPage/WritePostModal';
 
 const CommunityBoard = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchPosts = async () => {
+  const token = localStorage.getItem("token");
+
+  const fetchPosts = useCallback(async () => {
     try {
-      const res = await axios.get('/api/board');
+      const res = await axios.get('/api/board', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setPosts(res.data);
     } catch (err) {
       console.error('게시글 불러오기 실패:', err);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [fetchPosts]);
 
   const handlePostSubmit = async ({ title, content }) => {
     try {
-      await axios.post('/api/board', { title, content }, { withCredentials: true });
+      await axios.post(
+        '/api/board',
+        { title, content },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       alert('게시글이 등록되었습니다!');
       setIsModalOpen(false);
       fetchPosts();
