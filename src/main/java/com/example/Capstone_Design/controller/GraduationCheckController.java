@@ -31,6 +31,8 @@ public class GraduationCheckController {
     final GraduationCheckService graduationCheckService;
     final UserService userService;
 
+
+    //전공 총학점
     @PostMapping("/total-score")
     public ResponseEntity<Map<String, Integer>> totalSubjectScore(@AuthenticationPrincipal UserDetails userDetails) {
         Map<String, Integer> map = new HashMap<>();
@@ -50,6 +52,9 @@ public class GraduationCheckController {
 
     }
 
+
+
+    /*
     @PostMapping("/subject-score")   //수강 과목별 학점 조회 (임시코드 수정 필요)
     public ResponseEntity<Map<String, Integer>> subjectScore(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String category) {
         Map<String, Integer> map = new HashMap<>();
@@ -68,8 +73,10 @@ public class GraduationCheckController {
 
     }
 
+     */
 
-    //학생의 과의 전체 필수전공 리스트
+
+    //학생의 과의 전체 필수전공 리스트 (주전공)
     @PostMapping("/graduation-subject")
     public ResponseEntity<List<GraduationCheckDTO>> graduationSubject(@AuthenticationPrincipal UserDetails userDetails) {
 
@@ -85,7 +92,7 @@ public class GraduationCheckController {
     }
 
 
-    //학생이 수강하고 있는 과목중에서 과에 맞는 필수전공 리스트
+    //학생이 수강하고 있는 과목중에서 과에 맞는 필수전공 리스트 (주전공)
 
     @PostMapping("/graduation-check")
     public ResponseEntity<List<GraduationCheckDTO>> graduationCheck(@AuthenticationPrincipal UserDetails userDetails) {
@@ -94,6 +101,38 @@ public class GraduationCheckController {
         UserDTO user = userService.getUser(userID);
 
         String majorCode = graduationCheckService.getMajorCode(user.getMajor());
+
+        List<GraduationCheckDTO> list = graduationCheckService.graduationCheck(user.getStudentNumber(), majorCode);
+
+        return ResponseEntity.ok(list);
+    }
+
+
+    //학생의 과의 전체 필수전공 리스트 (복수 전공) 임시코드
+    @PostMapping("/graduation-subject02")
+    public ResponseEntity<List<GraduationCheckDTO>> graduationSubject02(@AuthenticationPrincipal UserDetails userDetails) {
+
+        String userID = userDetails.getUsername();
+        UserDTO user = userService.getUser(userID);
+
+        String scdMajor = user.getScdMajor();
+        String majorCode = graduationCheckService.getMajorCode(scdMajor);
+
+        List<GraduationCheckDTO> list = graduationCheckService.graduationSubject(majorCode);
+        return ResponseEntity.ok(list);
+
+    }
+
+
+    //학생이 수강하고 있는 과목중에서 과에 맞는 필수전공 리스트 (복수 전공) 임시코드
+
+    @PostMapping("/graduation-check02")
+    public ResponseEntity<List<GraduationCheckDTO>> graduationCheck02(@AuthenticationPrincipal UserDetails userDetails) {
+
+        String userID = userDetails.getUsername();
+        UserDTO user = userService.getUser(userID);
+
+        String majorCode = graduationCheckService.getMajorCode(user.getScdMajor());
 
         List<GraduationCheckDTO> list = graduationCheckService.graduationCheck(user.getStudentNumber(), majorCode);
 

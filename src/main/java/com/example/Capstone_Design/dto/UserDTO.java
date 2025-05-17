@@ -21,6 +21,7 @@ public class UserDTO {
     //    private String userEmail;
     private String studentNumber;
     private String major;
+    private String scdMajor;
 
 
     public static UserDTO toUserDTO(UserEntity userEntity) {
@@ -32,6 +33,7 @@ public class UserDTO {
 //        userDTO.setUserEmail(userEntity.getUserEmail());
         userDTO.setStudentNumber(userEntity.getStudentNumber());
         userDTO.setMajor(userEntity.getMajor());
+        userDTO.setScdMajor(userEntity.getScdMajor());
 
         return userDTO;
     }
