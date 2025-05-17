@@ -2,10 +2,13 @@ package com.example.Capstone_Design.controller;
 
 import com.example.Capstone_Design.dto.UserDTO;
 import com.example.Capstone_Design.entity.EmailAuth;
+import com.example.Capstone_Design.entity.UserEntity;
 import com.example.Capstone_Design.repository.EmailAuthRepository;
+import com.example.Capstone_Design.repository.UserRepository;
 import com.example.Capstone_Design.service.MailService;
 import com.example.Capstone_Design.service.UserService;
 import lombok.RequiredArgsConstructor;
+//import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,7 +26,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -31,7 +35,7 @@ public class UserController {
     private final UserService userService;
     private final MailService mailService;
     private final EmailAuthRepository emailAuthRepository; // ✅ 인증 DB 접근용
-
+    private final UserRepository userRepository;
 
 
     // 회원가입 페이지 출력 요청 - GetMapping으로 출력 요청 -> PostMapping에서 form에 대한 action 수행
@@ -77,6 +81,9 @@ public class UserController {
         }
 
         String code = UUID.randomUUID().toString().substring(0, 6);
+
+        log.info("✅ 생성된 인증 코드: {}", code);
+
         mailService.sendVerificationEmail(email, code);
 
         EmailAuth auth = EmailAuth.builder()
@@ -139,7 +146,12 @@ public class UserController {
         return ResponseEntity.ok(map);
     }
 
-
+    @GetMapping("/user/me")
+    public ResponseEntity<UserDTO> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
+        UserDTO userDTO = UserDTO.toUserDTO(user);
+        return ResponseEntity.ok(userDTO);
+    }
 }
 
 

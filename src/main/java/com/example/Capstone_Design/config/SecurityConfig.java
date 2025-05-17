@@ -55,6 +55,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // ✅ OPTIONS 허용
+                        .requestMatchers(HttpMethod.GET, "/api/board/**", "/api/comments/**").permitAll() // ✅ 게시글/댓글 조회는 공개
                         .requestMatchers("/api/login",
                                 "/api/register",
                                 "/api/send-code",
