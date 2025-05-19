@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import "../components/loginpage/loginpage.css";
-import hallymLogo from "../asset/한림대학교 로고2.png";
+import "../../components/loginpage/loginpage.css";
+import hallymLogo from "../../asset/한림대학교 로고2.png";
 
 const Loginpage = () => {
     const [id, setId] = useState("");

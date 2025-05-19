@@ -16,77 +16,71 @@ const GraduationCheckPage = () => {
     name: '',
     completed: false
   });
+
   const [graduationData, setGraduationData] = useState({
-    majorRequired: { status: false, subjects: [] },
+    majorRequired: { status: false, credits: 0, requiredCredits: 60, subjects: [] },
     doubleMajorRequired: { status: false, subjects: [] },
     totalCredits: { current: 0, required: 130, status: false }
   });
 
-  // 초기화 함수 - 컴포넌트 마운트 시 한 번만 실행
+  // 초기화 - 컴포넌트 마운트 시 한 번 실행
   useEffect(() => {
-    // 페이지 접근 시 인증 오류 표시 상태 초기화
     authErrorShown = false;
-    
-    // 토큰 확인
     const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다');
       navigate('/login');
       return;
     }
-    
+
     const fetchData = async () => {
-      // 사용자 정보 가져오기
       try {
+        // 사용자 정보
         const userResponse = await axios.get('/api/user/me', {
           headers: { Authorization: `Bearer ${token}` }
         });
-        
+
         setUserInfo({
           name: userResponse.data?.userName || 'OOO',
           completed: false
         });
-        
+
       } catch (error) {
-        // 인증 오류가 처음 발생한 경우에만 알림 표시
-        if (!authErrorShown && error.response && error.response.status === 401) {
+        if (!authErrorShown && error.response?.status === 401) {
           authErrorShown = true;
           alert('세션이 만료되었습니다. 다시 로그인해주세요.');
           localStorage.removeItem('token');
           navigate('/login');
         }
-        return; // 인증 오류시 추가 API 호출 중단
+        return;
       }
-      
-      // 졸업 정보 가져오기 (위에서 인증 오류가 없는 경우에만 실행)
+
       try {
-        const gradResponse = await axios.get('/api/graduation-check', {
+        // 졸업 진단 정보
+        const gradResponse = await axios.post('/api/graduation-check', {}, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        
+
         if (gradResponse.data) {
           setGraduationData(gradResponse.data);
         }
       } catch (error) {
-        // 인증 오류가 아닌 경우에만 별도 처리
-        if (error.response && error.response.status !== 401) {
+        if (error.response?.status !== 401) {
           console.error('졸업 데이터 로딩 실패:', error);
         }
       }
     };
-    
+
     fetchData();
   }, [navigate]);
 
-  // 모달이 닫힐 때 데이터 다시 불러오기
+  // 모달 닫힘 후 데이터 갱신
   const handleModalClose = () => {
     setIsModalOpen(false);
-    
-    // 데이터 다시 불러오기
     const token = localStorage.getItem('token');
     if (!token) return;
-    
-    axios.get('/api/graduation-check', {
+
+    axios.post('/api/graduation-check', {}, {
       headers: { Authorization: `Bearer ${token}` }
     }).then(response => {
       if (response.data) {
@@ -105,12 +99,9 @@ const GraduationCheckPage = () => {
         <img src={home} alt="Home" className="home-icon" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
       </header>
       <hr className="divider" />
-      
+
       <div className="button-wrapper">
-        <button
-          className="subject-button"
-          onClick={() => setIsModalOpen(true)}
-        >
+        <button className="subject-button" onClick={() => setIsModalOpen(true)}>
           현재 이수 과목 등록/수정
         </button>
       </div>
@@ -176,23 +167,24 @@ const GraduationCheckPage = () => {
             </tr>
           </thead>
           <tbody>
-            {graduationData.majorRequired.subjects && graduationData.majorRequired.subjects.map((subject, index) => (
-              <tr key={index}>
-                <td>{subject.code || '-'}</td>
-                <td>{subject.name}</td>
-                <td>{subject.type || '전필'}</td>
-                <td className={subject.completed ? "status-pass" : "status-fail"}>
-                  {subject.completed ? '수강완료' : '미수강'}
-                </td>
-              </tr>
-            ))}
-            {(!graduationData.majorRequired.subjects || graduationData.majorRequired.subjects.length === 0) &&
-              [1, 2, 3, 4, 5, 6].map(i => (
+            {graduationData.majorRequired.subjects?.length > 0 ? (
+              graduationData.majorRequired.subjects.map((subject, index) => (
+                <tr key={index}>
+                  <td>{subject.code || '-'}</td>
+                  <td>{subject.name}</td>
+                  <td>{subject.type || '전필'}</td>
+                  <td className={subject.completed ? "status-pass" : "status-fail"}>
+                    {subject.completed ? '수강완료' : '미수강'}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              Array.from({ length: 6 }).map((_, i) => (
                 <tr key={i}>
                   <td>-</td><td>과목 정보 없음</td><td>-</td><td>-</td>
                 </tr>
               ))
-            }
+            )}
           </tbody>
         </table>
       </section>
@@ -206,23 +198,24 @@ const GraduationCheckPage = () => {
             </tr>
           </thead>
           <tbody>
-            {graduationData.doubleMajorRequired.subjects && graduationData.doubleMajorRequired.subjects.map((subject, index) => (
-              <tr key={index}>
-                <td>{subject.code || '-'}</td>
-                <td>{subject.name}</td>
-                <td>{subject.type || '전필'}</td>
-                <td className={subject.completed ? "status-pass" : "status-fail"}>
-                  {subject.completed ? '수강완료' : '미수강'}
-                </td>
-              </tr>
-            ))}
-            {(!graduationData.doubleMajorRequired.subjects || graduationData.doubleMajorRequired.subjects.length === 0) &&
-              [1, 2, 3, 4, 5, 6].map(i => (
+            {graduationData.doubleMajorRequired.subjects?.length > 0 ? (
+              graduationData.doubleMajorRequired.subjects.map((subject, index) => (
+                <tr key={index}>
+                  <td>{subject.code || '-'}</td>
+                  <td>{subject.name}</td>
+                  <td>{subject.type || '전필'}</td>
+                  <td className={subject.completed ? "status-pass" : "status-fail"}>
+                    {subject.completed ? '수강완료' : '미수강'}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              Array.from({ length: 6 }).map((_, i) => (
                 <tr key={i}>
                   <td>-</td><td>과목 정보 없음</td><td>-</td><td>-</td>
                 </tr>
               ))
-            }
+            )}
           </tbody>
         </table>
       </section>

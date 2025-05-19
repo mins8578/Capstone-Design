@@ -25,13 +25,14 @@ const BoardDetailPage = () => {
 
   // ✅ 게시글, 댓글, 로그인 사용자 정보 가져오기
   useEffect(() => {
-    axios.get('/api/board')
+    axios.get(`/api/board/${id}`)
       .then(res => {
-        const found = res.data.find(item => item.id === parseInt(id));
-        if (found) setPost(found);
-        else alert("게시글을 찾을 수 없습니다.");
+        setPost(res.data);
       })
-      .catch(err => console.error('게시글 불러오기 실패:', err));
+      .catch(err => {
+        console.error('게시글 불러오기 실패:', err);
+        alert("게시글을 찾을 수 없습니다.");
+      });
 
     fetchComments();
 

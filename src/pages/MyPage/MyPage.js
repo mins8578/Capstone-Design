@@ -1,7 +1,7 @@
 import React from "react";
-import "../components/mypage/mypage.css";
-import hallymLogo from "../asset/한림대학교 로고.png";
-import home from "../asset/Home.png";
+import "../../components/mypage/mypage.css";
+import hallymLogo from "../../asset/한림대학교 로고.png";
+import home from "../../asset/Home.png";
 import { useNavigate } from 'react-router-dom';
 
 function MyPage() {

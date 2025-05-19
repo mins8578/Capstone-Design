@@ -1,11 +1,11 @@
 import React from 'react';
-import Header from '../components/mainpage/header';
-import NoticeBox from '../components/mainpage/noticebox';
-import bgImage from '../asset/한림대학교.jpg';
+import Header from '../../components/mainpage/header';
+import NoticeBox from '../../components/mainpage/noticebox';
+import bgImage from '../../asset/한림대학교.jpg';
 import { useNavigate } from 'react-router-dom';
 
 
-function Mainpage() {
+function MainPage() {
   const navigate = useNavigate();
   return (
     <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
