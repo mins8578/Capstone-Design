@@ -93,7 +93,7 @@ const SignupForm = () => {
     setIsSubmitting(true);
   
     try {
-      await axios.post("api/register", {
+      await axios.post("/api/register", {
         userID: `${form.email}@hallym.ac.kr`,     // 이메일
         pwd: form.password,                       // 비밀번호
         passwordCheck: form.confirmPassword,      // 비밀번호 확인

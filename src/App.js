@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Mainpage from './pages/Mainpage';  // 메인 페이지
-import Loginpage from './pages/Loginpage';  // 로그인 페이지
+import Mainpage from './pages/MainPage/MainPage';  // 메인 페이지
+import Loginpage from './pages/LoginPage/Loginpage';  // 로그인 페이지
 import SignupTerms from './pages/SignupPage/SignupTerms';   // 약관 동의 페이지
 import SignupForm from './pages/SignupPage/SignupForm';     // 회원정보 입력 페이지
 import GraduationCheckPage from './pages/GraduationCheckPage/GraduationCheckPage';    // 졸업자가진단 페이지
 import FindPasswordEmail from './pages/FindPasswordPage/FindPasswordEmail';   // 비밀번호찾기 이메일 입력 페이지
 import FindPasswordCode from './pages/FindPasswordPage/FindPasswordCode';   // 비밀번호찾기 이메일 코드 페이지
 import ResetPassword from './pages/FindPasswordPage/ResetPassword';   // 비밀번호찾기 새비밀번호 생성 페이지
-import MyPage from './pages/MyPage';  // 나의 정보 페이지
+import MyPage from './pages/MyPage/MyPage';  // 나의 정보 페이지
 import CommunityBoard from './pages/CommunityPage/CommunityPage';   // 커뮤니티 게시판 페이지
 import BoardDetailPage from './pages/CommunityPage/BoardDetailPage';   // 게시글 페이지
 
