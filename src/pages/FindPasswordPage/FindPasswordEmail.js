@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../../components/findpasswordpage/FindPasswordEmail.css';
-import hallymLogo from '../../asset/한림대학교 로고2.jpg';
+import '../../components/findpasswordpage/FindPasswordEmail.css'; // 공통 CSS로 변경 예정
+import hallymLogo from '../../asset/한림대학교 로고2.png';
 
 function FindPasswordEmail() {
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleNext = async () => {
@@ -17,11 +18,11 @@ function FindPasswordEmail() {
     const fullEmail = `${email}@hallym.ac.kr`;
 
     try {
-      const response = await axios.post('http://192.168.219.48:8080/api/find-send-code', {
+      setIsLoading(true);
+      const response = await axios.post('/api/find-send-code', {
         userID: fullEmail,
       });
 
-      // ✅ success 값 기준으로 처리
       if (response.data.success === true) {
         alert('인증코드를 이메일로 전송했습니다.');
         sessionStorage.setItem("email", fullEmail);
@@ -32,25 +33,43 @@ function FindPasswordEmail() {
     } catch (error) {
       console.error(error);
       alert('서버와의 연결 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleNext();
     }
   };
 
   return (
-    <div className="page-container">
-      <div className="top-logo">
+    <div className="password-page-container">
+      <div className="password-top-logo">
         <img src={hallymLogo} alt="한림대학교 로고" />
       </div>
 
-      <div className="form-area">
-        <p className="label">학번을 입력해주세요.</p>
+      <div className="password-form-area">
+        <p className="password-label">비밀번호 찾기</p>
+        <div className="email-description">
+          가입 시 등록한 학번을 입력하시면 해당 이메일로 인증코드를 보내드립니다.
+        </div>
         <input
           type="text"
           className="email-input"
-          placeholder="ex) 2020XXXX"
+          placeholder="학번 입력 (ex: 2020XXXX)"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          onKeyPress={handleKeyPress}
         />
-        <button className="next-button" onClick={handleNext}>다음</button>
+        <button 
+          className="next-button" 
+          onClick={handleNext}
+          disabled={isLoading}
+        >
+          {isLoading ? '처리 중...' : '다음'}
+        </button>
       </div>
     </div>
   );

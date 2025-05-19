@@ -1,13 +1,101 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../components/graduationcheckpage/graduationcheck.css';
 import SubjectModal from '../../pages/GraduationCheckPage/SubjectModal';
 import logo from '../../asset/한림대학교 로고.png';
 import home from '../../asset/Home.png';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+// 인증 관련 오류를 추적하기 위한 전역 변수
+let authErrorShown = false;
 
 const GraduationCheckPage = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    name: '',
+    completed: false
+  });
+  const [graduationData, setGraduationData] = useState({
+    majorRequired: { status: false, subjects: [] },
+    doubleMajorRequired: { status: false, subjects: [] },
+    totalCredits: { current: 0, required: 130, status: false }
+  });
+
+  // 초기화 함수 - 컴포넌트 마운트 시 한 번만 실행
+  useEffect(() => {
+    // 페이지 접근 시 인증 오류 표시 상태 초기화
+    authErrorShown = false;
+    
+    // 토큰 확인
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다');
+      //navigate('/login');
+      return;
+    }
+    
+    const fetchData = async () => {
+      // 사용자 정보 가져오기
+      try {
+        const userResponse = await axios.get('/api/user/me', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        setUserInfo({
+          name: userResponse.data?.userName || 'OOO',
+          completed: false
+        });
+        
+      } catch (error) {
+        // 인증 오류가 처음 발생한 경우에만 알림 표시
+        if (!authErrorShown && error.response && error.response.status === 401) {
+          authErrorShown = true;
+          alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
+        return; // 인증 오류시 추가 API 호출 중단
+      }
+      
+      // 졸업 정보 가져오기 (위에서 인증 오류가 없는 경우에만 실행)
+      try {
+        const gradResponse = await axios.get('/api/graduation-check', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (gradResponse.data) {
+          setGraduationData(gradResponse.data);
+        }
+      } catch (error) {
+        // 인증 오류가 아닌 경우에만 별도 처리
+        if (error.response && error.response.status !== 401) {
+          console.error('졸업 데이터 로딩 실패:', error);
+        }
+      }
+    };
+    
+    fetchData();
+  }, [navigate]);
+
+  // 모달이 닫힐 때 데이터 다시 불러오기
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    
+    // 데이터 다시 불러오기
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    
+    axios.get('/api/graduation-check', {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(response => {
+      if (response.data) {
+        setGraduationData(response.data);
+      }
+    }).catch(error => {
+      console.error('데이터 갱신 실패:', error);
+    });
+  };
 
   return (
     <div className="container">
@@ -17,29 +105,44 @@ const GraduationCheckPage = () => {
         <img src={home} alt="Home" className="home-icon" onClick={() => navigate('/')} style={{ cursor: 'pointer' }} />
       </header>
       <hr className="divider" />
-      <section className="section">
+      
+      <div className="button-wrapper">
         <button
           className="subject-button"
           onClick={() => setIsModalOpen(true)}
         >
           현재 이수 과목 등록/수정
         </button>
-      </section>
+      </div>
 
-      {isModalOpen && <SubjectModal onClose={() => setIsModalOpen(false)} />}
-
+      {isModalOpen && <SubjectModal onClose={handleModalClose} />}
 
       <section className="section">
-        <h2>XXX님의 현재 이수현황!</h2>
+        <h2>{userInfo.name}님의 현재 이수현황!</h2>
         <table className="check-table strong-border">
           <tbody>
             <tr className="gray-row">
               <td>졸업 요건 리스트</td>
-              <td>충족? 불충족?</td>
+              <td>충족 여부</td>
             </tr>
-            <tr><td>주전공 필수</td><td>충족? 불충족?</td></tr>
-            <tr><td>복수전공 필수</td><td>충족? 불충족?</td></tr>
-            <tr><td>전체취득 학점</td><td>충족? 불충족?</td></tr>
+            <tr>
+              <td>주전공 필수</td>
+              <td className={graduationData.majorRequired.status ? "status-pass" : "status-fail"}>
+                {graduationData.majorRequired.status ? "충족" : "불충족"}
+              </td>
+            </tr>
+            <tr>
+              <td>복수전공 필수</td>
+              <td className={graduationData.doubleMajorRequired.status ? "status-pass" : "status-fail"}>
+                {graduationData.doubleMajorRequired.status ? "충족" : "불충족"}
+              </td>
+            </tr>
+            <tr>
+              <td>전체취득 학점</td>
+              <td className={graduationData.totalCredits.status ? "status-pass" : "status-fail"}>
+                {graduationData.totalCredits.status ? "충족" : "불충족"}
+              </td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -53,15 +156,16 @@ const GraduationCheckPage = () => {
               <td>전체 학점</td>
             </tr>
             <tr>
-              <td>전공 학점</td>
-              <td>전체 학점</td>
+              <td className="credit-value">
+                {graduationData.majorRequired.credits || 0} / {graduationData.majorRequired.requiredCredits || 60}
+              </td>
+              <td className="credit-value">
+                {graduationData.totalCredits.current || 0} / {graduationData.totalCredits.required || 130}
+              </td>
             </tr>
           </tbody>
         </table>
       </section>
-
-      
-
 
       <section className="section">
         <h2>주전공 필수</h2>
@@ -72,11 +176,23 @@ const GraduationCheckPage = () => {
             </tr>
           </thead>
           <tbody>
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <tr key={i}>
-                <td>1234{i}</td><td>알고리즘</td><td>전필</td><td>수강완료</td>
+            {graduationData.majorRequired.subjects && graduationData.majorRequired.subjects.map((subject, index) => (
+              <tr key={index}>
+                <td>{subject.code || '-'}</td>
+                <td>{subject.name}</td>
+                <td>{subject.type || '전필'}</td>
+                <td className={subject.completed ? "status-pass" : "status-fail"}>
+                  {subject.completed ? '수강완료' : '미수강'}
+                </td>
               </tr>
             ))}
+            {(!graduationData.majorRequired.subjects || graduationData.majorRequired.subjects.length === 0) &&
+              [1, 2, 3, 4, 5, 6].map(i => (
+                <tr key={i}>
+                  <td>-</td><td>과목 정보 없음</td><td>-</td><td>-</td>
+                </tr>
+              ))
+            }
           </tbody>
         </table>
       </section>
@@ -90,11 +206,23 @@ const GraduationCheckPage = () => {
             </tr>
           </thead>
           <tbody>
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <tr key={i}>
-                <td>1234{i}</td><td>알고리즘</td><td>전필</td><td>수강완료</td>
+            {graduationData.doubleMajorRequired.subjects && graduationData.doubleMajorRequired.subjects.map((subject, index) => (
+              <tr key={index}>
+                <td>{subject.code || '-'}</td>
+                <td>{subject.name}</td>
+                <td>{subject.type || '전필'}</td>
+                <td className={subject.completed ? "status-pass" : "status-fail"}>
+                  {subject.completed ? '수강완료' : '미수강'}
+                </td>
               </tr>
             ))}
+            {(!graduationData.doubleMajorRequired.subjects || graduationData.doubleMajorRequired.subjects.length === 0) &&
+              [1, 2, 3, 4, 5, 6].map(i => (
+                <tr key={i}>
+                  <td>-</td><td>과목 정보 없음</td><td>-</td><td>-</td>
+                </tr>
+              ))
+            }
           </tbody>
         </table>
       </section>
