@@ -38,6 +38,6 @@ out/
 
 
 # Gradle 빌드 캐시 & 산출물 제외
-.gradle/
-build/
-*.jar
+#.gradle/
+#build/
+#*.jar
