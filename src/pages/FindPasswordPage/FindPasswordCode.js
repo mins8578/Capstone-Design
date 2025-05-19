@@ -22,8 +22,9 @@ function FindPasswordCode() {
       return;
     }
     try {
+
       setIsLoading(true);
-      const response = await axios.post('http://192.168.219.48:8080/api/password-verify-code', {
+      const response = await axios.post('/api/password-verify-code', {
         email: email,
         code: code,
       });
