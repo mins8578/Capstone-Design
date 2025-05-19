@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../components/communitypage/boarddetailpage.css';
+import { FaHeart, FaRegHeart } from 'react-icons/fa'; // 하트 아이콘 추가
 
 const BoardDetailPage = () => {
   const { id } = useParams(); // 게시글 ID
@@ -12,6 +13,7 @@ const BoardDetailPage = () => {
   const [editingId, setEditingId] = useState(null);
   const [editContent, setEditContent] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
+  const [liked, setLiked] = useState(false); // 좋아요 상태 추가
 
   // ✅ 댓글 불러오는 함수
   const fetchComments = useCallback(async () => {
@@ -23,9 +25,16 @@ const BoardDetailPage = () => {
     }
   }, [id]);
 
-  // ✅ 게시글, 댓글, 사용자 정보 가져오기
+  // ✅ 게시글, 댓글, 사용자 정보, 좋아요 상태 가져오기
   useEffect(() => {
-    axios.get(`/api/board/${id}`)
+    const token = localStorage.getItem('token');
+    
+    // 게시글 정보 가져오기
+    axios.get(`/api/board/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(res => {
         setPost(res.data);
       })
@@ -34,12 +43,67 @@ const BoardDetailPage = () => {
         alert("게시글을 찾을 수 없습니다.");
       });
 
+    // 댓글 가져오기
     fetchComments();
 
-    axios.get('/api/user/me', { withCredentials: true })
+    // 사용자 정보 가져오기
+    axios.get('/api/user/me', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(res => setCurrentUser(res.data.userID))
       .catch(err => console.error('사용자 정보 불러오기 실패:', err));
+    
+    // 좋아요 상태 확인
+    axios.get(`/api/board/${id}/like`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        setLiked(res.data.liked);
+      })
+      .catch(err => {
+        console.error('좋아요 상태 확인 실패:', err);
+      });
   }, [id, fetchComments]);
+
+  // ✅ 좋아요 토글 함수 추가
+  const toggleLike = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (liked) {
+        // 좋아요 취소
+        await axios.delete(`/api/board/${id}/like`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setLiked(false);
+        setPost(prev => ({
+          ...prev,
+          likeCount: prev.likeCount - 1
+        }));
+      } else {
+        // 좋아요 추가
+        await axios.post(`/api/board/${id}/like`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setLiked(true);
+        setPost(prev => ({
+          ...prev,
+          likeCount: prev.likeCount + 1
+        }));
+      }
+    } catch (err) {
+      console.error('좋아요 작업 실패:', err);
+      alert('좋아요 처리 중 오류가 발생했습니다.');
+    }
+  };
 
   // ✅ 댓글 등록
   const handleCommentSubmit = async () => {
@@ -117,15 +181,33 @@ const BoardDetailPage = () => {
 
   return (
     <div className="detail-container">
-      <button onClick={() => navigate(-1)}>← 목록으로</button>
-      <h2>{post.title}</h2>
-      <p className="meta">👤 {post.author} | 🕒 {new Date(post.createdAt).toLocaleString()}</p>
-      <p className="board-content">{post.content}</p>
+      <button onClick={() => navigate(-1)} className="back-button">← 목록으로</button>
+      
+      <div className="post-header">
+        <h2>{post.title}</h2>
+        <div className="post-meta">
+          <p className="author-info">👤 {post.author} | 🕒 {new Date(post.createdAt).toLocaleString()}</p>
+          
+          {/* 좋아요 버튼 추가 */}
+          <div className="like-container">
+            <button 
+              className={`like-button ${liked ? 'liked' : ''}`} 
+              onClick={toggleLike}
+            >
+              {liked ? <FaHeart color="#ff4a4a" /> : <FaRegHeart />} {post.likeCount}
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div className="post-content">
+        <p className="board-content">{post.content}</p>
+      </div>
 
       <hr />
-      <h3>💬 댓글</h3>
+      <h3>💬 댓글 ({comments.length})</h3>
       <div className="comments">
-        {comments.length === 0 && <p>댓글이 없습니다.</p>}
+        {comments.length === 0 && <p className="no-comments">댓글이 없습니다.</p>}
         {comments.map(c => (
           <div key={c.id} className="comment">
             {editingId === c.id ? (
@@ -133,20 +215,25 @@ const BoardDetailPage = () => {
                 <textarea
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
+                  className="edit-textarea"
                 />
-                <button onClick={() => handleEditSubmit(c.id)}>확인</button>
-                <button onClick={() => setEditingId(null)}>취소</button>
+                <div className="comment-edit-buttons">
+                  <button onClick={() => handleEditSubmit(c.id)} className="confirm-button">확인</button>
+                  <button onClick={() => setEditingId(null)} className="cancel-button">취소</button>
+                </div>
               </>
             ) : (
               <>
-                <p><strong>{c.author}</strong> | {new Date(c.createdAt).toLocaleString()}</p>
-                <p>{c.content}</p>
-                {currentUser === c.author && (
-                  <>
-                    <button onClick={() => startEdit(c.id, c.content)}>✏️ 수정</button>
-                    <button onClick={() => handleDelete(c.id)}>🗑️ 삭제</button>
-                  </>
-                )}
+                <div className="comment-header">
+                  <p><strong>{c.author}</strong> | {new Date(c.createdAt).toLocaleString()}</p>
+                  {currentUser === c.author && (
+                    <div className="comment-actions">
+                      <button onClick={() => startEdit(c.id, c.content)} className="edit-button">✏️ 수정</button>
+                      <button onClick={() => handleDelete(c.id)} className="delete-button">🗑️ 삭제</button>
+                    </div>
+                  )}
+                </div>
+                <p className="comment-content">{c.content}</p>
               </>
             )}
           </div>
@@ -159,8 +246,9 @@ const BoardDetailPage = () => {
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="댓글을 입력하세요"
           rows={3}
+          className="comment-textarea"
         />
-        <button onClick={handleCommentSubmit}>등록</button>
+        <button onClick={handleCommentSubmit} className="submit-button">등록</button>
       </div>
     </div>
   );
