@@ -13,7 +13,7 @@ const BoardDetailPage = () => {
   const [editContent, setEditContent] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
 
-  // ✅ 댓글 불러오는 함수 (useCallback으로 감쌈)
+  // ✅ 댓글 불러오는 함수
   const fetchComments = useCallback(async () => {
     try {
       const res = await axios.get(`/api/comments/board/${id}`);
@@ -23,7 +23,7 @@ const BoardDetailPage = () => {
     }
   }, [id]);
 
-  // ✅ 게시글, 댓글, 로그인 사용자 정보 가져오기
+  // ✅ 게시글, 댓글, 사용자 정보 가져오기
   useEffect(() => {
     axios.get(`/api/board/${id}`)
       .then(res => {
@@ -74,6 +74,8 @@ const BoardDetailPage = () => {
   // ✅ 댓글 수정 완료
   const handleEditSubmit = async (commentId) => {
     try {
+      const token = localStorage.getItem('token');
+
       await axios.put(
         `/api/comments/${commentId}`,
         { content: editContent },
@@ -97,6 +99,8 @@ const BoardDetailPage = () => {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
 
     try {
+      const token = localStorage.getItem('token');
+
       await axios.delete(`/api/comments/${commentId}`, {
         headers: {
           Authorization: `Bearer ${token}`
