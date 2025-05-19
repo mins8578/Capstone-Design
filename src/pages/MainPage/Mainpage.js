@@ -5,7 +5,7 @@ import bgImage from '../../asset/한림대학교.jpg';
 import { useNavigate } from 'react-router-dom';
 
 
-function MainPage() {
+function Mainpage() {
   const navigate = useNavigate();
   return (
     <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
@@ -120,4 +120,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export default Mainpage;

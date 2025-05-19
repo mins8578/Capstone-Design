@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Mainpage from './pages/MainPage/MainPage';  // 메인 페이지
+import Mainpage from './pages/MainPage/Mainpage';   // 메인 페이지
 import Loginpage from './pages/LoginPage/Loginpage';  // 로그인 페이지
 import SignupTerms from './pages/SignupPage/SignupTerms';   // 약관 동의 페이지
 import SignupForm from './pages/SignupPage/SignupForm';     // 회원정보 입력 페이지
