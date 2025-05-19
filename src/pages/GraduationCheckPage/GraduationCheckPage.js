@@ -6,24 +6,25 @@ import home from '../../asset/Home.png';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-// 인증 관련 오류를 추적하기 위한 전역 변수
 let authErrorShown = false;
 
 const GraduationCheckPage = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userInfo, setUserInfo] = useState({
-    name: '',
-    completed: false
-  });
+  const [userInfo, setUserInfo] = useState({ name: '', completed: false });
+  const [majorSubjects, setMajorSubjects] = useState([]);
+  const [doubleMajorSubjects, setDoubleMajorSubjects] = useState([]);
 
-  const [graduationData, setGraduationData] = useState({
-    majorRequired: { status: false, credits: 0, requiredCredits: 60, subjects: [] },
-    doubleMajorRequired: { status: false, subjects: [] },
-    totalCredits: { current: 0, required: 130, status: false }
-  });
+  // 과목별 취득 학점 (3학점 기준)
+  const getCredits = subjects => subjects.filter(s => s.completed).length * 3;
 
-  // 초기화 - 컴포넌트 마운트 시 한 번 실행
+  const majorCredits = getCredits(majorSubjects);
+  const doubleMajorCredits = getCredits(doubleMajorSubjects);
+
+  const requiredCredits = 60;
+  const isMajorRequirementMet = majorSubjects.length > 0 && majorSubjects.every(s => s.completed);
+  const isDoubleMajorRequirementMet = doubleMajorSubjects.length > 0 && doubleMajorSubjects.every(s => s.completed);
+
   useEffect(() => {
     authErrorShown = false;
     const token = localStorage.getItem('token');
@@ -35,38 +36,26 @@ const GraduationCheckPage = () => {
 
     const fetchData = async () => {
       try {
-        // 사용자 정보
-        const userResponse = await axios.get('/api/user/me', {
+        const userRes = await axios.get('/api/user/me', {
           headers: { Authorization: `Bearer ${token}` }
         });
+        setUserInfo({ name: userRes.data?.userName || 'OOO', completed: false });
 
-        setUserInfo({
-          name: userResponse.data?.userName || 'OOO',
-          completed: false
-        });
+        const [majorRes, doubleMajorRes] = await Promise.all([
+          axios.post('/api/graduation-check', {}, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.post('/api/graduation-check02', {}, { headers: { Authorization: `Bearer ${token}` } }),
+        ]);
 
+        setMajorSubjects(Array.isArray(majorRes.data) ? majorRes.data : []);
+        setDoubleMajorSubjects(Array.isArray(doubleMajorRes.data) ? doubleMajorRes.data : []);
       } catch (error) {
         if (!authErrorShown && error.response?.status === 401) {
           authErrorShown = true;
           alert('세션이 만료되었습니다. 다시 로그인해주세요.');
           localStorage.removeItem('token');
           navigate('/login');
-        }
-        return;
-      }
-
-      try {
-        // 졸업 진단 정보
-        const gradResponse = await axios.post('/api/graduation-check', {}, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        if (gradResponse.data) {
-          setGraduationData(gradResponse.data);
-        }
-      } catch (error) {
-        if (error.response?.status !== 401) {
-          console.error('졸업 데이터 로딩 실패:', error);
+        } else {
+          console.error('데이터 로딩 실패:', error);
         }
       }
     };
@@ -74,18 +63,17 @@ const GraduationCheckPage = () => {
     fetchData();
   }, [navigate]);
 
-  // 모달 닫힘 후 데이터 갱신
   const handleModalClose = () => {
     setIsModalOpen(false);
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    axios.post('/api/graduation-check', {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    }).then(response => {
-      if (response.data) {
-        setGraduationData(response.data);
-      }
+    Promise.all([
+      axios.post('/api/graduation-check', {}, { headers: { Authorization: `Bearer ${token}` } }),
+      axios.post('/api/graduation-check02', {}, { headers: { Authorization: `Bearer ${token}` } }),
+    ]).then(([majorRes, doubleMajorRes]) => {
+      setMajorSubjects(Array.isArray(majorRes.data) ? majorRes.data : []);
+      setDoubleMajorSubjects(Array.isArray(doubleMajorRes.data) ? doubleMajorRes.data : []);
     }).catch(error => {
       console.error('데이터 갱신 실패:', error);
     });
@@ -118,20 +106,14 @@ const GraduationCheckPage = () => {
             </tr>
             <tr>
               <td>주전공 필수</td>
-              <td className={graduationData.majorRequired.status ? "status-pass" : "status-fail"}>
-                {graduationData.majorRequired.status ? "충족" : "불충족"}
+              <td className={isMajorRequirementMet ? "status-pass" : "status-fail"}>
+                {isMajorRequirementMet ? "충족" : "불충족"}
               </td>
             </tr>
             <tr>
               <td>복수전공 필수</td>
-              <td className={graduationData.doubleMajorRequired.status ? "status-pass" : "status-fail"}>
-                {graduationData.doubleMajorRequired.status ? "충족" : "불충족"}
-              </td>
-            </tr>
-            <tr>
-              <td>전체취득 학점</td>
-              <td className={graduationData.totalCredits.status ? "status-pass" : "status-fail"}>
-                {graduationData.totalCredits.status ? "충족" : "불충족"}
+              <td className={isDoubleMajorRequirementMet ? "status-pass" : "status-fail"}>
+                {isDoubleMajorRequirementMet ? "충족" : "불충족"}
               </td>
             </tr>
           </tbody>
@@ -139,20 +121,16 @@ const GraduationCheckPage = () => {
       </section>
 
       <section className="section">
-        <h2>현재 취득 학점(전공, 전체)</h2>
+        <h2>현재 취득 학점(전공, 복수전공)</h2>
         <table className="credit-table">
           <tbody>
             <tr className="gray-row">
               <td>전공 학점</td>
-              <td>전체 학점</td>
+              <td>복수전공 학점</td>
             </tr>
             <tr>
-              <td className="credit-value">
-                {graduationData.majorRequired.credits || 0} / {graduationData.majorRequired.requiredCredits || 60}
-              </td>
-              <td className="credit-value">
-                {graduationData.totalCredits.current || 0} / {graduationData.totalCredits.required || 130}
-              </td>
+              <td className="credit-value">{majorCredits} / {requiredCredits}</td>
+              <td className="credit-value">{doubleMajorCredits} / {requiredCredits}</td>
             </tr>
           </tbody>
         </table>
@@ -167,8 +145,8 @@ const GraduationCheckPage = () => {
             </tr>
           </thead>
           <tbody>
-            {graduationData.majorRequired.subjects?.length > 0 ? (
-              graduationData.majorRequired.subjects.map((subject, index) => (
+            {majorSubjects.length > 0 ? (
+              majorSubjects.map((subject, index) => (
                 <tr key={index}>
                   <td>{subject.code || '-'}</td>
                   <td>{subject.name}</td>
@@ -198,8 +176,8 @@ const GraduationCheckPage = () => {
             </tr>
           </thead>
           <tbody>
-            {graduationData.doubleMajorRequired.subjects?.length > 0 ? (
-              graduationData.doubleMajorRequired.subjects.map((subject, index) => (
+            {doubleMajorSubjects.length > 0 ? (
+              doubleMajorSubjects.map((subject, index) => (
                 <tr key={index}>
                   <td>{subject.code || '-'}</td>
                   <td>{subject.name}</td>

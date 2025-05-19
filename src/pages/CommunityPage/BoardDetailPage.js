@@ -46,10 +46,16 @@ const BoardDetailPage = () => {
     if (!newComment.trim()) return alert("댓글을 입력하세요.");
 
     try {
+      const token = localStorage.getItem('token');
+
       await axios.post(
         `/api/comments/board/${id}`,
         { content: newComment },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
       );
       setNewComment('');
       fetchComments();
@@ -71,7 +77,11 @@ const BoardDetailPage = () => {
       await axios.put(
         `/api/comments/${commentId}`,
         { content: editContent },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
       );
       setEditingId(null);
       setEditContent('');
@@ -87,7 +97,11 @@ const BoardDetailPage = () => {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
 
     try {
-      await axios.delete(`/api/comments/${commentId}`, { withCredentials: true });
+      await axios.delete(`/api/comments/${commentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       fetchComments();
     } catch (err) {
       alert('댓글 삭제 실패');
