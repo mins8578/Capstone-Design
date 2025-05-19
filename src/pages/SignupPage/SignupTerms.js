@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import hallymLogo from '../../asset/한림대학교 로고2.jpg';
 import "../../components/signuppage/signupterms.css";
+import hallymLogo from '../../asset/한림대학교 로고2.png';
 
 
 const SignupTerms = () => {
@@ -19,18 +19,23 @@ const SignupTerms = () => {
   
     return (
       <div className="terms-container">
-        <img src={hallymLogo} alt="로고" className="signupterms-logo" />
+        <img src={hallymLogo} alt="한림대학교 로고" className="signupterms-logo" />
   
-        <div className="terms-section">
-          <label>
-            <input
-              type="checkbox"
-              checked={agreeTerms}
-              onChange={() => setAgreeTerms(!agreeTerms)}
-            />
-            <strong>[필수]</strong> 이용약관
-          </label>
-          <textarea readOnly value={`[이용약관]
+        <div className="terms-form-area">
+          <h2 className="terms-title">회원가입을 위한 약관 동의</h2>
+          
+          <div className="terms-section">
+            <label>
+              <input
+                type="checkbox"
+                checked={agreeTerms}
+                onChange={() => setAgreeTerms(!agreeTerms)}
+              />
+              <div>
+                <strong>[필수]</strong> 이용약관
+              </div>
+            </label>
+            <textarea readOnly value={`[이용약관]
 
 제1조 목적
 본 약관은 한림대학교 소프트웨어학부 홈페이지의 이용과 관련된 조건 및 절차를 규정함을 목적으로 합니다.
@@ -52,18 +57,20 @@ const SignupTerms = () => {
 
 제6조 준거법
 본 약관은 대한민국 법률에 따릅니다.`} />
-        </div>
-  
-        <div className="terms-section">
-          <label>
-            <input
-              type="checkbox"
-              checked={agreePrivacy}
-              onChange={() => setAgreePrivacy(!agreePrivacy)}
-            />
-            <strong>[필수]</strong> 개인정보 수집 및 이용
-          </label>
-          <textarea readOnly value={`[개인정보 수집 및 이용 동의서]
+          </div>
+      
+          <div className="terms-section">
+            <label>
+              <input
+                type="checkbox"
+                checked={agreePrivacy}
+                onChange={() => setAgreePrivacy(!agreePrivacy)}
+              />
+              <div>
+                <strong>[필수]</strong> 개인정보 수집 및 이용
+              </div>
+            </label>
+            <textarea readOnly value={`[개인정보 수집 및 이용 동의서]
 
 1. 수집 항목
 - 필수: 이름, 학번, 이메일, 비밀번호, 전공
@@ -81,15 +88,16 @@ const SignupTerms = () => {
 
 5. 기타
 - 수집된 정보는 외부에 제공되지 않으며, 안전한 방법으로 보호됩니다.`} />
+          </div>
+      
+          <button
+            className="signup-next-button"
+            onClick={handleNext}
+            disabled={!(agreeTerms && agreePrivacy)}
+          >
+            다음
+          </button>
         </div>
-  
-        <button
-          className="next-button"
-          onClick={handleNext}
-          disabled={!(agreeTerms && agreePrivacy)}
-        >
-          다음
-        </button>
       </div>
     );
   };
