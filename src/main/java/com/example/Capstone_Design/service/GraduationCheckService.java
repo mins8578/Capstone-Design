@@ -61,7 +61,8 @@ public class GraduationCheckService {
                         dto.getSubjectCode(),
                         dto.getScore(),
                         subjectCodes.contains(dto.getSubjectCode())
-                )).collect(Collectors.toList());
+                )).distinct()
+        .collect(Collectors.toList());
 
         return list;
 

@@ -195,18 +195,12 @@ public class GraduationCheckController {
         List<String> subjects = request.getSubjects();
 
         for(String subjectName : subjects) {
-
             boolean saveFlag = graduationCheckService.studentSubjectSave(studentNumber,subjectName);
 
             if(!saveFlag) {
                 return ResponseEntity.badRequest().build();
             }
         }
-
         return ResponseEntity.ok().build();
     }
-
-
-
-
 }
