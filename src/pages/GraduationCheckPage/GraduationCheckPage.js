@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import '../../components/graduationcheckpage/graduationcheck.css';
 import SubjectModal from '../../pages/GraduationCheckPage/SubjectModal';
+import TrackRecommendationModal from './TrackRecommendationModal';
 import logo from '../../asset/한림대학교 로고.png';
 import home from '../../asset/Home.png';
+import trackIcon from '../../asset/학년별 전공트랙.png';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -11,26 +13,22 @@ let authErrorShown = false;
 const GraduationCheckPage = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTrackModalOpen, setIsTrackModalOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({ name: '', completed: false });
   const [majorSubjects, setMajorSubjects] = useState([]);
   const [doubleMajorSubjects, setDoubleMajorSubjects] = useState([]);
+  const [majorScore, setMajorScore] = useState(0);
+  const [doubleMajorScore, setDoubleMajorScore] = useState(0);
 
-  // 과목별 취득 학점 (3학점 기준)
-  const getCredits = subjects => subjects.filter(s => s.completed).length * 3;
-
-  const majorCredits = getCredits(majorSubjects);
-  const doubleMajorCredits = getCredits(doubleMajorSubjects);
-
-  const requiredCredits = 60;
-  const isMajorRequirementMet = majorSubjects.length > 0 && majorSubjects.every(s => s.completed);
-  const isDoubleMajorRequirementMet = doubleMajorSubjects.length > 0 && doubleMajorSubjects.every(s => s.completed);
+  const requiredCredits = 33;
+  const isMajorRequirementMet = majorScore >= requiredCredits;
+  const isDoubleMajorRequirementMet = doubleMajorScore >= requiredCredits;
 
   useEffect(() => {
     authErrorShown = false;
     const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다');
-      navigate('/login');
       return;
     }
 
@@ -41,13 +39,17 @@ const GraduationCheckPage = () => {
         });
         setUserInfo({ name: userRes.data?.userName || 'OOO', completed: false });
 
-        const [majorRes, doubleMajorRes] = await Promise.all([
+        const [majorRes, doubleMajorRes, scoreRes] = await Promise.all([
           axios.post('/api/graduation-check', {}, { headers: { Authorization: `Bearer ${token}` } }),
           axios.post('/api/graduation-check02', {}, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.post('/api/total-score', {}, { headers: { Authorization: `Bearer ${token}` } }),
         ]);
 
         setMajorSubjects(Array.isArray(majorRes.data) ? majorRes.data : []);
         setDoubleMajorSubjects(Array.isArray(doubleMajorRes.data) ? doubleMajorRes.data : []);
+        setMajorScore(scoreRes.data?.['주전공 학점'] || 0);
+        setDoubleMajorScore(scoreRes.data?.['복수전공 학점'] || 0);
+
       } catch (error) {
         if (!authErrorShown && error.response?.status === 401) {
           authErrorShown = true;
@@ -71,12 +73,23 @@ const GraduationCheckPage = () => {
     Promise.all([
       axios.post('/api/graduation-check', {}, { headers: { Authorization: `Bearer ${token}` } }),
       axios.post('/api/graduation-check02', {}, { headers: { Authorization: `Bearer ${token}` } }),
-    ]).then(([majorRes, doubleMajorRes]) => {
+      axios.post('/api/total-score', {}, { headers: { Authorization: `Bearer ${token}` } }),
+    ]).then(([majorRes, doubleMajorRes, scoreRes]) => {
       setMajorSubjects(Array.isArray(majorRes.data) ? majorRes.data : []);
       setDoubleMajorSubjects(Array.isArray(doubleMajorRes.data) ? doubleMajorRes.data : []);
+      setMajorScore(scoreRes.data?.['주전공 학점'] || 0);
+      setDoubleMajorScore(scoreRes.data?.['복수전공 학점'] || 0);
     }).catch(error => {
       console.error('데이터 갱신 실패:', error);
     });
+  };
+
+  const handleTrackModalOpen = () => {
+    setIsTrackModalOpen(true);
+  };
+
+  const handleTrackModalClose = () => {
+    setIsTrackModalOpen(false);
   };
 
   return (
@@ -95,6 +108,11 @@ const GraduationCheckPage = () => {
       </div>
 
       {isModalOpen && <SubjectModal onClose={handleModalClose} />}
+      {isTrackModalOpen && <TrackRecommendationModal onClose={handleTrackModalClose} />}
+
+      <button className="track-recommend-button" onClick={handleTrackModalOpen}>
+        <img src={trackIcon} alt="학년별 트랙 추천" className="track-recommend-icon" />
+      </button>
 
       <section className="section">
         <h2>{userInfo.name}님의 현재 이수현황!</h2>
@@ -129,8 +147,8 @@ const GraduationCheckPage = () => {
               <td>복수전공 학점</td>
             </tr>
             <tr>
-              <td className="credit-value">{majorCredits} / {requiredCredits}</td>
-              <td className="credit-value">{doubleMajorCredits} / {requiredCredits}</td>
+              <td className="credit-value">{majorScore} / {requiredCredits}</td>
+              <td className="credit-value">{doubleMajorScore} / {requiredCredits}</td>
             </tr>
           </tbody>
         </table>
@@ -202,3 +220,4 @@ const GraduationCheckPage = () => {
 };
 
 export default GraduationCheckPage;
+
