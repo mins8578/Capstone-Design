@@ -1,6 +1,7 @@
 package com.example.Capstone_Design.entity;
 
 
+import com.example.Capstone_Design.dto.StudentSubjectDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,19 @@ public class StudentSubjectEntity {
     private SubjectEntity subjectEntity;
 
 
+
+    public static StudentSubjectEntity toStudentSubjectEntity(StudentSubjectDTO studentSubjectDTO) {
+        StudentSubjectId studentSubjectId = new StudentSubjectId();
+
+        studentSubjectId.setSubjectName(studentSubjectDTO.getSubjectName());
+        studentSubjectId.setStudentNumber(studentSubjectDTO.getStudentNumber());
+
+        StudentSubjectEntity studentSubjectEntity = new StudentSubjectEntity();
+        studentSubjectEntity.setStudentSubjectId(studentSubjectId);
+
+        return studentSubjectEntity;
+
+    }
 
 
 }
