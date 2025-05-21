@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import hallymLogo from '../../asset/한림대학교 로고2.png';
 import '../../components/signuppage/signupform.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -115,7 +114,7 @@ const SignupForm = () => {
 
   return (
     <div className="signup-container">
-      <img src={hallymLogo} alt="한림대학교 로고" className="signup-logo" />
+      <img src="/한림대학교 로고2.png" alt="한림대학교 로고" className="signup-logo" />
 
       <div className="signup-form-area">
         <h2 className="signup-title">회원가입</h2>

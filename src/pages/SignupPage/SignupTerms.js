@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../../components/signuppage/signupterms.css";
-import hallymLogo from '../../asset/한림대학교 로고2.png';
 
 
 const SignupTerms = () => {
@@ -19,7 +18,7 @@ const SignupTerms = () => {
   
     return (
       <div className="terms-container">
-        <img src={hallymLogo} alt="한림대학교 로고" className="signupterms-logo" />
+        <img src="/한림대학교 로고2.png" alt="한림대학교 로고" className="signupterms-logo" />
   
         <div className="terms-form-area">
           <h2 className="terms-title">회원가입을 위한 약관 동의</h2>
