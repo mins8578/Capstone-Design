@@ -2,12 +2,15 @@ package com.example.Capstone_Design.service;
 
 import com.example.Capstone_Design.Exception.BadRequestException;
 import com.example.Capstone_Design.Exception.UserNotFoundException;
+import com.example.Capstone_Design.dto.MyPageResponse;
 import com.example.Capstone_Design.dto.UserDTO;
 import com.example.Capstone_Design.entity.UserEntity;
 import com.example.Capstone_Design.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +49,7 @@ public class UserService {
 
     public UserDTO getUser(String userID) {
         if(userID == null || userID.isBlank()) {
-            throw new BadRequestException("프론트엔드에서 userName이 정상적으로 넘어오지 않음.");
+            throw new BadRequestException("userID이 정상적으로 넘어오지 않음.");
         }
 
         UserEntity user = userRepository.findByUserID(userID).orElseThrow(() -> new UserNotFoundException("입력하신 회원이 존재하지 않습니다."));
@@ -54,6 +57,18 @@ public class UserService {
         return UserDTO.toUserDTO(user);
 
     }
+
+    public MyPageResponse getMyPageUser(String userID) {
+        if(userID == null || userID.isBlank()) {
+            throw new BadRequestException("userID이 정상적으로 넘어오지 않음.");
+        }
+
+        UserEntity user = userRepository.findByUserID(userID).orElseThrow(() -> new UserNotFoundException("입력하신 회원이 존재하지 않습니다."));
+        return MyPageResponse.toMyPageResponse(user);
+    }
+
+
+
 
 
 

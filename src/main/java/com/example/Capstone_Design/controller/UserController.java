@@ -1,5 +1,6 @@
 package com.example.Capstone_Design.controller;
 
+import com.example.Capstone_Design.dto.MyPageResponse;
 import com.example.Capstone_Design.dto.UserDTO;
 import com.example.Capstone_Design.entity.EmailAuth;
 import com.example.Capstone_Design.entity.UserEntity;
@@ -133,6 +134,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    /*
     @PostMapping("/user-name")
     public ResponseEntity<Map<String, String>> getUserName(@AuthenticationPrincipal UserDetails userDetails) {
         Map<String, String> map = new HashMap<>();
@@ -145,6 +147,17 @@ public class UserController {
 
         return ResponseEntity.ok(map);
     }
+     */
+
+    @PostMapping("/mypage/user")
+    public ResponseEntity<MyPageResponse> getMyPageUser(@AuthenticationPrincipal UserDetails userDetails) {
+
+        String userID = userDetails.getUsername();
+        MyPageResponse myPageResponse = userService.getMyPageUser(userID);
+        return ResponseEntity.ok(myPageResponse);
+    }
+
+
 
     @GetMapping("/user/me")
     public ResponseEntity<UserDTO> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {

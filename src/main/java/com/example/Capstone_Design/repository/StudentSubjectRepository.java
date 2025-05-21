@@ -13,11 +13,12 @@ import java.util.List;
 @Repository
 public interface StudentSubjectRepository extends JpaRepository<StudentSubjectEntity, StudentSubjectId> {
 
-    // 수강하고 있는 과목의 총 학점
+    // 학과별 수강하는 과목 전체 총점
     @Query("SELECT SUM(ss.subjectEntity.score) " +
             "FROM StudentSubjectEntity ss " +
-            "WHERE ss.studentSubjectId.studentNumber = :studentNumber ")
-    Integer totalSubjectScore(@Param("studentNumber") String studentNumber);
+            "WHERE ss.studentSubjectId.studentNumber = :studentNumber " +
+            "AND ss.subjectEntity.major =:major" )
+    Integer totalSubjectScore(@Param("studentNumber") String studentNumber, @Param("major") String major);
 
 
     // 수강하고 있는 전공과목 카테고리 별 총점
@@ -38,7 +39,7 @@ public interface StudentSubjectRepository extends JpaRepository<StudentSubjectEn
 
 
 
-
+    //학생이 수강하는 전공필수 과목 조회
     @Query("SELECT new com.example.Capstone_Design.dto.GraduationCheckDTO(se.subjectName, se.subjectCode, se.score) " +
             "FROM StudentSubjectEntity sse " +
             "JOIN sse.subjectEntity se " +
@@ -46,6 +47,9 @@ public interface StudentSubjectRepository extends JpaRepository<StudentSubjectEn
             "AND se.majorCode LIKE CONCAT('%', :majorCode, '%')")
     List<GraduationCheckDTO> graduationCheck(@Param("studentNumber") String studentNumber,
                                              @Param("majorCode") String majorCode);
+
+
+
 
 
 }
