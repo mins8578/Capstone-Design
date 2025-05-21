@@ -1,6 +1,0 @@
-version: '3'
-services:
-  backend:
-    image: wtgs9817/test-capston-design-backend04
-    ports:
-      - "8080:8080"
