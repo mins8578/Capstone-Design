@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 
@@ -31,8 +32,7 @@ public class CommentController {
     private final UserRepository userRepository;
     private final CommentLikeRepository commentLikeRepository;
 
-
-    // ✅ 댓글 목록 (DTO로 변환)
+    // ✅ 댓글 목록
     @GetMapping("/board/{boardId}")
     public ResponseEntity<?> getComments(@PathVariable Long boardId) {
         List<CommentDTO> result = commentRepository.findByBoardId(boardId).stream()
@@ -40,7 +40,7 @@ public class CommentController {
                         comment.getId(),
                         comment.getContent(),
                         comment.getUser().getUserName(),
-                        comment.getUser().getUserID(),    // 작성자 ID ← 추가// author로 전달
+                        comment.getUser().getUserID(),
                         comment.getCreatedAt()
                 ))
                 .toList();
@@ -58,7 +58,7 @@ public class CommentController {
 
         comment.setBoard(board);
         comment.setUser(user);
-        comment.setCreatedAt(LocalDateTime.now());
+        comment.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));  // ✅ 한국 시간 설정
 
         CommentEntity saved = commentRepository.save(comment);
         CommentDTO result = new CommentDTO(saved.getId(), saved.getContent(), user.getUserName(), user.getUserID(), saved.getCreatedAt());
@@ -100,6 +100,7 @@ public class CommentController {
         return ResponseEntity.ok("삭제 완료");
     }
 
+    // ✅ 댓글 좋아요
     @PostMapping("/{id}/like")
     public ResponseEntity<?> likeComment(@PathVariable Long id,
                                          @AuthenticationPrincipal UserDetails userDetails) {
@@ -114,7 +115,7 @@ public class CommentController {
         CommentLikeEntity like = new CommentLikeEntity();
         like.setComment(comment);
         like.setUser(user);
-        like.setCreatedAt(LocalDateTime.now());
+        like.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul"))); // ✅ 한국 시간 설정
         commentLikeRepository.save(like);
 
         return ResponseEntity.ok("좋아요 완료");
@@ -128,11 +129,10 @@ public class CommentController {
         UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
 
         commentLikeRepository.deleteByCommentAndUser(comment, user);
-
         return ResponseEntity.ok("좋아요 취소");
     }
 
-    // ✅ 사용자가 댓글에 좋아요 눌렀는지 확인
+    // ✅ 댓글 좋아요 상태 확인
     @GetMapping("/{id}/like")
     public ResponseEntity<?> checkCommentLike(@PathVariable Long id,
                                               @AuthenticationPrincipal UserDetails userDetails) {
