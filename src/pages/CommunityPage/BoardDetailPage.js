@@ -2,10 +2,10 @@ import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../components/communitypage/boarddetailpage.css';
-import { FaHeart, FaRegHeart, FaArrowLeft } from 'react-icons/fa'; // 화살표 아이콘 추가
+import { FaHeart, FaRegHeart, FaArrowLeft } from 'react-icons/fa';
 
 const BoardDetailPage = () => {
-  const { id } = useParams(); // 게시글 ID
+  const { id } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
@@ -13,9 +13,8 @@ const BoardDetailPage = () => {
   const [editingId, setEditingId] = useState(null);
   const [editContent, setEditContent] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
-  const [liked, setLiked] = useState(false); // 좋아요 상태 추가
+  const [liked, setLiked] = useState(false);
 
-  // ✅ 댓글 불러오는 함수
   const fetchComments = useCallback(async () => {
     try {
       const res = await axios.get(`/api/comments/board/${id}`);
@@ -25,79 +24,48 @@ const BoardDetailPage = () => {
     }
   }, [id]);
 
-  // ✅ 게시글, 댓글, 사용자 정보, 좋아요 상태 가져오기
   useEffect(() => {
     const token = localStorage.getItem('token');
-    
-    // 게시글 정보 가져오기
+
     axios.get(`/api/board/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     })
-      .then(res => {
-        setPost(res.data);
-      })
+      .then(res => setPost(res.data))
       .catch(err => {
         console.error('게시글 불러오기 실패:', err);
         alert("게시글을 찾을 수 없습니다.");
       });
 
-    // 댓글 가져오기
     fetchComments();
 
-    // 사용자 정보 가져오기
     axios.get('/api/user/me', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => setCurrentUser(res.data.userID))
       .catch(err => console.error('사용자 정보 불러오기 실패:', err));
-    
-    // 좋아요 상태 확인
+
     axios.get(`/api/board/${id}/like`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     })
-      .then(res => {
-        setLiked(res.data.liked);
-      })
-      .catch(err => {
-        console.error('좋아요 상태 확인 실패:', err);
-      });
+      .then(res => setLiked(res.data.liked))
+      .catch(err => console.error('좋아요 상태 확인 실패:', err));
   }, [id, fetchComments]);
 
-  // ✅ 좋아요 토글 함수 추가
   const toggleLike = async () => {
+    const token = localStorage.getItem('token');
     try {
-      const token = localStorage.getItem('token');
-      
       if (liked) {
-        // 좋아요 취소
         await axios.delete(`/api/board/${id}/like`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { Authorization: `Bearer ${token}` }
         });
         setLiked(false);
-        setPost(prev => ({
-          ...prev,
-          likeCount: prev.likeCount - 1
-        }));
+        setPost(prev => ({ ...prev, likeCount: prev.likeCount - 1 }));
       } else {
-        // 좋아요 추가
         await axios.post(`/api/board/${id}/like`, {}, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+          headers: { Authorization: `Bearer ${token}` }
         });
         setLiked(true);
-        setPost(prev => ({
-          ...prev,
-          likeCount: prev.likeCount + 1
-        }));
+        setPost(prev => ({ ...prev, likeCount: prev.likeCount + 1 }));
       }
     } catch (err) {
       console.error('좋아요 작업 실패:', err);
@@ -105,22 +73,15 @@ const BoardDetailPage = () => {
     }
   };
 
-  // ✅ 댓글 등록
   const handleCommentSubmit = async () => {
     if (!newComment.trim()) return alert("댓글을 입력하세요.");
-
+    const token = localStorage.getItem('token');
     try {
-      const token = localStorage.getItem('token');
-
-      await axios.post(
-        `/api/comments/board/${id}`,
-        { content: newComment },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      await axios.post(`/api/comments/board/${id}`, {
+        content: newComment
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setNewComment('');
       fetchComments();
     } catch (err) {
@@ -129,26 +90,19 @@ const BoardDetailPage = () => {
     }
   };
 
-  // ✅ 댓글 수정 시작
   const startEdit = (id, content) => {
     setEditingId(id);
     setEditContent(content);
   };
 
-  // ✅ 댓글 수정 완료
   const handleEditSubmit = async (commentId) => {
+    const token = localStorage.getItem('token');
     try {
-      const token = localStorage.getItem('token');
-
-      await axios.put(
-        `/api/comments/${commentId}`,
-        { content: editContent },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
+      await axios.put(`/api/comments/${commentId}`, {
+        content: editContent
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setEditingId(null);
       setEditContent('');
       fetchComments();
@@ -158,17 +112,12 @@ const BoardDetailPage = () => {
     }
   };
 
-  // ✅ 댓글 삭제
   const handleDelete = async (commentId) => {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
-
+    const token = localStorage.getItem('token');
     try {
-      const token = localStorage.getItem('token');
-
       await axios.delete(`/api/comments/${commentId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
       fetchComments();
     } catch (err) {
@@ -184,24 +133,19 @@ const BoardDetailPage = () => {
       <button onClick={() => navigate(-1)} className="back-button">
         <FaArrowLeft style={{ marginRight: '8px' }} /> 목록으로
       </button>
-      
+
       <div className="post-header">
         <h2>{post.title}</h2>
         <div className="post-meta">
-          <p className="author-info">👤 {post.author} | 🕒 {new Date(post.createdAt).toLocaleString()}</p>
-          
-          {/* 좋아요 버튼 추가 */}
+          <p className="author-info">👤 {post.author} | 🕒 {new Date(post.createdAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })}</p>
           <div className="like-container">
-            <button 
-              className={`like-button ${liked ? 'liked' : ''}`} 
-              onClick={toggleLike}
-            >
+            <button className={`like-button ${liked ? 'liked' : ''}`} onClick={toggleLike}>
               {liked ? <FaHeart color="#ff4a4a" /> : <FaRegHeart />} {post.likeCount}
             </button>
           </div>
         </div>
       </div>
-      
+
       <div className="post-content">
         <p className="board-content">{post.content}</p>
       </div>
@@ -227,8 +171,8 @@ const BoardDetailPage = () => {
             ) : (
               <>
                 <div className="comment-header">
-                  <p><strong>{c.author}</strong> | {new Date(c.createdAt).toLocaleString()}</p>
-                  {currentUser === c.author && (
+                  <p><strong>{c.author}</strong> | {new Date(c.createdAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })}</p>
+                  {currentUser === c.authorId && (
                     <div className="comment-actions">
                       <button onClick={() => startEdit(c.id, c.content)} className="edit-button">✏️ 수정</button>
                       <button onClick={() => handleDelete(c.id)} className="delete-button">🗑️ 삭제</button>
