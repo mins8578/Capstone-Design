@@ -13,14 +13,17 @@ public class CommentLikeEntity {
     private Long id;
 
     @ManyToOne
-        private CommentEntity comment;
+    @JoinColumn(name = "comment_id")
+    private CommentEntity comment;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    // Setter
     public void setComment(CommentEntity comment) {
         this.comment = comment;
     }
@@ -29,7 +32,11 @@ public class CommentLikeEntity {
         this.user = user;
     }
 
-    // 필요하면 getter도 추가
+    public void setCreatedAt(LocalDateTime now) {
+        this.createdAt = now;
+    }
+
+    // Getter
     public CommentEntity getComment() {
         return comment;
     }
@@ -38,7 +45,7 @@ public class CommentLikeEntity {
         return user;
     }
 
-    public void setCreatedAt(LocalDateTime now) {
-
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }
