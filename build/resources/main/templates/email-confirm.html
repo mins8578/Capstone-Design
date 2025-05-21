@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>이메일 인증</title>
+</head>
+<body>
+<h2>이메일 인증</h2>
+<p th:text="'인증코드가 ' + ${email} + '로 전송되었습니다.'"></p>
+
+<form action="/verify" method="post">
+    <input type="hidden" name="email" th:value="${email}">
+    인증 코드: <input type="text" name="code">
+    <button type="submit">확인</button>
+</form>
+</body>
+</html>
