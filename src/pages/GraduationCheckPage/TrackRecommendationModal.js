@@ -17,18 +17,18 @@ const TrackRecommendationModal = ({ onClose }) => {
             { code: '511644', name: 'C프로그래밍', credit: 3 },
             { code: '506808', name: 'C++프로그래밍', credit: 3 },
             { code: '506214', name: '이산구조론', credit: 3 },
-            { code: 'SW104', name: '소프트웨어세미나I', credit: 3 },
-            { code: 'SW104', name: '소프트웨어세미나II', credit: 3 },
+            { code: '', name: '소프트웨어세미나I', credit: 3 },
+            { code: '', name: '소프트웨어세미나II', credit: 3 },
             { code: '511601', name: '선형대수', credit: 3 },
-            { code: 'SW104', name: '오픈소스리눅스실무', credit: 3 },
-            { code: 'SW104', name: '프로그래밍스튜디오', credit: 3 },
+            { code: '', name: '오픈소스리눅스실무', credit: 3 },
+            { code: '', name: '프로그래밍스튜디오', credit: 3 },
             { code: '603119', name: '소프트웨어개론', credit: 3 },
             { code: '603110', name: '알고리즘', credit: 3 },
             { code: '511643', name: '자료구조', credit: 3 },
             { code: '506204', name: '컴퓨터구조', credit: 3 },
             { code: '511215', name: '논리설계 및 실험', credit: 3 },
             { code: '506829', name: '임베디드 시스템', credit: 3 },
-            { code: 'SW104', name: '회로이론 및 실험', credit: 3 },
+            { code: '', name: '회로이론 및 실험', credit: 3 },
             { code: '511502', name: '데이터통신', credit: 3 },
             { code: '603126', name: '데이터사이언스기초', credit: 3 },
             { code: '603111', name: '데이터베이스', credit: 3 },
@@ -50,18 +50,18 @@ const TrackRecommendationModal = ({ onClose }) => {
             { code: '511644', name: 'C프로그래밍', credit: 3 },
             { code: '506808', name: 'C++프로그래밍', credit: 3 },
             { code: '506214', name: '이산구조론', credit: 3 },
-            { code: 'SW104', name: '소프트웨어세미나I', credit: 3 },
+            { code: '', name: '소프트웨어세미나I', credit: 3 },
             { code: 'SW104', name: '소프트웨어세미나II', credit: 3 },
             { code: '511601', name: '선형대수', credit: 3 },
-            { code: 'SW104', name: '오픈소스리눅스실무', credit: 3 },
-            { code: 'SW104', name: '프로그래밍스튜디오', credit: 3 },
+            { code: '', name: '오픈소스리눅스실무', credit: 3 },
+            { code: '', name: '프로그래밍스튜디오', credit: 3 },
             { code: '603119', name: '소프트웨어개론', credit: 3 },
             { code: '603110', name: '알고리즘', credit: 3 },
             { code: '511643', name: '자료구조', credit: 3 },
             { code: '506204', name: '컴퓨터구조', credit: 3 },
             { code: '511215', name: '논리설계 및 실험', credit: 3 },
             { code: '506829', name: '임베디드 시스템', credit: 3 },
-            { code: 'SW104', name: '회로이론 및 실험', credit: 3 },
+            { code: '', name: '회로이론 및 실험', credit: 3 },
             { code: '511502', name: '데이터통신', credit: 3 },
             { code: '603126', name: '데이터사이언스기초', credit: 3 },
             { code: '603111', name: '데이터베이스', credit: 3 },
@@ -70,19 +70,44 @@ const TrackRecommendationModal = ({ onClose }) => {
           ]
         },
         {
-          name: '웹/앱 개발 트랙',
+          name: '빅데이터 트랙(빅데이터 전공)',
           subjects: [
-            { code: 'SW201', name: '웹 프로그래밍', credit: 3 },
-            { code: 'SW202', name: '데이터베이스', credit: 3 },
-            { code: 'SW203', name: '알고리즘', credit: 3 }
+            { code: '', name: '데이터사이언스기초', credit: 3 },
+            { code: '', name: '데이터베이스기초', credit: 3 }
           ]
         },
         {
-          name: '인공지능 트랙',
+          name: '인공지능 트랙(빅데이터 전공)',
           subjects: [
-            { code: 'SW204', name: '인공지능 개론', credit: 3 },
-            { code: 'SW205', name: '확률과 통계', credit: 3 },
-            { code: 'SW203', name: '알고리즘', credit: 3 }
+            { code: '', name: '데이터베이스', credit: 3 },
+            { code: '', name: '인공지능수학', credit: 3 }
+          ]
+        },
+        {
+          name: '게임개발 트랙(콘텐츠IT 전공)',
+          subjects: [
+            { code: '', name: 'VR/AR/게임제작기초', credit: 3 }
+          ]
+        },
+        {
+          name: 'VR/AR 트랙(콘텐츠IT 전공)',
+          subjects: [
+            { code: '', name: 'VR/AR/게임제작기초', credit: 3 }
+          ]
+        },
+        {
+          name: '임베디드 트랙(스마트IoT 전공)',
+          subjects: [
+            { code: '', name: '데이터 통신', credit: 3 },
+            { code: '', name: '인공지능수학', credit: 3 },
+            { code: '', name: '임베디드시스템', credit: 3 },
+            { code: '', name: '디지털신호처리', credit: 3 }
+          ]
+        },
+        {
+          name: '통신/보안 트랙(스마트IoT 전공)',
+          subjects: [
+            { code: '', name: '데이터 통신', credit: 3 }
           ]
         }
       ],
@@ -125,30 +150,58 @@ const TrackRecommendationModal = ({ onClose }) => {
           ]
         },
         {
-          name: '웹/앱 개발 심화 트랙',
+          name: '빅데이터 트랙(빅데이터 전공)',
           subjects: [
-            { code: 'SW301', name: '프론트엔드 개발', credit: 3 },
-            { code: 'SW302', name: '백엔드 개발', credit: 3 },
-            { code: 'SW303', name: '모바일 앱 개발', credit: 3 },
-            { code: 'SW304', name: '소프트웨어 설계', credit: 3 }
+            { code: '', name: '데이터시각화', credit: 3 },
+            { code: '', name: '데이터마이닝', credit: 3 },
+            { code: '', name: '머신러닝', credit: 3 },
+            { code: '', name: '클라우드컴퓨팅', credit: 3 },
+            { code: '', name: '빅데이터개론', credit: 3 }
           ]
         },
         {
-          name: '인공지능 심화 트랙',
+          name: '인공지능 트랙(빅데이터 전공)',
           subjects: [
-            { code: 'SW305', name: '기계학습', credit: 3 },
-            { code: 'SW306', name: '데이터 마이닝', credit: 3 },
-            { code: 'SW307', name: '딥러닝', credit: 3 },
-            { code: 'SW308', name: '자연어 처리', credit: 3 }
+            { code: '', name: '머신러닝응용', credit: 3 },
+            { code: '', name: '데이터마이닝', credit: 3 },
+            { code: '', name: '머신러닝닝', credit: 3 },
+            { code: '', name: '텍스트정보처리', credit: 3 },
+            { code: '', name: '딥러닝이론 및 응용', credit: 3 }
           ]
         },
         {
-          name: '정보보안 트랙',
+          name: '게임개발 트랙(콘텐츠IT 전공)',
           subjects: [
-            { code: 'SW309', name: '정보보안 개론', credit: 3 },
-            { code: 'SW310', name: '네트워크 보안', credit: 3 },
-            { code: 'SW311', name: '암호학', credit: 3 },
-            { code: 'SW312', name: '시스템 보안', credit: 3 }
+            { code: '', name: '컴퓨터그래픽스', credit: 3 },
+            { code: '', name: '게임프로그래밍', credit: 3 }
+          ]
+        },
+        {
+          name: 'VR/AR 트랙(콘텐츠IT 전공)',
+          subjects: [
+            { code: '', name: '가상현실과 증강현실', credit: 3 }
+          ]
+        },
+        {
+          name: '임베디드 트랙(스마트IoT 전공)',
+          subjects: [
+            { code: '', name: '모바일센서공학', credit: 3 },
+            { code: '', name: '전자회로', credit: 3 },
+            { code: '', name: 'IoT플랫폼설계', credit: 3 },
+            { code: '', name: '모바일프로그래밍', credit: 3 },
+            { code: '', name: '머신러닝', credit: 3 },
+            { code: '', name: '고급임베디드시스템', credit: 3 }
+          ]
+        },
+        {
+          name: '통신/보안 트랙(스마트IoT 전공)',
+          subjects: [
+            { code: '', name: '통신네트워크시스템', credit: 3 },
+            { code: '', name: '블록체인', credit: 3 },
+            { code: '', name: '시스템보안', credit: 3 },
+            { code: '', name: 'IoT네트워크', credit: 3 },
+            { code: '', name: 'IoT플랫폼설계', credit: 3 },
+            { code: '', name: '네트워크보안', credit: 3 }
           ]
         }
       ],
@@ -188,22 +241,6 @@ const TrackRecommendationModal = ({ onClose }) => {
             { code: '603144', name: '강화학습', credit: 3 },
             { code: '603132', name: '통신네트워크시스템', credit: 3 },
             { code: '603103', name: '소프트웨어캡스톤디자인', credit: 3 }
-          ]
-        },
-        {
-          name: '취업 준비 트랙',
-          subjects: [
-            { code: 'SW401', name: '캡스톤 디자인', credit: 3 },
-            { code: 'SW402', name: '현장 실습', credit: 3 },
-            { code: 'SW403', name: '소프트웨어 프로젝트', credit: 3 }
-          ]
-        },
-        {
-          name: '대학원 진학 트랙',
-          subjects: [
-            { code: 'SW404', name: '논문 연구', credit: 3 },
-            { code: 'SW405', name: '고급 알고리즘', credit: 3 },
-            { code: 'SW406', name: '연구 방법론', credit: 3 }
           ]
         }
       ],

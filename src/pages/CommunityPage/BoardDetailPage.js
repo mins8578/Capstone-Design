@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../components/communitypage/boarddetailpage.css';
-import { FaHeart, FaRegHeart } from 'react-icons/fa'; // 하트 아이콘 추가
+import { FaHeart, FaRegHeart, FaArrowLeft } from 'react-icons/fa'; // 화살표 아이콘 추가
 
 const BoardDetailPage = () => {
   const { id } = useParams(); // 게시글 ID
@@ -181,7 +181,9 @@ const BoardDetailPage = () => {
 
   return (
     <div className="detail-container">
-      <button onClick={() => navigate(-1)} className="back-button">← 목록으로</button>
+      <button onClick={() => navigate(-1)} className="back-button">
+        <FaArrowLeft style={{ marginRight: '8px' }} /> 목록으로
+      </button>
       
       <div className="post-header">
         <h2>{post.title}</h2>
