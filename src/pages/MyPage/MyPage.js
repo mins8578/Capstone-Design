@@ -23,7 +23,8 @@ function MyPage() {
       return;
     }
 
-    axios.post("/api/mypage/user", {}, {
+    // ✅ GET 요청으로 변경
+    axios.get("/api/mypage/user", {
       headers: {
         Authorization: `Bearer ${token}`
       }

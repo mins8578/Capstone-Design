@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../components/findpasswordpage/FindPasswordEmail.css'; // 공통 CSS로 변경 예정
-import hallymLogo from '../../asset/한림대학교 로고2.png';
 
 function FindPasswordEmail() {
   const [email, setEmail] = useState('');
@@ -47,7 +46,7 @@ function FindPasswordEmail() {
   return (
     <div className="password-page-container">
       <div className="password-top-logo">
-        <img src={hallymLogo} alt="한림대학교 로고" />
+        <img src="/한림대학교 로고2.png" alt="한림대학교 로고" />
       </div>
 
       <div className="password-form-area">
