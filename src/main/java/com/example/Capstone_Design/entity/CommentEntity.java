@@ -25,7 +25,10 @@ public class CommentEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
+<<<<<<< HEAD
 
     @Column(name = "like_count")
     private int likeCount;
+=======
+>>>>>>> 1a5d5f2ffe2cdae9e10275d1c02c7aa8f3c4aa7d
 }

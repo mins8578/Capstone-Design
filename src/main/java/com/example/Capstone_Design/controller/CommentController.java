@@ -44,7 +44,6 @@ public class CommentController {
                         comment.getCreatedAt()
                 ))
                 .toList();
-
         return ResponseEntity.ok(result);
     }
 
@@ -58,7 +57,7 @@ public class CommentController {
 
         comment.setBoard(board);
         comment.setUser(user);
-        comment.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));  // ✅ 한국 시간 설정
+        comment.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul"))); // 한국 시간
 
         CommentEntity saved = commentRepository.save(comment);
         CommentDTO result = new CommentDTO(saved.getId(), saved.getContent(), user.getUserName(), user.getUserID(), saved.getCreatedAt());
@@ -115,7 +114,7 @@ public class CommentController {
         CommentLikeEntity like = new CommentLikeEntity();
         like.setComment(comment);
         like.setUser(user);
-        like.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul"))); // ✅ 한국 시간 설정
+        like.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         commentLikeRepository.save(like);
 
         return ResponseEntity.ok("좋아요 완료");

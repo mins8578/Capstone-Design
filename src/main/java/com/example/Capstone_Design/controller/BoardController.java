@@ -27,7 +27,7 @@ public class BoardController {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
-    // 게시글 목록 조회
+    // ✅ 게시글 목록 조회
     @GetMapping
     public ResponseEntity<?> getAllBoards() {
         List<BoardEntity> boards = boardRepository.findAll();
@@ -50,7 +50,7 @@ public class BoardController {
         return ResponseEntity.ok(result);
     }
 
-    // 게시글 작성
+    // ✅ 게시글 작성
     @PostMapping
     public ResponseEntity<?> createBoard(@RequestBody BoardEntity board,
                                          @AuthenticationPrincipal UserDetails userDetails) {
@@ -65,7 +65,7 @@ public class BoardController {
         return ResponseEntity.ok(boardRepository.save(board));
     }
 
-    // 게시글 수정
+    // ✅ 게시글 수정
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBoard(@PathVariable Long id,
                                          @RequestBody BoardEntity updatedBoard,
@@ -84,7 +84,7 @@ public class BoardController {
         return ResponseEntity.ok(boardRepository.save(board));
     }
 
-    // 게시글 삭제
+    // ✅ 게시글 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBoard(@PathVariable Long id,
                                          @AuthenticationPrincipal UserDetails userDetails) {
@@ -99,7 +99,7 @@ public class BoardController {
         return ResponseEntity.ok("삭제 완료");
     }
 
-    // 게시글 상세 조회
+    // ✅ 게시글 상세 조회
     @GetMapping("/{id}")
     public ResponseEntity<?> getBoard(@PathVariable Long id) {
         BoardEntity board = boardRepository.findById(id).orElseThrow();
