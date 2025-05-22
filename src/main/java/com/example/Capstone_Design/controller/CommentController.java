@@ -3,8 +3,10 @@ package com.example.Capstone_Design.controller;
 import com.example.Capstone_Design.dto.CommentDTO;
 import com.example.Capstone_Design.entity.BoardEntity;
 import com.example.Capstone_Design.entity.CommentEntity;
+import com.example.Capstone_Design.entity.CommentLikeEntity;
 import com.example.Capstone_Design.entity.UserEntity;
 import com.example.Capstone_Design.repository.BoardRepository;
+import com.example.Capstone_Design.repository.CommentLikeRepository;
 import com.example.Capstone_Design.repository.CommentRepository;
 import com.example.Capstone_Design.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +17,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -26,15 +30,17 @@ public class CommentController {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
-    // ✅ 댓글 목록 (DTO로 변환)
+    // ✅ 댓글 목록
     @GetMapping("/board/{boardId}")
     public ResponseEntity<?> getComments(@PathVariable Long boardId) {
         List<CommentDTO> result = commentRepository.findByBoardId(boardId).stream()
                 .map(comment -> new CommentDTO(
                         comment.getId(),
                         comment.getContent(),
-                        comment.getUser().getUserName(), // author로 전달
+                        comment.getUser().getUserName(),
+                        comment.getUser().getUserID(),
                         comment.getCreatedAt()
                 ))
                 .toList();
@@ -52,10 +58,10 @@ public class CommentController {
 
         comment.setBoard(board);
         comment.setUser(user);
-        comment.setCreatedAt(LocalDateTime.now());
+        comment.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));  // ✅ 한국 시간 설정
 
         CommentEntity saved = commentRepository.save(comment);
-        CommentDTO result = new CommentDTO(saved.getId(), saved.getContent(), user.getUserName(), saved.getCreatedAt());
+        CommentDTO result = new CommentDTO(saved.getId(), saved.getContent(), user.getUserName(), user.getUserID(), saved.getCreatedAt());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
@@ -74,7 +80,7 @@ public class CommentController {
 
         comment.setContent(updated.getContent());
         CommentEntity saved = commentRepository.save(comment);
-        CommentDTO result = new CommentDTO(saved.getId(), saved.getContent(), user.getUserName(), saved.getCreatedAt());
+        CommentDTO result = new CommentDTO(saved.getId(), saved.getContent(), user.getUserName(), user.getUserID(), saved.getCreatedAt());
 
         return ResponseEntity.ok(result);
     }
@@ -92,5 +98,48 @@ public class CommentController {
 
         commentRepository.delete(comment);
         return ResponseEntity.ok("삭제 완료");
+    }
+
+    // ✅ 댓글 좋아요
+    @PostMapping("/{id}/like")
+    public ResponseEntity<?> likeComment(@PathVariable Long id,
+                                         @AuthenticationPrincipal UserDetails userDetails) {
+        CommentEntity comment = commentRepository.findById(id).orElseThrow();
+        UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
+
+        boolean exists = commentLikeRepository.existsByCommentAndUser(comment, user);
+        if (exists) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 좋아요한 댓글입니다.");
+        }
+
+        CommentLikeEntity like = new CommentLikeEntity();
+        like.setComment(comment);
+        like.setUser(user);
+        like.setCreatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul"))); // ✅ 한국 시간 설정
+        commentLikeRepository.save(like);
+
+        return ResponseEntity.ok("좋아요 완료");
+    }
+
+    // ✅ 댓글 좋아요 취소
+    @DeleteMapping("/{id}/like")
+    public ResponseEntity<?> unlikeComment(@PathVariable Long id,
+                                           @AuthenticationPrincipal UserDetails userDetails) {
+        CommentEntity comment = commentRepository.findById(id).orElseThrow();
+        UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
+
+        commentLikeRepository.deleteByCommentAndUser(comment, user);
+        return ResponseEntity.ok("좋아요 취소");
+    }
+
+    // ✅ 댓글 좋아요 상태 확인
+    @GetMapping("/{id}/like")
+    public ResponseEntity<?> checkCommentLike(@PathVariable Long id,
+                                              @AuthenticationPrincipal UserDetails userDetails) {
+        CommentEntity comment = commentRepository.findById(id).orElseThrow();
+        UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
+
+        boolean liked = commentLikeRepository.existsByCommentAndUser(comment, user);
+        return ResponseEntity.ok(Map.of("liked", liked));
     }
 }
