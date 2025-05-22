@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../components/communitypage/boarddetailpage.css';
 import { FaHeart, FaRegHeart, FaArrowLeft } from 'react-icons/fa';
+import WritePostModal from './WritePostModal'; // 수정 모달로 재사용
 
 const BoardDetailPage = () => {
   const { id } = useParams();
@@ -14,6 +15,7 @@ const BoardDetailPage = () => {
   const [editContent, setEditContent] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
   const [liked, setLiked] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // 수정 모달 상태
 
   const fetchComments = useCallback(async () => {
     try {
@@ -126,6 +128,40 @@ const BoardDetailPage = () => {
     }
   };
 
+  const handlePostEditOpen = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handlePostEditSubmit = async (updatedData) => {
+    const token = localStorage.getItem('token');
+    try {
+      await axios.put(`/api/board/${id}`, updatedData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert("게시글이 수정되었습니다.");
+      setPost(prev => ({ ...prev, ...updatedData }));
+      setIsEditModalOpen(false);
+    } catch (err) {
+      alert("게시글 수정 실패");
+      console.error("게시글 수정 실패:", err);
+    }
+  };
+
+  const handlePostDelete = async () => {
+    if (!window.confirm("이 게시글을 삭제하시겠습니까?")) return;
+    const token = localStorage.getItem('token');
+    try {
+      await axios.delete(`/api/board/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert("삭제되었습니다.");
+      navigate("/community");
+    } catch (err) {
+      alert("게시글 삭제 실패");
+      console.error("게시글 삭제 실패:", err);
+    }
+  };
+
   if (!post) return <div>로딩 중...</div>;
 
   return (
@@ -144,6 +180,12 @@ const BoardDetailPage = () => {
             </button>
           </div>
         </div>
+        {currentUser === post.authorId && (
+          <div className="post-actions">
+            <button onClick={handlePostEditOpen} className="edit-button">✏️ 수정</button>
+            <button onClick={handlePostDelete} className="delete-button">🗑️ 삭제</button>
+          </div>
+        )}
       </div>
 
       <div className="post-content">
@@ -196,6 +238,16 @@ const BoardDetailPage = () => {
         />
         <button onClick={handleCommentSubmit} className="submit-button">등록</button>
       </div>
+
+      {isEditModalOpen && (
+        <WritePostModal
+          onClose={() => setIsEditModalOpen(false)}
+          onSubmit={handlePostEditSubmit}
+          initialTitle={post.title}
+          initialContent={post.content}
+          isEditMode={true}
+        />
+      )}
     </div>
   );
 };
