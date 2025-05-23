@@ -3,13 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import './header.css';
 import hallymLogo from '../../asset/한림대학교 로고.png';
 import { FaUserCircle } from 'react-icons/fa';
+import { HiUserCircle, HiLogout } from 'react-icons/hi';
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   // 로그인했다고 가정
- // const isLoggedIn = true; // 항상 true로 설정!
+  // const isLoggedIn = true; // 항상 true로 설정!
 
   // 로그인 여부 판단 (예: 토큰이 있으면 로그인된 상태라고 가정)
   const isLoggedIn = !!localStorage.getItem('token');
@@ -43,8 +44,14 @@ function Header() {
         />
         {isLoggedIn && isOpen && (
           <div className="dropdown-menu">
-            <Link to="/mypage">나의 정보</Link>
-            <button onClick={handleLogout}>로그아웃</button>
+            <Link to="/mypage" className="dropdown-item">
+              <HiUserCircle className="icon" />
+              <span>나의 정보</span>
+            </Link>
+            <button onClick={handleLogout} className="dropdown-item">
+              <HiLogout className="icon" />
+              <span>로그아웃</span>
+            </button>
           </div>
         )}
       </div>
