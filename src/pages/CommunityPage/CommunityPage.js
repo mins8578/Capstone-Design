@@ -1,10 +1,11 @@
+// src/pages/CommunityPage/CommunityBoard.js
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import '../../components/communitypage/communitypage.css';
 import logo from '../../asset/한림대학교 로고.png';
 import home from '../../asset/Home.png';
 import { useNavigate } from 'react-router-dom';
-import WritePostModal from '../../pages/CommunityPage/WritePostModal';
+import WritePostModal from './WritePostModal';
 import { FaPencilAlt, FaHeart, FaComment, FaUserCircle, FaClock } from 'react-icons/fa';
 
 const CommunityBoard = () => {
@@ -12,11 +13,11 @@ const CommunityBoard = () => {
   const [posts, setPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchField, setSearchField] = useState('제목');
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [searchType, setSearchType] = useState('title'); // 'title' or 'author'
+  const [filteredPosts, setFilteredPosts] = useState([]);
 
   const token = localStorage.getItem('token');
-  const postsPerPage = 7;
 
   useEffect(() => {
     if (!token) {
@@ -30,7 +31,9 @@ const CommunityBoard = () => {
       const res = await axios.get('/api/board', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setPosts(res.data);
+      const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setPosts(sorted);
+      setFilteredPosts(sorted);
     } catch (err) {
       console.error('게시글 불러오기 실패:', err);
     }
@@ -57,27 +60,36 @@ const CommunityBoard = () => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString('ko-KR', {
-      year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit'
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
-  const filteredPosts = posts
-    .filter(post => {
-      const field = searchType === 'title' ? post.title : post.author;
-      return field.toLowerCase().includes(searchKeyword.toLowerCase());
-    })
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // 최신순 정렬
-
-  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
-  const paginatedPosts = filteredPosts.slice(
-    (currentPage - 1) * postsPerPage,
-    currentPage * postsPerPage
-  );
-
   const handleSearch = () => {
-    setCurrentPage(1); // 검색 시 첫 페이지로 이동
+    const keyword = searchKeyword.trim().toLowerCase();
+    if (!keyword) {
+      setFilteredPosts(posts);
+      setCurrentPage(1);
+      return;
+    }
+
+    const result = posts.filter((post) => {
+      if (searchField === '제목') return post.title.toLowerCase().includes(keyword);
+      if (searchField === '작성자') return post.author.toLowerCase().includes(keyword);
+      return false;
+    });
+
+    setFilteredPosts(result);
+    setCurrentPage(1);
   };
+
+  // 페이지네이션
+  const postsPerPage = 7;
+  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+  const currentPosts = filteredPosts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
 
   return (
     <div className="community-container">
@@ -106,7 +118,7 @@ const CommunityBoard = () => {
       </div>
 
       <div className="post-list">
-        {paginatedPosts.length > 0 ? paginatedPosts.map(post => (
+        {currentPosts.length > 0 ? currentPosts.map((post) => (
           <div className="post-card" key={post.id} onClick={() => navigate(`/board/${post.id}`)}>
             <div className="post-title">{post.title}</div>
             <div className="post-footer">
@@ -121,37 +133,32 @@ const CommunityBoard = () => {
             </div>
           </div>
         )) : (
-          <div style={{ textAlign: 'center', padding: '30px', backgroundColor: 'white', borderRadius: '12px' }}>
-            <p>게시글이 없습니다. 첫 번째 게시글을 작성해보세요!</p>
-          </div>
+          <div className="no-posts">게시글이 없습니다. 첫 번째 게시글을 작성해보세요!</div>
         )}
       </div>
 
       <div className="pagination">
-        {[...Array(totalPages)].map((_, idx) => (
+        {[...Array(totalPages)].map((_, i) => (
           <button
-            key={idx + 1}
-            className={currentPage === idx + 1 ? 'active' : ''}
-            onClick={() => setCurrentPage(idx + 1)}
+            key={i + 1}
+            className={currentPage === i + 1 ? 'active' : ''}
+            onClick={() => setCurrentPage(i + 1)}
           >
-            {idx + 1}
+            {i + 1}
           </button>
         ))}
-        {currentPage < totalPages && (
-          <button onClick={() => setCurrentPage(currentPage + 1)}>다음</button>
-        )}
       </div>
 
       <div className="bottom-search">
-        <select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
-          <option value="title">제목</option>
-          <option value="author">작성자</option>
+        <select value={searchField} onChange={(e) => setSearchField(e.target.value)}>
+          <option>제목</option>
+          <option>작성자</option>
         </select>
         <input
           type="text"
+          placeholder="검색어를 입력하세요"
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
-          placeholder="검색어를 입력하세요"
         />
         <button onClick={handleSearch}>검색</button>
       </div>
@@ -167,3 +174,4 @@ const CommunityBoard = () => {
 };
 
 export default CommunityBoard;
+
