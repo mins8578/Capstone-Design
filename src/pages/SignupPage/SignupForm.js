@@ -99,7 +99,7 @@ const SignupForm = () => {
         userName: form.name,                      // 이름
         studentNumber: form.studentId,            // 학번
         major: form.major,                        // 주전공
-        scdmajor: form.scdmajor,                  // 복수전공
+        scdMajor: form.scdMajor,                  // 복수전공
       });
   
       alert("회원가입이 완료되었습니다!");
