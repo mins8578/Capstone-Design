@@ -2,7 +2,9 @@ package com.example.Capstone_Design.controller;
 
 import com.example.Capstone_Design.dto.BoardDTO;
 import com.example.Capstone_Design.entity.BoardEntity;
+import com.example.Capstone_Design.entity.BoardLikeEntity;
 import com.example.Capstone_Design.entity.UserEntity;
+import com.example.Capstone_Design.repository.BoardLikeRepository;
 import com.example.Capstone_Design.repository.BoardRepository;
 import com.example.Capstone_Design.repository.CommentRepository;
 import com.example.Capstone_Design.repository.UserRepository;
@@ -26,25 +28,23 @@ public class BoardController {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final BoardLikeRepository boardLikeRepository;
+
+    private static final ZoneId SEOUL_ZONE = ZoneId.of("Asia/Seoul");
 
     // ✅ 게시글 목록 조회
     @GetMapping
     public ResponseEntity<?> getAllBoards() {
-        List<BoardEntity> boards = boardRepository.findAll();
-
-        List<BoardDTO> result = boards.stream().map(board -> {
+        List<BoardDTO> result = boardRepository.findAll().stream().map(board -> {
             int commentCount = commentRepository.countByBoardId(board.getId());
-            String author = board.getUser().getUserName();
-            String authorId = board.getUser().getUserID(); // ← 추가
-
             return new BoardDTO(
                     board.getId(),
                     board.getTitle(),
                     board.getContent(),
                     board.getLikeCount(),
                     commentCount,
-                    author,
-                    authorId,
+                    board.getUser().getUserName(),
+                    board.getUser().getUserID(),
                     board.getCreatedAt()
             );
         }).toList();
@@ -57,7 +57,7 @@ public class BoardController {
     public ResponseEntity<?> createBoard(@RequestBody BoardEntity board,
                                          @AuthenticationPrincipal UserDetails userDetails) {
         UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime now = LocalDateTime.now(SEOUL_ZONE);
 
         board.setUser(user);
         board.setLikeCount(0);
@@ -81,7 +81,7 @@ public class BoardController {
 
         board.setTitle(updatedBoard.getTitle());
         board.setContent(updatedBoard.getContent());
-        board.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        board.setUpdatedAt(LocalDateTime.now(SEOUL_ZONE));
 
         return ResponseEntity.ok(boardRepository.save(board));
     }
@@ -113,35 +113,47 @@ public class BoardController {
                 board.getLikeCount(),
                 commentRepository.countByBoardId(board.getId()),
                 board.getUser().getUserName(),
-                board.getUser().getUserID(),  // ← authorId 추가
+                board.getUser().getUserID(),
                 board.getCreatedAt()
         );
 
         return ResponseEntity.ok(dto);
     }
 
-    //게시글 좋아요
+    // ✅ 게시글 좋아요
     @PostMapping("/{id}/like")
     public ResponseEntity<?> likeBoard(@PathVariable Long id,
                                        @AuthenticationPrincipal UserDetails userDetails) {
         BoardEntity board = boardRepository.findById(id).orElseThrow();
         UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
 
-        // 중복 좋아요 방지 로직은 필요에 따라 추가
+        if (boardLikeRepository.existsByBoardAndUser(board, user)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 좋아요한 게시글입니다.");
+        }
+
+        // ✅ createdAt은 BoardLikeEntity의 @PrePersist로 자동 세팅됨
+        BoardLikeEntity like = new BoardLikeEntity(board, user);
+        boardLikeRepository.save(like);
+
         board.setLikeCount(board.getLikeCount() + 1);
         boardRepository.save(board);
 
         return ResponseEntity.ok("좋아요 성공");
     }
 
-    // 게시글 좋아요 취소
+    // ✅ 게시글 좋아요 취소
     @DeleteMapping("/{id}/like")
     public ResponseEntity<?> unlikeBoard(@PathVariable Long id,
                                          @AuthenticationPrincipal UserDetails userDetails) {
         BoardEntity board = boardRepository.findById(id).orElseThrow();
         UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
 
-        // 현재는 좋아요 수만 관리 중이므로, 중복 방지 없이 단순 감소 처리
+        if (!boardLikeRepository.existsByBoardAndUser(board, user)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("좋아요한 기록이 없습니다.");
+        }
+
+        boardLikeRepository.deleteByBoardAndUser(board, user);
+
         if (board.getLikeCount() > 0) {
             board.setLikeCount(board.getLikeCount() - 1);
             boardRepository.save(board);
