@@ -167,8 +167,8 @@ const GraduationCheckPage = () => {
             {majorSubjects.length > 0 ? (
               majorSubjects.map((subject, index) => (
                 <tr key={index}>
-                  <td>{subject.Code || '-'}</td>
-                  <td>{subject.Name}</td>
+                  <td>{subject.subjectCode || '-'}</td>
+                  <td>{subject.subjectName}</td>
                   <td>{subject.type || '전필'}</td>
                   <td className={subject.completed ? "status-pass" : "status-fail"}>
                     {subject.completed ? '수강완료' : '미수강'}
@@ -198,8 +198,8 @@ const GraduationCheckPage = () => {
             {doubleMajorSubjects.length > 0 ? (
               doubleMajorSubjects.map((subject, index) => (
                 <tr key={index}>
-                  <td>{subject.Code || '-'}</td>
-                  <td>{subject.Name}</td>
+                  <td>{subject.subjectCode || '-'}</td>
+                  <td>{subject.subjectName}</td>
                   <td>{subject.type || '전필'}</td>
                   <td className={subject.completed ? "status-pass" : "status-fail"}>
                     {subject.completed ? '수강완료' : '미수강'}
