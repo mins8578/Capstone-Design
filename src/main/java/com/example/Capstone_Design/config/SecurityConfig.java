@@ -62,7 +62,14 @@ public class SecurityConfig {
                                 "/api/verify-code",
                                 "/api/find-send-code",
                                 "/api/password-verify-code",
-                                "/api/reset").permitAll().anyRequest().authenticated()                    // ✅ 로그인, 회원가입, 이메일 인증, 비밀번호 변경 외에 요청은 인증 필요
+                                "/api/reset").permitAll()
+                        .requestMatchers(
+                                "/api/user/me",
+                                "/api/board/**/like",
+                                "/api/comments/**/like",
+                                "/api/board/**",         // 게시글 등록/수정/삭제
+                                "/api/comments/**"       // 댓글 등록/수정/삭제
+                        ).authenticated().anyRequest().authenticated()                    // ✅ 로그인, 회원가입, 이메일 인증, 비밀번호 변경 외에 요청은 인증 필요
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
