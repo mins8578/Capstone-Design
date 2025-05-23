@@ -35,6 +35,7 @@ public class BoardController {
         List<BoardDTO> result = boards.stream().map(board -> {
             int commentCount = commentRepository.countByBoardId(board.getId());
             String author = board.getUser().getUserName();
+            String authorId = board.getUser().getUserID(); // ← 추가
 
             return new BoardDTO(
                     board.getId(),
@@ -43,6 +44,7 @@ public class BoardController {
                     board.getLikeCount(),
                     commentCount,
                     author,
+                    authorId,
                     board.getCreatedAt()
             );
         }).toList();
@@ -111,6 +113,7 @@ public class BoardController {
                 board.getLikeCount(),
                 commentRepository.countByBoardId(board.getId()),
                 board.getUser().getUserName(),
+                board.getUser().getUserID(),  // ← authorId 추가
                 board.getCreatedAt()
         );
 
