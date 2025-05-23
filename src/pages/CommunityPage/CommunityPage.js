@@ -12,51 +12,39 @@ const CommunityBoard = () => {
   const [posts, setPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchType, setSearchType] = useState('title'); // 'title' or 'author'
 
-  // 페이지 진입 시 인증 체크
+  const token = localStorage.getItem('token');
+  const postsPerPage = 7;
+
   useEffect(() => {
-    const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다');
       navigate('/login');
-      return;
     }
-  }, [navigate]);
-
-  const token = localStorage.getItem('token');
+  }, [navigate, token]);
 
   const fetchPosts = useCallback(async () => {
     try {
       const res = await axios.get('/api/board', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setPosts(res.data);
     } catch (err) {
       console.error('게시글 불러오기 실패:', err);
-      // 401 오류는 별도 처리할 필요 없음 (App.js의 인터셉터에서 처리)
     }
   }, [token]);
 
   useEffect(() => {
-    // 토큰이 있을 때만 게시글 로드
-    if (token) {
-      fetchPosts();
-    }
+    if (token) fetchPosts();
   }, [fetchPosts, token]);
 
   const handlePostSubmit = async ({ title, content }) => {
     try {
-      await axios.post(
-        '/api/board',
-        { title, content },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.post('/api/board', { title, content }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       alert('게시글이 등록되었습니다!');
       setIsModalOpen(false);
       fetchPosts();
@@ -66,16 +54,29 @@ const CommunityBoard = () => {
     }
   };
 
-  // 날짜 포맷 함수 추가
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString('ko-KR', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit'
     });
+  };
+
+  const filteredPosts = posts
+    .filter(post => {
+      const field = searchType === 'title' ? post.title : post.author;
+      return field.toLowerCase().includes(searchKeyword.toLowerCase());
+    })
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // 최신순 정렬
+
+  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+  const paginatedPosts = filteredPosts.slice(
+    (currentPage - 1) * postsPerPage,
+    currentPage * postsPerPage
+  );
+
+  const handleSearch = () => {
+    setCurrentPage(1); // 검색 시 첫 페이지로 이동
   };
 
   return (
@@ -105,7 +106,7 @@ const CommunityBoard = () => {
       </div>
 
       <div className="post-list">
-        {posts.length > 0 ? posts.map(post => (
+        {paginatedPosts.length > 0 ? paginatedPosts.map(post => (
           <div className="post-card" key={post.id} onClick={() => navigate(`/board/${post.id}`)}>
             <div className="post-title">{post.title}</div>
             <div className="post-footer">
@@ -127,25 +128,32 @@ const CommunityBoard = () => {
       </div>
 
       <div className="pagination">
-        {[1, 2, 3, 4, 5].map(n => (
-          <button 
-            key={n} 
-            className={currentPage === n ? 'active' : ''}
-            onClick={() => setCurrentPage(n)}
+        {[...Array(totalPages)].map((_, idx) => (
+          <button
+            key={idx + 1}
+            className={currentPage === idx + 1 ? 'active' : ''}
+            onClick={() => setCurrentPage(idx + 1)}
           >
-            {n}
+            {idx + 1}
           </button>
         ))}
-        <button>다음</button>
+        {currentPage < totalPages && (
+          <button onClick={() => setCurrentPage(currentPage + 1)}>다음</button>
+        )}
       </div>
 
       <div className="bottom-search">
-        <select>
-          <option>제목</option>
-          <option>작성자</option>
+        <select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
+          <option value="title">제목</option>
+          <option value="author">작성자</option>
         </select>
-        <input type="text" placeholder="검색어를 입력하세요" />
-        <button>검색</button>
+        <input
+          type="text"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+          placeholder="검색어를 입력하세요"
+        />
+        <button onClick={handleSearch}>검색</button>
       </div>
 
       {isModalOpen && (
