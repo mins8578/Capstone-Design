@@ -119,4 +119,34 @@ public class BoardController {
 
         return ResponseEntity.ok(dto);
     }
+
+    //게시글 좋아요
+    @PostMapping("/{id}/like")
+    public ResponseEntity<?> likeBoard(@PathVariable Long id,
+                                       @AuthenticationPrincipal UserDetails userDetails) {
+        BoardEntity board = boardRepository.findById(id).orElseThrow();
+        UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
+
+        // 중복 좋아요 방지 로직은 필요에 따라 추가
+        board.setLikeCount(board.getLikeCount() + 1);
+        boardRepository.save(board);
+
+        return ResponseEntity.ok("좋아요 성공");
+    }
+
+    // 게시글 좋아요 취소
+    @DeleteMapping("/{id}/like")
+    public ResponseEntity<?> unlikeBoard(@PathVariable Long id,
+                                         @AuthenticationPrincipal UserDetails userDetails) {
+        BoardEntity board = boardRepository.findById(id).orElseThrow();
+        UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
+
+        // 현재는 좋아요 수만 관리 중이므로, 중복 방지 없이 단순 감소 처리
+        if (board.getLikeCount() > 0) {
+            board.setLikeCount(board.getLikeCount() - 1);
+            boardRepository.save(board);
+        }
+
+        return ResponseEntity.ok("좋아요 취소 완료");
+    }
 }
