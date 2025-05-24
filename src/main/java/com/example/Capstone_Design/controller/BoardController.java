@@ -154,13 +154,16 @@ public class BoardController {
     @DeleteMapping("/{id}/like")
     public ResponseEntity<?> unlikeBoard(@PathVariable Long id,
                                          @AuthenticationPrincipal UserDetails userDetails) {
-        if (!boardLikeRepository.existsByBoard_IdAndUser_UserID(id, userDetails.getUsername())) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("좋아요한 기록이 없습니다.");
-        }
-
-        boardLikeRepository.deleteByBoard_IdAndUser_UserID(id, userDetails.getUsername());
-
         BoardEntity board = boardRepository.findById(id).orElseThrow();
+        String userId = userDetails.getUsername(); // 로그인한 사용자 ID
+
+        // ⭐ 직접 ID로 찾아 삭제
+        BoardLikeEntity like = boardLikeRepository.findByBoardIdAndUserId(id, userId)
+                .orElseThrow(() -> new RuntimeException("좋아요 기록이 없습니다."));
+
+        boardLikeRepository.delete(like); // 삭제 실행
+
+        // 좋아요 수 감소
         board.setLikeCount(Math.max(0, board.getLikeCount() - 1));
         boardRepository.save(board);
 
