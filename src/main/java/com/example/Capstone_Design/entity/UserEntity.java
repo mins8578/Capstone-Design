@@ -1,17 +1,17 @@
 package com.example.Capstone_Design.entity;
 
 import com.example.Capstone_Design.dto.UserDTO;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.Objects;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Table(name = "user")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // 👈 Hibernate 프록시 직렬화 방지
 public class UserEntity {
 
     @Id
@@ -27,7 +27,6 @@ public class UserEntity {
     @Column(length = 255)
     private String studentNumber;
 
-    @Column(length = 255)
     private String major;
 
     @Column(name = "role_id", nullable = false)
@@ -36,14 +35,27 @@ public class UserEntity {
     @Column(name = "scd_major")
     private String scdMajor;
 
+    // ✅ DTO → Entity 변환용 정적 메서드
     public static UserEntity toUserEntity(UserDTO userDto) {
-        return UserEntity.builder()
-                .userID(userDto.getUserID())
-                .pwd(userDto.getPwd())
-                .userName(userDto.getUserName())
-                .studentNumber(userDto.getStudentNumber())
-                .major(userDto.getMajor())
-                .scdMajor(userDto.getScdMajor())
-                .build();
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUserID(userDto.getUserID());
+        userEntity.setPwd(userDto.getPwd());
+        userEntity.setUserName(userDto.getUserName());
+        userEntity.setStudentNumber(userDto.getStudentNumber());
+        userEntity.setMajor(userDto.getMajor());
+        userEntity.setScdMajor(userDto.getScdMajor());
+        return userEntity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserEntity that)) return false;
+        return Objects.equals(userID, that.userID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userID);
     }
 }
