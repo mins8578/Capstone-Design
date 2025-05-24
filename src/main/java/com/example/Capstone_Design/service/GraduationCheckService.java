@@ -9,15 +9,14 @@ import com.example.Capstone_Design.dto.MajorDTO;
 import com.example.Capstone_Design.dto.StudentSubjectDTO;
 import com.example.Capstone_Design.entity.MajorEntity;
 import com.example.Capstone_Design.entity.StudentSubjectEntity;
-import com.example.Capstone_Design.entity.StudentSubjectId;
+import com.example.Capstone_Design.entity.SubjectEntity;
 import com.example.Capstone_Design.repository.MajorRepository;
 import com.example.Capstone_Design.repository.StudentSubjectRepository;
+import com.example.Capstone_Design.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,27 +25,37 @@ public class GraduationCheckService {
 
     private final StudentSubjectRepository studentSubjectRepository;
     private final MajorRepository majorRepository;
+    private final SubjectRepository subjectRepository;
 
 
     // 학과별 수강하는 과목 전체 총점
-    public int totalSubjectScore(String studentNumber, String major) {
-        Integer score = studentSubjectRepository.totalSubjectScore(studentNumber, major);
+    public int totalSubjectScore(String studentNumber) {
+        Integer score = studentSubjectRepository.totalSubjectScore(studentNumber);
         int result = score == null ? 0 : score;
 
         return result;
     }
 
-    /*
-    // 수강하고 있는 전공과목 카테고리 별 총점
-    public int subjectScore(String studentNumber, String category) {
-        Integer score = studentSubjectRepository.subjectScore(studentNumber, category);
-        int result = score == null ? 0 : score;
+    //복수전공 주전공 학점 map에 담아 리턴
+    public Map<String, Integer> getSubjectScore(int totalScore) {
+        Map<String, Integer> map = new HashMap<>();
+        int requiredScore = 33;
+        int majorScore = Math.min(requiredScore, totalScore);
+        totalScore -= majorScore;
 
-        return result;
+        int doubleMajorScore = Math.min(requiredScore, totalScore);
+        totalScore -= doubleMajorScore;
+
+        majorScore += totalScore;
+
+        map.put("주전공 학점", majorScore);
+        map.put("복수전공 학점", doubleMajorScore);
+
+        return map;
     }
 
-     */
 
+    //필수과목 자가진단
     public List<GraduationCheckResponse> getSubjectCheckList(List<GraduationCheckDTO> allList, List<GraduationCheckDTO> checkList) {
 
         Set<String> subjectCodes = new HashSet<>();
@@ -67,8 +76,6 @@ public class GraduationCheckService {
 
     }
 
-
-
     //각 과마다 졸업에 필요한 전공필수 과목
     public List<GraduationCheckDTO> graduationSubject(String majorCode) {
         List<GraduationCheckDTO> graduationCheckDTO = studentSubjectRepository.graduationSubject(majorCode);
@@ -85,7 +92,7 @@ public class GraduationCheckService {
     }
 
 
-     //학과 코드 리턴
+    //학과 코드 리턴
     public String getMajorCode(String major) {
         if(major == null || major.isBlank()) {
             throw new BadRequestException("프론트엔드에서 major가 정상적으로 넘어오지 않음.");
@@ -100,6 +107,7 @@ public class GraduationCheckService {
         return majorDTO.getMajorCode();
     }
 
+    //과목 저장
     public boolean studentSubjectSave(String studentNumber, String subjectName) {
 
         try{
@@ -107,7 +115,10 @@ public class GraduationCheckService {
             dto.setStudentNumber(studentNumber);
             dto.setSubjectName(subjectName);
 
+            SubjectEntity subjectEntity = subjectRepository.findBySubjectName(dto.getSubjectName());
+
             StudentSubjectEntity studentSubjectEntity = StudentSubjectEntity.toStudentSubjectEntity(dto);
+            studentSubjectEntity.setSubjectEntity(subjectEntity);
             studentSubjectRepository.save(studentSubjectEntity);
 
             return true;
@@ -116,8 +127,35 @@ public class GraduationCheckService {
         catch(Exception e){
             return false;
         }
-
     }
+
+    //수강하고 있는 과목 조회
+    public List<String> getGraduationSubjectList(List<GraduationCheckDTO> list) {
+        List<String> subjectList = new ArrayList<>();
+
+        if(list == null || list.isEmpty() || list.size() == 0) {
+            subjectList.add("수강과목 없음.");
+
+            return subjectList;
+        }
+
+        for(GraduationCheckDTO dto : list) {
+            subjectList.add(dto.getSubjectName());
+        }
+
+        return subjectList;
+    }
+
+
+    //학생이 수강하는 과목 전체 조회
+    public List<GraduationCheckDTO> getSubjects(String studentNumber) {
+        List<GraduationCheckDTO> list = studentSubjectRepository.getSubjects(studentNumber);
+
+        return list;
+    }
+
+
+
 
 
 }
