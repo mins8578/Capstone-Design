@@ -63,6 +63,7 @@ public class UserService {
             throw new BadRequestException("userID이 정상적으로 넘어오지 않음.");
         }
 
+
         UserEntity user = userRepository.findByUserID(userID).orElseThrow(() -> new UserNotFoundException("입력하신 회원이 존재하지 않습니다."));
         return MyPageResponse.toMyPageResponse(user);
     }

@@ -7,35 +7,27 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update  # create / update / validate / none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          time_zone: Asia/Seoul   # ✅ 여기에 추가하세요!
     database-platform: org.hibernate.dialect.MySQL8Dialect
 
   mail:
     host: mail.hallym.ac.kr
     port: 25
     username: 20203305@hallym.ac.kr
-    password: alstjr8578@   # 실제 이메일 비밀번호로 바꿔주세요
+    password: alstjr8578@
     properties:
       mail.smtp.auth: true
-      mail.smtp.starttls.enable: false  # 암호화 X (학교 설정 기준)
-
+      mail.smtp.starttls.enable: false
 
   logging:
-
     level:
       org.springframework.mail: DEBUG
 
   server:
     address: 0.0.0.0
-
-
-
-
-
-
-
-

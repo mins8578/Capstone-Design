@@ -149,10 +149,11 @@ public class UserController {
     }
      */
 
-    @PostMapping("/mypage/user")
+    @GetMapping("/mypage/user")
     public ResponseEntity<MyPageResponse> getMyPageUser(@AuthenticationPrincipal UserDetails userDetails) {
 
         String userID = userDetails.getUsername();
+
         MyPageResponse myPageResponse = userService.getMyPageUser(userID);
         return ResponseEntity.ok(myPageResponse);
     }

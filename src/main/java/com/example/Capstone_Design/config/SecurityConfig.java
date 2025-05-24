@@ -54,8 +54,8 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // ✅ OPTIONS 허용
-                        .requestMatchers(HttpMethod.GET, "/api/board/**", "/api/comments/**").permitAll() // ✅ 게시글/댓글 조회는 공개
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/board/**", "/api/comments/**").permitAll()
                         .requestMatchers("/api/login",
                                 "/api/register",
                                 "/api/send-code",
@@ -63,14 +63,13 @@ public class SecurityConfig {
                                 "/api/find-send-code",
                                 "/api/password-verify-code",
                                 "/api/reset").permitAll()
-                        .requestMatchers(
-                                "/api/user/me",
-                                "/api/board/**/like",
-                                "/api/comments/**/like",
-                                "/api/board/**",         // 게시글 등록/수정/삭제
-                                "/api/comments/**"       // 댓글 등록/수정/삭제
-                        ).authenticated().anyRequest().authenticated()                    // ✅ 로그인, 회원가입, 이메일 인증, 비밀번호 변경 외에 요청은 인증 필요
-            )
+                        .requestMatchers("/api/user/me").authenticated()
+                        .requestMatchers("/api/board/*/like").authenticated()       // 수정
+                        .requestMatchers("/api/comments/*/like").authenticated()    // 수정
+                        .requestMatchers("/api/board/**").authenticated()
+                        .requestMatchers("/api/comments/**").authenticated()
+                        .anyRequest().authenticated()
+                )
             .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
