@@ -120,6 +120,19 @@ public class BoardController {
         return ResponseEntity.ok(dto);
     }
 
+    // ✅ 게시글 좋아요 상태 확인
+    @GetMapping("/{id}/like")
+    public ResponseEntity<?> checkBoardLike(@PathVariable Long id,
+                                            @AuthenticationPrincipal UserDetails userDetails) {
+        BoardEntity board = boardRepository.findById(id).orElseThrow();
+        UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
+
+        boolean liked = boardLikeRepository.existsByBoardAndUser(board, user);
+        return ResponseEntity.ok().body(
+                java.util.Map.of("liked", liked)
+        );
+    }
+
     // ✅ 게시글 좋아요
     @PostMapping("/{id}/like")
     public ResponseEntity<?> likeBoard(@PathVariable Long id,
