@@ -65,10 +65,12 @@ const BoardDetailPage = () => {
         await axios.delete(`/api/board/${id}/like`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        alert('좋아요를 취소하셨습니다.');
       } else {
         await axios.post(`/api/board/${id}/like`, {}, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        alert('좋아요를 누르셨습니다!');
       }
 
       // 좋아요 상태 다시 확인
@@ -143,7 +145,7 @@ const BoardDetailPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("게시글이 수정되었습니다.");
-      await fetchPost(); // 수정 후 갱신
+      await fetchPost();
       setIsEditModalOpen(false);
     } catch (err) {
       alert("게시글 수정 실패");
