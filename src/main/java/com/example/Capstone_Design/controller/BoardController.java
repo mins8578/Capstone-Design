@@ -158,7 +158,7 @@ public class BoardController {
         String userId = userDetails.getUsername(); // 로그인한 사용자 ID
 
         // ⭐ 직접 ID로 찾아 삭제
-        BoardLikeEntity like = boardLikeRepository.findByBoardIdAndUserId(id, userId)
+        BoardLikeEntity like = boardLikeRepository.findByBoard_IdAndUser_UserID(id, userId)
                 .orElseThrow(() -> new RuntimeException("좋아요 기록이 없습니다."));
 
         boardLikeRepository.delete(like); // 삭제 실행
