@@ -93,6 +93,10 @@ public class BoardController {
         BoardEntity board = boardRepository.findById(id).orElseThrow();
         UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
 
+        // 수정된 코드
+        System.out.println("로그인한 사용자 ID: " + user.getUserID());
+        System.out.println("게시글 작성자 ID: " + board.getUser().getUserID());
+
         if (!board.getUser().getUserID().equals(user.getUserID())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("작성자만 삭제할 수 있습니다.");
         }
