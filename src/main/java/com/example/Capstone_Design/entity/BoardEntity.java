@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -37,4 +39,9 @@ public class BoardEntity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    // ✅ 좋아요 연관관계 추가
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<BoardLikeEntity> boardLikes = new ArrayList<>();
 }
