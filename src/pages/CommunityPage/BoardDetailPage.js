@@ -22,7 +22,7 @@ const BoardDetailPage = () => {
   const fetchPost = useCallback(async () => {
     try {
       const res = await axios.get(`/api/board/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }
       });
       setPost(res.data);
     } catch (err) {
@@ -40,46 +40,42 @@ const BoardDetailPage = () => {
     }
   }, [id]);
 
+  const fetchLikeStatus = useCallback(async () => {
+    try {
+      const res = await axios.get(`/api/board/${id}/like`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setLiked(res.data.liked);
+    } catch (err) {
+      console.error('좋아요 상태 확인 실패:', err);
+    }
+  }, [id, token]);
+
   useEffect(() => {
     if (!token) return;
 
     fetchPost();
     fetchComments();
+    fetchLikeStatus();
 
     axios.get('/api/user/me', {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => setCurrentUser(res.data.userID))
       .catch(err => console.error('사용자 정보 불러오기 실패:', err));
-
-    axios.get(`/api/board/${id}/like`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then(res => setLiked(res.data.liked))
-      .catch(err => console.error('좋아요 상태 확인 실패:', err));
-  }, [id, fetchPost, fetchComments, token]);
+  }, [fetchPost, fetchComments, fetchLikeStatus, token]);
 
   const toggleLike = async () => {
     try {
+      const headers = { headers: { Authorization: `Bearer ${token}` } };
       if (liked) {
-        await axios.delete(`/api/board/${id}/like`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.delete(`/api/board/${id}/like`, headers);
         alert('좋아요를 취소하셨습니다.');
       } else {
-        await axios.post(`/api/board/${id}/like`, {}, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.post(`/api/board/${id}/like`, {}, headers);
         alert('좋아요를 누르셨습니다!');
       }
-
-      // 좋아요 상태 다시 확인
-      const likeRes = await axios.get(`/api/board/${id}/like`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setLiked(likeRes.data.liked);
-
-      // 게시글 최신 정보로 갱신
+      await fetchLikeStatus();
       await fetchPost();
     } catch (err) {
       console.error('좋아요 처리 중 오류:', err);
@@ -91,9 +87,9 @@ const BoardDetailPage = () => {
     if (!newComment.trim()) return alert("댓글을 입력하세요.");
     try {
       await axios.post(`/api/comments/board/${id}`, {
-        content: newComment,
+        content: newComment
       }, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }
       });
       setNewComment('');
       fetchComments();
@@ -111,9 +107,9 @@ const BoardDetailPage = () => {
   const handleEditSubmit = async (commentId) => {
     try {
       await axios.put(`/api/comments/${commentId}`, {
-        content: editContent,
+        content: editContent
       }, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }
       });
       setEditingId(null);
       setEditContent('');
@@ -128,7 +124,7 @@ const BoardDetailPage = () => {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
     try {
       await axios.delete(`/api/comments/${commentId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }
       });
       fetchComments();
     } catch (err) {
@@ -142,7 +138,7 @@ const BoardDetailPage = () => {
   const handlePostEditSubmit = async (updatedData) => {
     try {
       await axios.put(`/api/board/${id}`, updatedData, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }
       });
       alert("게시글이 수정되었습니다.");
       await fetchPost();
@@ -157,7 +153,7 @@ const BoardDetailPage = () => {
     if (!window.confirm("이 게시글을 삭제하시겠습니까?")) return;
     try {
       await axios.delete(`/api/board/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }
       });
       alert("삭제되었습니다.");
       navigate("/communityboard");

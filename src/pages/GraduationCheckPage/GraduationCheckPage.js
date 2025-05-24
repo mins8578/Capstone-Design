@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../components/graduationcheckpage/graduationcheck.css';
-import SubjectModal from '../../pages/GraduationCheckPage/SubjectModal';
+import SubjectModal from './SubjectModal';
 import TrackRecommendationModal from './TrackRecommendationModal';
 import logo from '../../asset/한림대학교 로고.png';
 import home from '../../asset/Home.png';
@@ -15,22 +15,36 @@ const GraduationCheckPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTrackModalOpen, setIsTrackModalOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({ name: '', completed: false });
+
   const [majorSubjects, setMajorSubjects] = useState([]);
   const [doubleMajorSubjects, setDoubleMajorSubjects] = useState([]);
+
   const [majorScore, setMajorScore] = useState(0);
   const [doubleMajorScore, setDoubleMajorScore] = useState(0);
-  const [requirementStatus, setRequirementStatus] = useState({
-    "주전공 필수": "불충족",
-    "복수전공 필수": "불충족"
-  });
+
+  const [majorStatus, setMajorStatus] = useState('');
+  const [doubleMajorStatus, setDoubleMajorStatus] = useState('');
 
   const requiredCredits = 33;
+
+  const fetchGraduationStatus = async (token) => {
+    try {
+      const res = await axios.post('/api/graduation-check-result', {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setMajorStatus(res.data['주전공 필수'] || '정보 없음');
+      setDoubleMajorStatus(res.data['복수전공 필수'] || '정보 없음');
+    } catch (err) {
+      console.error('졸업 요건 충족 여부 불러오기 실패:', err);
+    }
+  };
 
   useEffect(() => {
     authErrorShown = false;
     const token = localStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다');
+      navigate('/login');
       return;
     }
 
@@ -41,18 +55,19 @@ const GraduationCheckPage = () => {
         });
         setUserInfo({ name: userRes.data?.userName || 'OOO', completed: false });
 
-        const [majorRes, doubleMajorRes, scoreRes, resultRes] = await Promise.all([
+        const [majorRes, doubleMajorRes, scoreRes] = await Promise.all([
           axios.post('/api/graduation-check', {}, { headers: { Authorization: `Bearer ${token}` } }),
           axios.post('/api/graduation-check02', {}, { headers: { Authorization: `Bearer ${token}` } }),
           axios.post('/api/total-score', {}, { headers: { Authorization: `Bearer ${token}` } }),
-          axios.post('/api/graduation-check-result', {}, { headers: { Authorization: `Bearer ${token}` } }),
         ]);
 
         setMajorSubjects(Array.isArray(majorRes.data) ? majorRes.data : []);
         setDoubleMajorSubjects(Array.isArray(doubleMajorRes.data) ? doubleMajorRes.data : []);
         setMajorScore(scoreRes.data?.['주전공 학점'] || 0);
         setDoubleMajorScore(scoreRes.data?.['복수전공 학점'] || 0);
-        setRequirementStatus(resultRes.data);
+
+        await fetchGraduationStatus(token);
+
       } catch (error) {
         if (!authErrorShown && error.response?.status === 401) {
           authErrorShown = true;
@@ -77,16 +92,22 @@ const GraduationCheckPage = () => {
       axios.post('/api/graduation-check', {}, { headers: { Authorization: `Bearer ${token}` } }),
       axios.post('/api/graduation-check02', {}, { headers: { Authorization: `Bearer ${token}` } }),
       axios.post('/api/total-score', {}, { headers: { Authorization: `Bearer ${token}` } }),
-      axios.post('/api/graduation-check-result', {}, { headers: { Authorization: `Bearer ${token}` } }),
-    ]).then(([majorRes, doubleMajorRes, scoreRes, resultRes]) => {
+    ]).then(([majorRes, doubleMajorRes, scoreRes]) => {
       setMajorSubjects(Array.isArray(majorRes.data) ? majorRes.data : []);
       setDoubleMajorSubjects(Array.isArray(doubleMajorRes.data) ? doubleMajorRes.data : []);
       setMajorScore(scoreRes.data?.['주전공 학점'] || 0);
       setDoubleMajorScore(scoreRes.data?.['복수전공 학점'] || 0);
-      setRequirementStatus(resultRes.data);
     }).catch(error => {
       console.error('데이터 갱신 실패:', error);
     });
+  };
+
+  const handleTrackModalOpen = () => {
+    setIsTrackModalOpen(true);
+  };
+
+  const handleTrackModalClose = () => {
+    setIsTrackModalOpen(false);
   };
 
   return (
@@ -105,9 +126,9 @@ const GraduationCheckPage = () => {
       </div>
 
       {isModalOpen && <SubjectModal onClose={handleModalClose} />}
-      {isTrackModalOpen && <TrackRecommendationModal onClose={() => setIsTrackModalOpen(false)} />}
+      {isTrackModalOpen && <TrackRecommendationModal onClose={handleTrackModalClose} />}
 
-      <button className="track-recommend-button" onClick={() => setIsTrackModalOpen(true)}>
+      <button className="track-recommend-button" onClick={handleTrackModalOpen}>
         <img src={trackIcon} alt="학년별 트랙 추천" className="track-recommend-icon" />
       </button>
 
@@ -121,14 +142,14 @@ const GraduationCheckPage = () => {
             </tr>
             <tr>
               <td>주전공 필수</td>
-              <td className={requirementStatus['주전공 필수'] === '충족' ? 'status-pass' : 'status-fail'}>
-                {requirementStatus['주전공 필수']}
+              <td className={majorStatus === "충족" ? "status-pass" : "status-fail"}>
+                {majorStatus}
               </td>
             </tr>
             <tr>
               <td>복수전공 필수</td>
-              <td className={requirementStatus['복수전공 필수'] === '충족' ? 'status-pass' : 'status-fail'}>
-                {requirementStatus['복수전공 필수']}
+              <td className={doubleMajorStatus === "충족" ? "status-pass" : "status-fail"}>
+                {doubleMajorStatus}
               </td>
             </tr>
           </tbody>
@@ -147,6 +168,60 @@ const GraduationCheckPage = () => {
               <td className="credit-value">{majorScore} / {requiredCredits}</td>
               <td className="credit-value">{doubleMajorScore} / {requiredCredits}</td>
             </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section className="section">
+        <h2>주전공 필수</h2>
+        <table className="subject-table">
+          <thead>
+            <tr className="gray-row">
+              <td>과목코드</td><td>과목명</td><td>분류</td><td>수강여부</td>
+            </tr>
+          </thead>
+          <tbody>
+            {majorSubjects.length > 0 ? (
+              majorSubjects.map((subject, index) => (
+                <tr key={index}>
+                  <td>{subject.subjectCode || '-'}</td>
+                  <td>{subject.subjectName}</td>
+                  <td>{subject.type || '전필'}</td>
+                  <td className={subject.completed ? "status-pass" : "status-fail"}>
+                    {subject.completed ? '수강완료' : '미수강'}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr><td colSpan="4">등록된 과목이 없습니다.</td></tr>
+            )}
+          </tbody>
+        </table>
+      </section>
+
+      <section className="section">
+        <h2>복수 전공 필수</h2>
+        <table className="subject-table">
+          <thead>
+            <tr className="gray-row">
+              <td>과목코드</td><td>과목명</td><td>분류</td><td>수강여부</td>
+            </tr>
+          </thead>
+          <tbody>
+            {doubleMajorSubjects.length > 0 ? (
+              doubleMajorSubjects.map((subject, index) => (
+                <tr key={index}>
+                  <td>{subject.subjectCode || '-'}</td>
+                  <td>{subject.subjectName}</td>
+                  <td>{subject.type || '전필'}</td>
+                  <td className={subject.completed ? "status-pass" : "status-fail"}>
+                    {subject.completed ? '수강완료' : '미수강'}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr><td colSpan="4">등록된 과목이 없습니다.</td></tr>
+            )}
           </tbody>
         </table>
       </section>
