@@ -44,6 +44,10 @@ public class BoardEntity {
     @Builder.Default
     private List<BoardLikeEntity> boardLikes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<CommentEntity> comments = new ArrayList<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

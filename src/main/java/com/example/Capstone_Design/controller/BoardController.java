@@ -128,27 +128,20 @@ public class BoardController {
     @GetMapping("/{id}/like")
     public ResponseEntity<?> checkBoardLike(@PathVariable Long id,
                                             @AuthenticationPrincipal UserDetails userDetails) {
-        BoardEntity board = boardRepository.findById(id).orElseThrow();
-        UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
-
-        boolean liked = boardLikeRepository.existsByBoardAndUser(board, user);
-        return ResponseEntity.ok().body(
-                java.util.Map.of("liked", liked)
-        );
+        boolean liked = boardLikeRepository.existsByBoard_IdAndUser_UserID(id, userDetails.getUsername());
+        return ResponseEntity.ok().body(java.util.Map.of("liked", liked));
     }
 
-    // ✅ 게시글 좋아요
     @PostMapping("/{id}/like")
     public ResponseEntity<?> likeBoard(@PathVariable Long id,
                                        @AuthenticationPrincipal UserDetails userDetails) {
-        BoardEntity board = boardRepository.findById(id).orElseThrow();
-        UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
-
-        if (boardLikeRepository.existsByBoardAndUser(board, user)) {
+        if (boardLikeRepository.existsByBoard_IdAndUser_UserID(id, userDetails.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 좋아요한 게시글입니다.");
         }
 
-        // ✅ createdAt은 BoardLikeEntity의 @PrePersist로 자동 세팅됨
+        BoardEntity board = boardRepository.findById(id).orElseThrow();
+        UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
+
         BoardLikeEntity like = new BoardLikeEntity(board, user);
         boardLikeRepository.save(like);
 
@@ -158,23 +151,18 @@ public class BoardController {
         return ResponseEntity.ok("좋아요 성공");
     }
 
-    // ✅ 게시글 좋아요 취소
     @DeleteMapping("/{id}/like")
     public ResponseEntity<?> unlikeBoard(@PathVariable Long id,
                                          @AuthenticationPrincipal UserDetails userDetails) {
-        BoardEntity board = boardRepository.findById(id).orElseThrow();
-        UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
-
-        if (!boardLikeRepository.existsByBoardAndUser(board, user)) {
+        if (!boardLikeRepository.existsByBoard_IdAndUser_UserID(id, userDetails.getUsername())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("좋아요한 기록이 없습니다.");
         }
 
-        boardLikeRepository.deleteByBoardAndUser(board, user);
+        boardLikeRepository.deleteByBoard_IdAndUser_UserID(id, userDetails.getUsername());
 
-        if (board.getLikeCount() > 0) {
-            board.setLikeCount(board.getLikeCount() - 1);
-            boardRepository.save(board);
-        }
+        BoardEntity board = boardRepository.findById(id).orElseThrow();
+        board.setLikeCount(Math.max(0, board.getLikeCount() - 1));
+        boardRepository.save(board);
 
         return ResponseEntity.ok("좋아요 취소 완료");
     }
