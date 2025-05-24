@@ -1,7 +1,9 @@
 package com.example.Capstone_Design.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -10,12 +12,12 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "board")
 public class BoardEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
     private Long id;
 
-    //DB title 테이블 추가해야 됨.
     @Column(length = 255)
     private String title;
 
@@ -27,12 +29,12 @@ public class BoardEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})  // 👈 핵심 추가
     private UserEntity user;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    //업데이트 시간 넣을까 말까
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
