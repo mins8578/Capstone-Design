@@ -105,17 +105,43 @@ public class GraduationCheckController {
 
         String studentNumber = user.getStudentNumber();
 
-        List<String> subjects = request.getSubjects();
+        List<String> subjectNames = request.getSubjects();
 
+        boolean saveFlag = graduationCheckService.studentSubjectSave(studentNumber, subjectNames);
+
+        if(!saveFlag) {
+            return ResponseEntity.badRequest().build();
+        }
+        else {
+            return ResponseEntity.ok().build();
+        }
+
+        /*
         for(String subjectName : subjects) {
-            boolean saveFlag = graduationCheckService.studentSubjectSave(studentNumber,subjectName);
+            boolean saveFlag = graduationCheckService.studentSubjectSave(studentNumber,subjectNames);
 
             if(!saveFlag) {
                 return ResponseEntity.badRequest().build();
             }
         }
 
-        return ResponseEntity.ok().build();
+         */
+
+    }
+
+    //졸업 요건 리스트 충족 불충족 여부
+    @PostMapping("/graduation-check-result")
+    public ResponseEntity<?> graduationCheckResult(@AuthenticationPrincipal UserDetails userDetails) {
+        String userID = userDetails.getUsername();
+        UserDTO user = userService.getUser(userID);
+
+        String studentNumber = user.getStudentNumber();
+        String majorCode = graduationCheckService.getMajorCode(user.getMajor());
+        String scdMajorCode = graduationCheckService.getMajorCode(user.getScdMajor());
+
+        Map<String, String> list = graduationCheckService.getGraduationCheckResults(studentNumber, majorCode, scdMajorCode);
+
+        return ResponseEntity.ok(list);
     }
 
 
