@@ -13,7 +13,7 @@ spring:
       hibernate:
         format_sql: true
         jdbc:
-          time_zone: Asia/Seoul   # ✅ 여기에 추가하세요!
+          time_zone: Asia/Seoul
     database-platform: org.hibernate.dialect.MySQL8Dialect
 
   mail:
@@ -31,3 +31,7 @@ spring:
 
   server:
     address: 0.0.0.0
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher  # ✅ 추가된 부분
