@@ -20,23 +20,19 @@ const subjectsByCategory = {
     "가상현실과증강현실", "영상처리와딥러닝"
   ],
   "스마트IoT 전공": [
-    "모바일프로그래밍", "디지털통신", "IOT플랫폼설계", "IOT네트워크", "모바일센서공학",
-    "통신네트워크시스템"
+    "모바일프로그래밍", "디지털통신", "IOT플랫폼설계", "IOT네트워크", "모바일센서공학", "통신네트워크시스템"
   ]
 };
 
-const SubjectModal = ({ onClose }) => {
+const SubjectModal = ({ onClose, isOpen }) => {
   const [selectedSubjects, setSelectedSubjects] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const token = localStorage.getItem('token');
 
-  // 모달이 열릴 때마다 이수 과목 불러오기
+  // ✅ 모달이 열릴 때마다 과목 상태를 새로 불러오기
   useEffect(() => {
     const fetchUserSubjects = async () => {
-      if (!token) {
-        alert('로그인이 필요합니다.');
-        return; // onClose 제거하여 useEffect 의존성 경고 방지
-      }
+      if (!token || !isOpen) return;
 
       try {
         setIsLoading(true);
@@ -44,24 +40,28 @@ const SubjectModal = ({ onClose }) => {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        if (response.data?.subjects) {
+        const data = response.data;
+
+        if (Array.isArray(data)) {
           const userSubjects = {};
-          response.data.subjects.forEach(subject => {
+          data.forEach(subject => {
             userSubjects[subject.trim()] = true;
           });
           setSelectedSubjects(userSubjects);
+        } else {
+          console.warn('예상치 못한 형식의 응답:', data);
         }
       } catch (error) {
-        console.error('과목 정보 로딩 실패:', error);
+        console.error('이수 과목 불러오기 실패:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchUserSubjects();
-  }, [token]);
+  }, [isOpen, token]); // ✅ token과 isOpen을 의존성 배열에 추가
 
-  // 체크 상태 토글
+  // ✅ 체크 상태 토글
   const handleSubjectChange = (subject) => {
     const trimmed = subject.trim();
     setSelectedSubjects(prev => ({
@@ -70,28 +70,26 @@ const SubjectModal = ({ onClose }) => {
     }));
   };
 
-  // 저장 처리
+  // ✅ 저장 처리
   const handleSave = async () => {
     if (!token) return;
 
     try {
       setIsLoading(true);
 
-      const selectedList = Object.keys(selectedSubjects)
-        .filter(subject => selectedSubjects[subject])
-        .map(subject => subject.trim());
+      const selectedList = Object.entries(selectedSubjects)
+        .filter(([_, isChecked]) => isChecked)
+        .map(([subject]) => subject.trim());
 
-      await axios.post('/api/subjects', {
-        subjects: selectedList
-      }, {
+      await axios.post('/api/subjects', { subjects: selectedList }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
       alert('이수 과목이 저장되었습니다.');
       onClose();
     } catch (error) {
-      console.error('과목 저장 실패:', error);
-      alert('이수 과목 저장에 실패했습니다.');
+      console.error('이수 과목 저장 실패:', error);
+      alert('저장에 실패했습니다.');
     } finally {
       setIsLoading(false);
     }
