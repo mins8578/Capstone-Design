@@ -97,7 +97,6 @@ const GraduationCheckPage = () => {
       setMajorScore(scoreRes.data?.['주전공 학점'] || 0);
       setDoubleMajorScore(scoreRes.data?.['복수전공 학점'] || 0);
 
-      // ✅ 졸업요건 상태도 갱신
       fetchGraduationStatus(token);
     }).catch(error => {
       console.error('데이터 갱신 실패:', error);
@@ -127,7 +126,8 @@ const GraduationCheckPage = () => {
         </button>
       </div>
 
-      {isModalOpen && <SubjectModal onClose={handleModalClose} />}
+      {/* ✅ isOpen prop 전달 */}
+      {isModalOpen && <SubjectModal isOpen={isModalOpen} onClose={handleModalClose} />}
       {isTrackModalOpen && <TrackRecommendationModal onClose={handleTrackModalClose} />}
 
       <button className="track-recommend-button" onClick={handleTrackModalOpen}>
