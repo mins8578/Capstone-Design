@@ -124,8 +124,8 @@ public class GraduationCheckService {
 
 
             //삭제하려고 하는 과목
-            List<String> subjectDelete = subjectNames.stream()
-                    .filter(subject -> !subjectCheckList.contains(subject))
+            List<String> subjectDelete = subjectCheckList.stream()
+                    .filter(subject -> !subjectNames.contains(subject))
                     .collect(Collectors.toList());
 
 
@@ -133,13 +133,18 @@ public class GraduationCheckService {
                 studentSubjectRepository.deleteByStudentNumberAndSubjectNames(studentNumber, subjectDelete);
             }
 
+            //프론트에는 있는데 db에는 없는 과목 (추가하려고 하는 과목)
+            List<String> subjectList = subjectNames.stream()
+                    .filter(subject -> !subjectCheckList.contains(subject))
+                    .collect(Collectors.toList());
+
 
             Map<String, SubjectEntity> subjectMap = subjectEntities.stream()
                     .collect(Collectors.toMap(SubjectEntity::getSubjectName, Function.identity()));
 
             List<StudentSubjectEntity> saveList = new ArrayList<>();
 
-            for (String subjectName : subjectNames) {
+            for (String subjectName : subjectList) {
                 SubjectEntity subjectEntity = subjectMap.get(subjectName);
 
                 if (subjectEntity == null) {
