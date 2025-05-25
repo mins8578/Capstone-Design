@@ -67,7 +67,6 @@ const GraduationCheckPage = () => {
         setDoubleMajorScore(scoreRes.data?.['복수전공 학점'] || 0);
 
         await fetchGraduationStatus(token);
-
       } catch (error) {
         if (!authErrorShown && error.response?.status === 401) {
           authErrorShown = true;
@@ -97,6 +96,9 @@ const GraduationCheckPage = () => {
       setDoubleMajorSubjects(Array.isArray(doubleMajorRes.data) ? doubleMajorRes.data : []);
       setMajorScore(scoreRes.data?.['주전공 학점'] || 0);
       setDoubleMajorScore(scoreRes.data?.['복수전공 학점'] || 0);
+
+      // ✅ 졸업요건 상태도 갱신
+      fetchGraduationStatus(token);
     }).catch(error => {
       console.error('데이터 갱신 실패:', error);
     });

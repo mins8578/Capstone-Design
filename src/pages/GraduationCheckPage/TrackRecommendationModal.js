@@ -17,21 +17,21 @@ const TrackRecommendationModal = ({ onClose }) => {
             { code: '511644', name: 'C프로그래밍', credit: 3 },
             { code: '506808', name: 'C++프로그래밍', credit: 3 },
             { code: '506214', name: '이산구조론', credit: 3 },
-            { code: '', name: '소프트웨어세미나I', credit: 3 },
-            { code: '', name: '소프트웨어세미나II', credit: 3 },
+            { code: '603115', name: '소프트웨어세미나I', credit: 3 },
+            { code: '603113', name: '소프트웨어세미나II', credit: 3 },
             { code: '511601', name: '선형대수', credit: 3 },
-            { code: '', name: '오픈소스리눅스실무', credit: 3 },
-            { code: '', name: '프로그래밍스튜디오', credit: 3 },
+            { code: '603114', name: '오픈소스리눅스실무', credit: 3 },
+            { code: '603109', name: '프로그래밍스튜디오', credit: 3 },
             { code: '603119', name: '소프트웨어개론', credit: 3 },
             { code: '603110', name: '알고리즘', credit: 3 },
             { code: '511643', name: '자료구조', credit: 3 },
             { code: '506204', name: '컴퓨터구조', credit: 3 },
             { code: '511215', name: '논리설계 및 실험', credit: 3 },
             { code: '506829', name: '임베디드 시스템', credit: 3 },
-            { code: '', name: '회로이론 및 실험', credit: 3 },
+            { code: '514101', name: '회로이론 및 실험', credit: 3 },
             { code: '511502', name: '데이터통신', credit: 3 },
             { code: '603126', name: '데이터사이언스기초', credit: 3 },
-            { code: '603111', name: '데이터베이스', credit: 3 },
+            { code: '603111', name: '데이터베이스기초', credit: 3 },
             { code: '603121', name: '신호 및 시스템', credit: 3 },
             { code: '603112', name: '오픈소스SW의 이해', credit: 3 }
           ]
@@ -50,10 +50,10 @@ const TrackRecommendationModal = ({ onClose }) => {
             { code: '511644', name: 'C프로그래밍', credit: 3 },
             { code: '506808', name: 'C++프로그래밍', credit: 3 },
             { code: '506214', name: '이산구조론', credit: 3 },
-            { code: '', name: '소프트웨어세미나I', credit: 3 },
-            { code: 'SW104', name: '소프트웨어세미나II', credit: 3 },
+            { code: '603115', name: '소프트웨어세미나I', credit: 3 },
+            { code: '603113', name: '소프트웨어세미나II', credit: 3 },
             { code: '511601', name: '선형대수', credit: 3 },
-            { code: '', name: '오픈소스리눅스실무', credit: 3 },
+            { code: '603114', name: '오픈소스리눅스실무', credit: 3 },
             { code: '603109', name: '프로그래밍스튜디오', credit: 3 },
             { code: '603119', name: '소프트웨어개론', credit: 3 },
             { code: '603110', name: '알고리즘', credit: 3 },
@@ -61,10 +61,10 @@ const TrackRecommendationModal = ({ onClose }) => {
             { code: '506204', name: '컴퓨터구조', credit: 3 },
             { code: '511215', name: '논리설계 및 실험', credit: 3 },
             { code: '506829', name: '임베디드 시스템', credit: 3 },
-            { code: '', name: '회로이론 및 실험', credit: 3 },
+            { code: '514101', name: '회로이론 및 실험', credit: 3 },
             { code: '511502', name: '데이터통신', credit: 3 },
             { code: '603126', name: '데이터사이언스기초', credit: 3 },
-            { code: '603111', name: '데이터베이스', credit: 3 },
+            { code: '603111', name: '데이터베이스기초', credit: 3 },
             { code: '603121', name: '신호 및 시스템', credit: 3 },
             { code: '603112', name: '오픈소스SW의 이해', credit: 3 }
           ]
@@ -72,42 +72,42 @@ const TrackRecommendationModal = ({ onClose }) => {
         {
           name: '빅데이터 트랙(빅데이터 전공)',
           subjects: [
-            { code: '', name: '데이터사이언스기초', credit: 3 },
-            { code: '', name: '데이터베이스기초', credit: 3 }
+            { code: '603126', name: '데이터사이언스기초', credit: 3 },
+            { code: '603111', name: '데이터베이스기초', credit: 3 }
           ]
         },
         {
           name: '인공지능 트랙(빅데이터 전공)',
           subjects: [
-            { code: '', name: '데이터베이스', credit: 3 },
-            { code: '', name: '인공지능수학', credit: 3 }
+            { code: '603111', name: '데이터베이스기초', credit: 3 },
+            { code: '603134', name: '인공지능수학', credit: 3 }
           ]
         },
         {
           name: '게임개발 트랙(콘텐츠IT 전공)',
           subjects: [
-            { code: '', name: 'VR/AR/게임제작기초', credit: 3 }
+            { code: '601101', name: 'VR/AR/게임제작기초', credit: 3 }
           ]
         },
         {
           name: 'VR/AR 트랙(콘텐츠IT 전공)',
           subjects: [
-            { code: '', name: 'VR/AR/게임제작기초', credit: 3 }
+            { code: '601101', name: 'VR/AR/게임제작기초', credit: 3 }
           ]
         },
         {
           name: '임베디드 트랙(스마트IoT 전공)',
           subjects: [
-            { code: '', name: '데이터 통신', credit: 3 },
-            { code: '', name: '인공지능수학', credit: 3 },
-            { code: '', name: '임베디드시스템', credit: 3 },
-            { code: '', name: '디지털신호처리', credit: 3 }
+            { code: '511502', name: '데이터 통신', credit: 3 },
+            { code: '603134', name: '인공지능수학', credit: 3 },
+            { code: '506829', name: '임베디드시스템', credit: 3 },
+            { code: '511321', name: '디지털신호처리', credit: 3 }
           ]
         },
         {
           name: '통신/보안 트랙(스마트IoT 전공)',
           subjects: [
-            { code: '', name: '데이터 통신', credit: 3 }
+            { code: '511502', name: '데이터 통신', credit: 3 }
           ]
         }
       ],
@@ -121,7 +121,7 @@ const TrackRecommendationModal = ({ onClose }) => {
           subjects: [
             { code: '506703', name: '윈도우프로그래밍', credit: 3 },
             { code: '506812', name: '모바일프로그래밍', credit: 3 },
-            { code: '', name: '웹프로그래밍', credit: 3 },
+            { code: '506702', name: '웹프로그래밍', credit: 3 },
             { code: '514126', name: '컴퓨터네트워크', credit: 3 },
             { code: '506314', name: '운영체제', credit: 3 },
             { code: '506319', name: '프로그래밍어론', credit: 3 },
@@ -152,56 +152,55 @@ const TrackRecommendationModal = ({ onClose }) => {
         {
           name: '빅데이터 트랙(빅데이터 전공)',
           subjects: [
-            { code: '', name: '데이터시각화', credit: 3 },
-            { code: '', name: '데이터마이닝', credit: 3 },
-            { code: '', name: '머신러닝', credit: 3 },
-            { code: '', name: '클라우드컴퓨팅', credit: 3 },
-            { code: '', name: '빅데이터개론', credit: 3 }
+            { code: '600008', name: '데이터시각화', credit: 3 },
+            { code: '600001', name: '데이터마이닝', credit: 3 },
+            { code: '506209', name: '머신러닝', credit: 3 },
+            { code: '600003', name: '클라우드컴퓨팅', credit: 3 },
+            { code: '600005', name: '빅데이터개론', credit: 3 }
           ]
         },
         {
           name: '인공지능 트랙(빅데이터 전공)',
           subjects: [
-            { code: '', name: '머신러닝응용', credit: 3 },
-            { code: '', name: '데이터마이닝', credit: 3 },
-            { code: '', name: '머신러닝닝', credit: 3 },
-            { code: '', name: '텍스트정보처리', credit: 3 },
-            { code: '', name: '딥러닝이론 및 응용', credit: 3 }
+            { code: '506417', name: '머신러닝응용', credit: 3 },
+            { code: '600001', name: '데이터마이닝', credit: 3 },
+            { code: '506209', name: '머신러닝', credit: 3 },
+            { code: '600002', name: '텍스트정보처리', credit: 3 },
+            { code: '600004', name: '딥러닝이론 및 응용', credit: 3 }
           ]
         },
         {
           name: '게임개발 트랙(콘텐츠IT 전공)',
           subjects: [
-            { code: '', name: '컴퓨터그래픽스', credit: 3 },
-            { code: '', name: '게임프로그래밍', credit: 3 }
+            { code: '506419', name: '컴퓨터그래픽스', credit: 3 },
+            { code: '601104', name: '게임프로그래밍', credit: 3 }
           ]
         },
         {
           name: 'VR/AR 트랙(콘텐츠IT 전공)',
           subjects: [
-            { code: '', name: '가상현실과 증강현실', credit: 3 }
+            { code: '601108', name: '가상현실과 증강현실', credit: 3 }
           ]
         },
         {
           name: '임베디드 트랙(스마트IoT 전공)',
           subjects: [
-            { code: '', name: '모바일센서공학', credit: 3 },
-            { code: '', name: '전자회로', credit: 3 },
-            { code: '', name: 'IoT플랫폼설계', credit: 3 },
-            { code: '', name: '모바일프로그래밍', credit: 3 },
-            { code: '', name: '머신러닝', credit: 3 },
-            { code: '', name: '고급임베디드시스템', credit: 3 }
+            { code: '602107', name: '모바일센서공학', credit: 3 },
+            { code: '511307', name: '전자회로', credit: 3 },
+            { code: '602104', name: 'IoT플랫폼설계', credit: 3 },
+            { code: '506812', name: '모바일프로그래밍', credit: 3 },
+            { code: '506209', name: '머신러닝', credit: 3 }
           ]
         },
         {
           name: '통신/보안 트랙(스마트IoT 전공)',
           subjects: [
-            { code: '', name: '통신네트워크시스템', credit: 3 },
-            { code: '', name: '블록체인', credit: 3 },
-            { code: '', name: '시스템보안', credit: 3 },
-            { code: '', name: 'IoT네트워크', credit: 3 },
-            { code: '', name: 'IoT플랫폼설계', credit: 3 },
-            { code: '', name: '네트워크보안', credit: 3 }
+            { code: '603132', name: '통신네트워크시스템', credit: 3 },
+            { code: '603125', name: '블록체인', credit: 3 },
+            { code: '603130', name: '시스템보안', credit: 3 },
+            { code: '602106', name: 'IoT네트워크', credit: 3 },
+            { code: '602104', name: 'IoT플랫폼설계', credit: 3 },
+            { code: '602103', name: '네트워크보안', credit: 3 }
           ]
         }
       ],
@@ -215,7 +214,7 @@ const TrackRecommendationModal = ({ onClose }) => {
           subjects: [
             { code: '506703', name: '윈도우프로그래밍', credit: 3 },
             { code: '506812', name: '모바일프로그래밍', credit: 3 },
-            { code: '', name: '웹프로그래밍', credit: 3 },
+            { code: '506702', name: '웹프로그래밍', credit: 3 },
             { code: '514126', name: '컴퓨터네트워크', credit: 3 },
             { code: '506314', name: '운영체제', credit: 3 },
             { code: '506319', name: '프로그래밍어론', credit: 3 },
