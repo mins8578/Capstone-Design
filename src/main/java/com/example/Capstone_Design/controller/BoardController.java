@@ -72,29 +72,25 @@ public class BoardController {
     public ResponseEntity<?> updateBoard(@PathVariable Long id,
                                          @RequestBody BoardEntity updatedBoard,
                                          @AuthenticationPrincipal UserDetails userDetails) {
-        // 1. 로그인한 사용자 ID
+
         String loginUserId = userDetails.getUsername();
 
-        // 2. 게시글 가져오기
-        BoardEntity board = boardRepository.findById(id).orElseThrow(() ->
-                new RuntimeException("해당 게시글이 존재하지 않습니다."));
-
-        // 3. 게시글 작성자의 ID
-        String writerUserId = board.getUser().getUserID();
-
-        // 4. ID 직접 비교
-        if (!loginUserId.equals(writerUserId)) {
+        // 게시글 ID와 로그인 사용자 ID로 존재 여부 확인
+        boolean isAuthor = boardRepository.existsByIdAndUser_UserID(id, loginUserId);
+        if (!isAuthor) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("작성자만 수정할 수 있습니다.");
         }
 
-        // 5. 수정 처리
+        // 게시글 엔티티 가져와서 수정
+        BoardEntity board = boardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
+
         board.setTitle(updatedBoard.getTitle());
         board.setContent(updatedBoard.getContent());
         board.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 
-        // 6. 저장
-        BoardEntity savedBoard = boardRepository.save(board);
-        return ResponseEntity.ok(savedBoard);
+        BoardEntity saved = boardRepository.save(board);
+        return ResponseEntity.ok(saved);
     }
 
     // ✅ 게시글 삭제
