@@ -73,15 +73,16 @@ public class BoardController {
                                          @RequestBody BoardEntity updatedBoard,
                                          @AuthenticationPrincipal UserDetails userDetails) {
         BoardEntity board = boardRepository.findById(id).orElseThrow();
-        UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
+        String loginUserId = userDetails.getUsername(); // 로그인한 사용자 ID
+        String writerUserId = board.getUser().getUserID(); // 게시글 작성자 ID
 
-        if (!board.getUser().getUserID().equals(user.getUserID())) {
+        if (!loginUserId.equals(writerUserId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("작성자만 수정할 수 있습니다.");
         }
 
         board.setTitle(updatedBoard.getTitle());
         board.setContent(updatedBoard.getContent());
-        board.setUpdatedAt(LocalDateTime.now(SEOUL_ZONE));
+        board.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 
         return ResponseEntity.ok(boardRepository.save(board));
     }
