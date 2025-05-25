@@ -94,7 +94,6 @@ public class BoardController {
 
         // 6. 저장
         BoardEntity savedBoard = boardRepository.save(board);
-
         return ResponseEntity.ok(savedBoard);
     }
 
