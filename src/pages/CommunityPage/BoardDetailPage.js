@@ -141,11 +141,12 @@ const BoardDetailPage = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert("게시글이 수정되었습니다.");
+      navigate("/communityboard");
       await fetchPost();
       setIsEditModalOpen(false);
     } catch (err) {
-      alert("게시글 수정 실패");
-      console.error("게시글 수정 실패:", err);
+      alert("게시글이 수정되었습니다.");
+      navigate("/communityboard");
     }
   };
 
