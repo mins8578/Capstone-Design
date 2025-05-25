@@ -8,6 +8,7 @@ import axios from 'axios';
 function MyPage() {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
+    user_name: '',
     userID: '',
     studentNumber: '',
     major: '',
@@ -58,6 +59,7 @@ function MyPage() {
       <div className="mypage-content">
         <div className="mypage-info-box">
           <h2>기본 정보</h2>
+          <p>이름: {userInfo.user_name}</p>
           <p>아이디(이메일): {userInfo.userID}</p>
           <p>학번: {userInfo.studentNumber}</p>
           <p>주전공: {userInfo.major}</p>
