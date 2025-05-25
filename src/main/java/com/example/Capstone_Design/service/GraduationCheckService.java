@@ -130,7 +130,7 @@ public class GraduationCheckService {
 
 
             if (!subjectDelete.isEmpty()) {
-                studentSubjectRepository.deleteByStudentNumberAndSubjectNames(studentNumber, subjectDelete);
+                studentSubjectRepository.deleteSubject(studentNumber, subjectDelete);
             }
 
             //프론트에는 있는데 db에는 없는 과목 (추가하려고 하는 과목)
