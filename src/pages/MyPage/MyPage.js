@@ -63,7 +63,7 @@ function MyPage() {
           <p>아이디(이메일): {userInfo.userID}</p>
           <p>학번: {userInfo.studentNumber}</p>
           <p>주전공: {userInfo.major}</p>
-          <p>복수전공: {userInfo.scdMajor || '없음'}</p>
+          <p>복수전공: {userInfo.scdMajor}</p>
         </div>
       </div>
     </div>

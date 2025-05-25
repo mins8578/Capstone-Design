@@ -135,7 +135,9 @@ const GraduationCheckPage = () => {
       </button>
 
       <section className="section">
-        <h2>{userInfo.name}님의 현재 이수현황!</h2>
+        <h2>{userInfo.name}님의 현재 이수현황!
+          <span className="capstone-notice">※ 소프트웨어캡스톤디자인을 수강하셔야지만 졸업요건 확인이 가능합니다!</span>
+        </h2>
         <table className="check-table strong-border">
           <tbody>
             <tr className="gray-row">

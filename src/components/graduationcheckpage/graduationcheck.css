@@ -158,3 +158,11 @@ td {
   font-weight: 600;
   font-size: 18px;
 }
+
+.capstone-notice {
+  display: block;
+  font-size: 14px;
+  font-weight: normal;
+  color: #e53935; /* 빨간색 강조 */
+  margin-top: 4px;
+}
