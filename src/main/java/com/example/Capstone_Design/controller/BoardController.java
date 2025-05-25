@@ -72,19 +72,30 @@ public class BoardController {
     public ResponseEntity<?> updateBoard(@PathVariable Long id,
                                          @RequestBody BoardEntity updatedBoard,
                                          @AuthenticationPrincipal UserDetails userDetails) {
-        BoardEntity board = boardRepository.findById(id).orElseThrow();
-        String loginUserId = userDetails.getUsername(); // 로그인한 사용자 ID
-        String writerUserId = board.getUser().getUserID(); // 게시글 작성자 ID
+        // 1. 로그인한 사용자 ID
+        String loginUserId = userDetails.getUsername();
 
+        // 2. 게시글 가져오기
+        BoardEntity board = boardRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("해당 게시글이 존재하지 않습니다."));
+
+        // 3. 게시글 작성자의 ID
+        String writerUserId = board.getUser().getUserID();
+
+        // 4. ID 직접 비교
         if (!loginUserId.equals(writerUserId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("작성자만 수정할 수 있습니다.");
         }
 
+        // 5. 수정 처리
         board.setTitle(updatedBoard.getTitle());
         board.setContent(updatedBoard.getContent());
         board.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 
-        return ResponseEntity.ok(boardRepository.save(board));
+        // 6. 저장
+        BoardEntity savedBoard = boardRepository.save(board);
+
+        return ResponseEntity.ok(savedBoard);
     }
 
     // ✅ 게시글 삭제
@@ -152,6 +163,7 @@ public class BoardController {
         return ResponseEntity.ok("좋아요 성공");
     }
 
+    //좋아요 삭제
     @DeleteMapping("/{id}/like")
     public ResponseEntity<?> unlikeBoard(@PathVariable Long id,
                                          @AuthenticationPrincipal UserDetails userDetails) {
