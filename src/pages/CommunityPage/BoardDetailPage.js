@@ -184,7 +184,7 @@ const BoardDetailPage = () => {
           </div>
         </div>
 
-        {currentUser === post.authorId && (
+        {currentUser !== null && currentUser === post.authorId && (
           <div className="post-actions">
             <button onClick={handlePostEditOpen} className="edit-button">✏️ 수정</button>
             <button onClick={handlePostDelete} className="delete-button">🗑️ 삭제</button>
@@ -218,7 +218,7 @@ const BoardDetailPage = () => {
               <>
                 <div className="comment-header">
                   <p><strong>{c.author}</strong> | {new Date(c.createdAt).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" })}</p>
-                  {currentUser === c.authorId && (
+                  {currentUser !== null && currentUser === c.authorId && (
                     <div className="comment-actions">
                       <button onClick={() => startEdit(c.id, c.content)} className="edit-button">✏️ 수정</button>
                       <button onClick={() => handleDelete(c.id)} className="delete-button">🗑️ 삭제</button>

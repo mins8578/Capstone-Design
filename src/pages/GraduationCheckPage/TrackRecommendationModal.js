@@ -54,7 +54,7 @@ const TrackRecommendationModal = ({ onClose }) => {
             { code: 'SW104', name: '소프트웨어세미나II', credit: 3 },
             { code: '511601', name: '선형대수', credit: 3 },
             { code: '', name: '오픈소스리눅스실무', credit: 3 },
-            { code: '', name: '프로그래밍스튜디오', credit: 3 },
+            { code: '603109', name: '프로그래밍스튜디오', credit: 3 },
             { code: '603119', name: '소프트웨어개론', credit: 3 },
             { code: '603110', name: '알고리즘', credit: 3 },
             { code: '511643', name: '자료구조', credit: 3 },

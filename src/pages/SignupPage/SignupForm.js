@@ -11,7 +11,7 @@ const SignupForm = () => {
     name: '',
     studentId: '',
     major: '',
-    scdmajor: '',
+    scdMajor: '',
   });
 
   const navigate = useNavigate();
@@ -218,7 +218,7 @@ const SignupForm = () => {
 
           <div className="form-group">
             <label>복수전공 선택</label>
-            <select name="scdmajor" value={form.scdmajor} onChange={handleChange} required>
+            <select name="scdMajor" value={form.scdMajor} onChange={handleChange} required>
               <option value="">복수전공을 선택하세요</option>
               <option value="빅데이터">빅데이터학과</option>
               <option value="콘텐츠IT">콘텐츠IT학과</option>
