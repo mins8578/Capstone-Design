@@ -91,16 +91,9 @@ public class GraduationCheckController {
         String studentNumber = user.getStudentNumber();
 
         List<GraduationCheckDTO> list = graduationCheckService.getSubjects(studentNumber);
-        //List<String> subjects = graduationCheckService.getGraduationSubjectList(list);
+        List<String> subjects = graduationCheckService.getGraduationSubjectList(list);
 
-        // ✅ 과목명 문자열만 추출하고 trim(), null 제거, 중복 제거
-        List<String> subjects = list.stream()
-                .map(GraduationCheckDTO::getSubjectName)
-                .filter(Objects::nonNull)
-                .map(String::trim)                        // ← 공백 제거
-                .filter(name -> !name.isEmpty())          // ← 빈 문자열 제거
-                .distinct()                               // ← 중복 제거
-                .collect(Collectors.toList());
+
 
 
         return ResponseEntity.ok(subjects);

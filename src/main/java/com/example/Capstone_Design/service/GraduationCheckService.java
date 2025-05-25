@@ -114,14 +114,37 @@ public class GraduationCheckService {
     //과목 저장
     public boolean studentSubjectSave(String studentNumber, List<String> subjectNames) {
         try {
+            //프론트에서 받아온 저장하기 위한 과목
             List<SubjectEntity> subjectEntities = subjectRepository.findAllBySubjectNameIn(subjectNames);
+
+            //현재 db에 저장되어 있는 수강과목
+            List<String> subjectCheckList = studentSubjectRepository.getSubjects(studentNumber).stream()
+                    .map(GraduationCheckDTO::getSubjectName)
+                    .collect(Collectors.toList());
+
+
+            //삭제하려고 하는 과목
+            List<String> subjectDelete = subjectCheckList.stream()
+                    .filter(subject -> !subjectNames.contains(subject))
+                    .collect(Collectors.toList());
+
+
+            if (!subjectDelete.isEmpty()) {
+                studentSubjectRepository.deleteSubject(studentNumber, subjectDelete);
+            }
+
+            //프론트에는 있는데 db에는 없는 과목 (추가하려고 하는 과목)
+            List<String> subjectList = subjectNames.stream()
+                    .filter(subject -> !subjectCheckList.contains(subject))
+                    .collect(Collectors.toList());
+
 
             Map<String, SubjectEntity> subjectMap = subjectEntities.stream()
                     .collect(Collectors.toMap(SubjectEntity::getSubjectName, Function.identity()));
 
             List<StudentSubjectEntity> saveList = new ArrayList<>();
 
-            for (String subjectName : subjectNames) {
+            for (String subjectName : subjectList) {
                 SubjectEntity subjectEntity = subjectMap.get(subjectName);
 
                 if (subjectEntity == null) {
@@ -173,6 +196,17 @@ public class GraduationCheckService {
 
     //수강하고 있는 과목 조회
     public List<String> getGraduationSubjectList(List<GraduationCheckDTO> list) {
+
+        // ✅ 과목명 문자열만 추출하고 trim(), null 제거, 중복 제거
+        List<String> subjects = list.stream()
+                .map(GraduationCheckDTO::getSubjectName)
+                .filter(Objects::nonNull)
+                .map(String::trim)                        // ← 공백 제거
+                .filter(name -> !name.isEmpty())          // ← 빈 문자열 제거
+                .distinct()                               // ← 중복 제거
+                .collect(Collectors.toList());
+
+        /*
         List<String> subjectList = new ArrayList<>();
 
         if(list == null || list.isEmpty() || list.size() == 0) {
@@ -185,7 +219,9 @@ public class GraduationCheckService {
             subjectList.add(dto.getSubjectName());
         }
 
-        return subjectList;
+         */
+
+        return subjects;
     }
 
 
