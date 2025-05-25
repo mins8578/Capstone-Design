@@ -67,30 +67,30 @@ public class BoardController {
         return ResponseEntity.ok(boardRepository.save(board));
     }
 
-    // ✅ 게시글 수정
+    // ✅ 게시글 수정 (403 문제 해결됨)
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBoard(@PathVariable Long id,
                                          @RequestBody BoardEntity updatedBoard,
                                          @AuthenticationPrincipal UserDetails userDetails) {
-
-        String loginUserId = userDetails.getUsername();
-
-        // 게시글 ID와 로그인 사용자 ID로 존재 여부 확인
-        boolean isAuthor = boardRepository.existsByIdAndUser_UserID(id, loginUserId);
-        if (!isAuthor) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("작성자만 수정할 수 있습니다.");
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
         }
 
-        // 게시글 엔티티 가져와서 수정
         BoardEntity board = boardRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 게시글이 존재하지 않습니다."));
 
+        UserEntity user = userRepository.findByUserID(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("사용자 정보가 없습니다."));
+
+        if (!board.getUser().getUserID().equals(user.getUserID())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("작성자만 수정할 수 있습니다.");
+        }
+
         board.setTitle(updatedBoard.getTitle());
         board.setContent(updatedBoard.getContent());
-        board.setUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        board.setUpdatedAt(LocalDateTime.now(SEOUL_ZONE));
 
-        BoardEntity saved = boardRepository.save(board);
-        return ResponseEntity.ok(saved);
+        return ResponseEntity.ok(boardRepository.save(board));
     }
 
     // ✅ 게시글 삭제
@@ -100,7 +100,6 @@ public class BoardController {
         BoardEntity board = boardRepository.findById(id).orElseThrow();
         UserEntity user = userRepository.findByUserID(userDetails.getUsername()).orElseThrow();
 
-        // 수정된 코드
         System.out.println("로그인한 사용자 ID: " + user.getUserID());
         System.out.println("게시글 작성자 ID: " + board.getUser().getUserID());
 
@@ -139,6 +138,7 @@ public class BoardController {
         return ResponseEntity.ok().body(java.util.Map.of("liked", liked));
     }
 
+    // ✅ 게시글 좋아요 추가
     @PostMapping("/{id}/like")
     public ResponseEntity<?> likeBoard(@PathVariable Long id,
                                        @AuthenticationPrincipal UserDetails userDetails) {
@@ -158,20 +158,17 @@ public class BoardController {
         return ResponseEntity.ok("좋아요 성공");
     }
 
-    //좋아요 삭제
+    // ✅ 좋아요 삭제
     @DeleteMapping("/{id}/like")
     public ResponseEntity<?> unlikeBoard(@PathVariable Long id,
                                          @AuthenticationPrincipal UserDetails userDetails) {
         BoardEntity board = boardRepository.findById(id).orElseThrow();
-        String userId = userDetails.getUsername(); // 로그인한 사용자 ID
+        String userId = userDetails.getUsername();
 
-        // ⭐ 직접 ID로 찾아 삭제
         BoardLikeEntity like = boardLikeRepository.findByBoard_IdAndUser_UserID(id, userId)
                 .orElseThrow(() -> new RuntimeException("좋아요 기록이 없습니다."));
 
-        boardLikeRepository.delete(like); // 삭제 실행
-
-        // 좋아요 수 감소
+        boardLikeRepository.delete(like);
         board.setLikeCount(Math.max(0, board.getLikeCount() - 1));
         boardRepository.save(board);
 
