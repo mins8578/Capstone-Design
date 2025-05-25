@@ -44,6 +44,8 @@ public interface StudentSubjectRepository extends JpaRepository<StudentSubjectEn
     List<GraduationCheckDTO> getSubjects(@Param("studentNumber") String studentNumber);
 
 
+    //프론트에서 체크해제한 과목이 db에 있으면 삭제
+    void deleteByStudentNumberAndSubjectNames(String studentNumber, List<String> subjectDelete);
 
 
 }
