@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://capstone-design-db.cdmyweqqmmeq.ap-northeast-2.rds.amazonaws.com:3306/project_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: wtgs9817
+    password: asdf1193
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: Asia/Seoul   # ✅ 여기에 추가하세요!
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+  mail:
+    host: mail.hallym.ac.kr
+    port: 25
+    username: 20203305@hallym.ac.kr
+    password: alstjr8578@
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: false
+
+  logging:
+    level:
+      org.springframework.mail: DEBUG
+
+  server:
+    address: 0.0.0.0
