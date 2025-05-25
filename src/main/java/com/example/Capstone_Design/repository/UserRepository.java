@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 
 
     //내 정보 리턴
-    @Query("SELECT new com.example.Capstone_Design.dto.MyPageResponse(u.userID, u.studentNumber, u.major, u.scdMajor) FROM UserEntity u " +
+    @Query("SELECT new com.example.Capstone_Design.dto.MyPageResponse(u.userID, u.userName,u.studentNumber, u.major, u.scdMajor) FROM UserEntity u " +
             "WHERE u.studentNumber = :studentNumber")
     List<MyPageResponse> getUserList(@Param("studentNumber") String studentNumber);
 

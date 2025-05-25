@@ -14,6 +14,7 @@ import lombok.Setter;
 public class MyPageResponse {
 
     private String userID;
+    private String name;
     private String studentNumber;
     private String major;
     private String scdMajor;
@@ -24,6 +25,7 @@ public class MyPageResponse {
         MyPageResponse myPageResponse = new MyPageResponse();
 
         myPageResponse.setUserID(userEntity.getUserID());
+        myPageResponse.setName(userEntity.getUserName());
         myPageResponse.setStudentNumber(userEntity.getStudentNumber());
         myPageResponse.setMajor(userEntity.getMajor());
         myPageResponse.setScdMajor(userEntity.getScdMajor());

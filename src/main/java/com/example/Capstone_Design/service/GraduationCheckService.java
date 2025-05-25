@@ -15,8 +15,11 @@ import com.example.Capstone_Design.repository.StudentSubjectRepository;
 import com.example.Capstone_Design.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.beans.Transient;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -107,9 +110,46 @@ public class GraduationCheckService {
         return majorDTO.getMajorCode();
     }
 
+    @Transactional
     //과목 저장
-    public boolean studentSubjectSave(String studentNumber, String subjectName) {
+    public boolean studentSubjectSave(String studentNumber, List<String> subjectNames) {
+        try {
+            List<SubjectEntity> subjectEntities = subjectRepository.findAllBySubjectNameIn(subjectNames);
 
+            Map<String, SubjectEntity> subjectMap = subjectEntities.stream()
+                    .collect(Collectors.toMap(SubjectEntity::getSubjectName, Function.identity()));
+
+            List<StudentSubjectEntity> saveList = new ArrayList<>();
+
+            for (String subjectName : subjectNames) {
+                SubjectEntity subjectEntity = subjectMap.get(subjectName);
+
+                if (subjectEntity == null) {
+                    return false;
+                }
+                StudentSubjectDTO studentSubjectDTO = new StudentSubjectDTO();
+                studentSubjectDTO.setSubjectName(subjectName);
+                studentSubjectDTO.setStudentNumber(studentNumber);
+
+
+                StudentSubjectEntity studentSubjectEntity = StudentSubjectEntity.toStudentSubjectEntity(studentSubjectDTO);
+                studentSubjectEntity.setSubjectEntity(subjectEntity);
+                saveList.add(studentSubjectEntity);
+
+            }
+
+            studentSubjectRepository.saveAll(saveList);
+            return true;
+
+        }
+        catch (Exception e) {
+            return false;
+        }
+
+
+
+
+        /*
         try{
             StudentSubjectDTO dto = new StudentSubjectDTO();
             dto.setStudentNumber(studentNumber);
@@ -127,6 +167,8 @@ public class GraduationCheckService {
         catch(Exception e){
             return false;
         }
+
+         */
     }
 
     //수강하고 있는 과목 조회
@@ -152,6 +194,61 @@ public class GraduationCheckService {
         List<GraduationCheckDTO> list = studentSubjectRepository.getSubjects(studentNumber);
 
         return list;
+    }
+
+    //필수전공 충족 불충족 요건
+    public Map<String, String> getGraduationCheckResults(String studentNumber, String majorCode, String scdMajorCode) {
+        List<GraduationCheckDTO> list = studentSubjectRepository.graduationCheck(studentNumber, majorCode);
+        List<GraduationCheckDTO> list2 = studentSubjectRepository.graduationCheck(studentNumber, scdMajorCode);
+
+        Map<String, String> map = new HashMap<>();
+
+        boolean capstone = false;
+        boolean major = false;
+        boolean scdMajor = false;
+
+        for(GraduationCheckDTO dto : list) {
+            if(dto.getSubjectName() != null) {
+                if(dto.getSubjectName().trim().equals("소프트웨어캡스톤디자인")) {
+                    capstone = true;
+                }
+                else {
+                    major = true;
+                }
+
+                if(capstone && major) {
+                    break;
+                }
+            }
+        }
+
+        if(capstone && major) {
+            map.put("주전공 필수","충족");
+        }
+        else {
+            map.put("주전공 필수","불충족");
+        }
+
+        if(capstone) {
+            for(GraduationCheckDTO dto : list2) {
+                if(dto.getSubjectName() != null) {
+                    if(!dto.getSubjectName().trim().equals("소프트웨어캡스톤디자인")) {
+                        scdMajor = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(capstone && scdMajor) {
+            map.put("복수전공 필수","충족");
+        }
+        else {
+            map.put("복수전공 필수","불충족");
+        }
+
+
+        return map;
     }
 
 
