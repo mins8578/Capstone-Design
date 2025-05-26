@@ -14,16 +14,32 @@ const SignupForm = () => {
     scdMajor: '',
   });
 
-  const navigate = useNavigate();
-
+  const [passwordStrength, setPasswordStrength] = useState('');
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [showCodeInput, setShowCodeInput] = useState(false);
   const [code, setCode] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+  // 비밀번호 강도 검사 함수
+  const checkPasswordStrength = (password) => {
+    if (!password) return '';
+    const hasLetter = /[a-zA-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[!@#$%^&*]/.test(password);
+    if (password.length < 8) return 'weak';
+    if (hasLetter && hasNumber && hasSpecial) return 'strong';
+    if ((hasLetter && hasNumber) || (hasLetter && hasSpecial) || (hasNumber && hasSpecial)) return 'medium';
+    return 'weak';
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
+
+    if (name === 'password') {
+      setPasswordStrength(checkPasswordStrength(value));
+    }
   };
 
   const handleSendVerification = async () => {
@@ -32,9 +48,9 @@ const SignupForm = () => {
       alert("이메일을 입력하세요.");
       return;
     }
-    
+
     alert("인증코드 입력창이 나타납니다.");
-    setShowCodeInput(true); // 인증창 바로 보여줌
+    setShowCodeInput(true);
 
     try {
       const response = await axios.post("/api/send-code", {
@@ -43,17 +59,12 @@ const SignupForm = () => {
 
       if (response.data.success) {
         alert("6자리 인증코드를 이메일로 보냈습니다.");
-        setShowCodeInput(true);
       } else {
         alert(response.data.message);
       }
     } catch (error) {
       console.error("메일 전송 오류:", error);
-      if (error.response && error.response.data && error.response.data.message) {
-        alert(error.response.data.message);
-      } else {
-        alert("메일 전송 중 오류가 발생했습니다.");
-      }
+      alert("메일 전송 중 오류가 발생했습니다.");
     }
   };
 
@@ -78,30 +89,35 @@ const SignupForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!isEmailVerified) {
       alert("아이디(이메일) 인증이 완료되지 않았습니다.");
       return;
     }
-  
+
     if (form.password !== form.confirmPassword) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
 
+    if (passwordStrength === 'weak') {
+      alert("더 강력한 비밀번호를 설정해주세요.");
+      return;
+    }
+
     setIsSubmitting(true);
-  
+
     try {
       await axios.post("/api/register", {
-        userID: `${form.email}@hallym.ac.kr`,     // 이메일
-        pwd: form.password,                       // 비밀번호
-        passwordCheck: form.confirmPassword,      // 비밀번호 확인
-        userName: form.name,                      // 이름
-        studentNumber: form.studentId,            // 학번
-        major: form.major,                        // 주전공
-        scdMajor: form.scdMajor,                  // 복수전공
+        userID: `${form.email}@hallym.ac.kr`,
+        pwd: form.password,
+        passwordCheck: form.confirmPassword,
+        userName: form.name,
+        studentNumber: form.studentId,
+        major: form.major,
+        scdMajor: form.scdMajor,
       });
-  
+
       alert("회원가입이 완료되었습니다!");
       navigate("/login");
     } catch (error) {
@@ -114,11 +130,11 @@ const SignupForm = () => {
 
   return (
     <div className="signup-container">
-      <img src="/한림대학교 로고2.png" alt="한림대학교 로고" className="signup-logo" />
+      <img onClick={() => navigate('/')} src="/한림대학교 로고2.png" alt="한림대학교 로고" className="signup-logo" />
 
       <div className="signup-form-area">
         <h2 className="signup-title">회원가입</h2>
-        
+
         <form onSubmit={handleSubmit} className="signup-form">
           <div className="form-group">
             <label>아이디(이메일)</label>
@@ -132,11 +148,7 @@ const SignupForm = () => {
                 required
               />
               <span className="email-fixed">@hallym.ac.kr</span>
-              <button 
-                type="button" 
-                className="cert-button" 
-                onClick={handleSendVerification}
-              >
+              <button type="button" className="cert-button" onClick={handleSendVerification}>
                 인증
               </button>
             </div>
@@ -168,6 +180,11 @@ const SignupForm = () => {
               placeholder="8자 이상 영문, 숫자, 특수문자 조합"
               required
             />
+            {form.password && (
+              <div className="password-strength">
+                <div className={`password-strength-bar ${passwordStrength}`}></div>
+              </div>
+            )}
           </div>
 
           <div className="form-group">
@@ -226,11 +243,7 @@ const SignupForm = () => {
             </select>
           </div>
 
-          <button 
-            type="submit" 
-            className="submit-button"
-            disabled={isSubmitting}
-          >
+          <button type="submit" className="submit-button" disabled={isSubmitting}>
             {isSubmitting ? "처리 중..." : "회원가입"}
           </button>
         </form>
