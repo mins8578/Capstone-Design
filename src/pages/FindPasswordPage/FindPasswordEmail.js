@@ -46,7 +46,7 @@ function FindPasswordEmail() {
   return (
     <div className="password-page-container">
       <div className="password-top-logo">
-        <img src="/한림대학교 로고2.png" alt="한림대학교 로고" />
+        <img onClick={() => navigate('/')} src="/한림대학교 로고2.png" alt="한림대학교 로고" />
       </div>
 
       <div className="password-form-area">

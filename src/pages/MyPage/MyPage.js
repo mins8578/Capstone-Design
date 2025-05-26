@@ -45,7 +45,7 @@ function MyPage() {
       <div className="mypage-header">
         <div className="header-left">
           <img src={hallymLogo} alt="한림대학교 로고" className="mypage-logo" />
-          <h1 className="mypage-title">마이 페이지</h1>
+          <h1 className="mypage-title">마이페이지</h1>
         </div>
         <img
           src={home}

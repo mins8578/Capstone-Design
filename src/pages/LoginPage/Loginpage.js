@@ -33,7 +33,7 @@ const Loginpage = () => {
             if (error.response && error.response.data.error) {
                 alert(error.response.data.error);
             } else {
-                alert("로그인 처리 중 오류가 발생했습니다.");
+                alert("아이디 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.");
             }
         } finally {
             setLoading(false);
@@ -49,6 +49,7 @@ const Loginpage = () => {
     return (
         <div className="login-container">
             <img 
+                onClick={() => navigate('/')}
                 src={hallymLogo} 
                 alt="한림대학교 로고" 
                 className="login-logo" 
