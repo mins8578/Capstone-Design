@@ -1,0 +1,168 @@
+/* 전체 레이아웃 */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: 'Pretendard', 'Noto Sans KR', 'Arial', sans-serif;
+  color: #333;
+  padding: 20px 20px 80px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* 상단 헤더 */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+}
+
+.page-header h1 {
+  flex: 1;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.graduationcheck-logo {
+  height: 44px;
+  display: block;
+  object-fit: contain;
+}
+
+.home-icon {
+  height: 32px;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.home-icon:hover {
+  transform: scale(1.1);
+}
+
+/* 제목 아래 구분선 */
+.divider {
+  border: none;
+  border-top: 2px solid #4a6bff;
+  margin: 0 0 40px 0;
+}
+
+/* 버튼 래퍼 - 배경색 없음 */
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+/* 과목 입력 버튼 */
+.subject-button {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #4a6bff;
+  border: none;
+  padding: 14px 26px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(74, 107, 255, 0.25);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.subject-button:hover {
+  background-color: #3955d0;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 20px rgba(74, 107, 255, 0.3);
+}
+
+.subject-button:active {
+  transform: translateY(0);
+}
+
+/* 공통 섹션 스타일 */
+.section {
+  margin-top: 40px;
+  background-color: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f2f2f2;
+  text-align: left;
+}
+
+/* 공통 테이블 스타일 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.03);
+}
+
+td {
+  border: 1px solid #e6e6e6;
+  text-align: center;
+  padding: 12px 8px;
+  font-size: 15px;
+}
+
+/* 회색 헤더행 */
+.gray-row {
+  background-color: #f7f7f7;
+  font-weight: 600;
+  color: #444;
+}
+
+/* 바깥 테두리만 굵은 테이블 (이수현황) */
+.strong-border {
+  border: 2px solid #4a6bff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.strong-border td {
+  padding: 14px 10px;
+  font-size: 16px;
+}
+
+/* 충족 상태에 따른 색상 표시 */
+.status-pass {
+  color: #4a6bff;
+  font-weight: 600;
+}
+
+.status-fail {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+/* 학점 테이블 (2칸 나란히) */
+.credit-table td {
+  width: 50%;
+  font-size: 16px;
+}
+
+.credit-table .credit-value {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.capstone-notice {
+  display: block;
+  font-size: 14px;
+  font-weight: normal;
+  color: #e53935; /* 빨간색 강조 */
+  margin-top: 4px;
+}

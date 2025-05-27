@@ -1,0 +1,177 @@
+/* 트랙 추천 모달 오버레이 */
+.track-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 트랙 추천 모달 */
+.track-modal {
+  background-color: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+/* 모달 헤더 */
+.track-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.track-modal-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.track-close-button {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s;
+}
+
+.track-close-button:hover {
+  color: #333;
+}
+
+/* 모달 탭 메뉴 */
+.track-modal-tabs {
+  display: flex;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+.track-tab {
+  flex: 1;
+  padding: 15px 0;
+  text-align: center;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 16px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.track-tab:hover {
+  color: #4a6bff;
+}
+
+.track-tab.active {
+  color: #4a6bff;
+  border-bottom-color: #4a6bff;
+  background-color: white;
+}
+
+/* 모달 콘텐츠 */
+.track-modal-content {
+  padding: 25px;
+}
+
+.track-modal-content h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.track-description {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  color: #555;
+  line-height: 1.5;
+  font-size: 15px;
+}
+
+/* 트랙 카드 */
+.track-card {
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.track-card h4 {
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  border-bottom: 1px solid #eee;
+}
+
+/* 트랙 테이블 */
+.track-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0;
+  box-shadow: none;
+}
+
+.track-table th,
+.track-table td {
+  border: 1px solid #eee;
+  text-align: center;
+  padding: 12px 8px;
+}
+
+.track-table th {
+  background-color: #f7f7f7;
+  font-weight: 600;
+  color: #444;
+}
+
+/* 트랙 추천 버튼 */
+.track-recommend-button {
+  position: fixed;
+  right: 70px;
+  top: 30%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 100;
+  padding: 0;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.track-recommend-button:hover {
+  transform: translateY(-50%) scale(1.05);
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.15));
+}
+
+.track-recommend-icon {
+  width: 130px;
+  height: auto;
+}

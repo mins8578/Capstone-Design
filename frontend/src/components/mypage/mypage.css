@@ -1,0 +1,62 @@
+  .mypage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 20px;
+  }
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .mypage-logo {
+    width: 100px;
+    height: auto;
+  }
+  
+  .mypage-title {
+    font-size: 25px;
+    font-weight: bold;
+    margin-left: 20px; /* 로고와 제목 사이 여백 */
+  }
+  
+  .mypage-home-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .mypage-home-icon:hover {
+    transform: scale(1.1); /* 호버시 약간 커지는 효과 */
+  }
+  
+  .mypage-content {
+    display: flex;
+    justify-content: center; /* 중앙 정렬 추가 */
+    margin-top: 30px;
+  }
+  
+  .mypage-info-box {
+    background-color: #d8f1ff;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    width: 350px; /* 기본 정보 박스 고정 */
+    height: 300px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 살짝 그림자 추가하면 더 깔끔해짐 (선택) */
+  }
+  
+  .mypage-info-box h2 {
+    margin-bottom: 30px;
+    font-size: 28px;
+    text-align: left; /* 제목 왼쪽 정렬 */
+  }
+  
+  .mypage-info-box p {
+    margin: 15px 0;
+    font-size: 16px;
+  }
+  

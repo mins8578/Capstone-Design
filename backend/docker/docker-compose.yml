@@ -1,0 +1,15 @@
+version: '3'
+services:
+  backend:
+    image: k2c1/capston-design-backend
+    expose:
+      - "8080"
+    networks:
+      - capston-design-network
+
+networks:
+  capston-design-network:
+    external: true
+
+
+

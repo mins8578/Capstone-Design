@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  frontend:
+    image: k2c1/capston-design-frontend
+    ports:
+      - "80:80"
+    networks:
+      - capston-design-network
+
+networks:
+  capston-design-network:
+    external: true

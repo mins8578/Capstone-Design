@@ -1,0 +1,131 @@
+.terms-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 40px 20px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.signupterms-logo {
+  width: 150px;
+  height: auto;
+  margin-bottom: 30px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s ease;
+  animation: fadeInDown 0.6s ease; /* 애니메이션 추가 */
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.terms-form-area {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  padding: 35px 40px;
+  width: 100%;
+  max-width: 600px;
+  animation: fadeInUp 0.6s ease; /* 애니메이션 추가 */
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.terms-title {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.terms-section {
+  margin-bottom: 25px;
+}
+
+.terms-section label {
+  display: flex;
+  align-items: flex-start;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.terms-section input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  margin-top: 2px;
+  accent-color: #4a6bff;
+}
+
+.terms-section strong {
+  color: #4a6bff;
+  margin-right: 5px;
+}
+
+.terms-section textarea {
+  width: 100%;
+  height: 150px;
+  padding: 15px;
+  resize: none;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  font-family: inherit;
+  background-color: #f8f9fa;
+  margin-bottom: 20px;
+}
+
+.signup-next-button {
+  width: 100%;
+  padding: 14px 0;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background-color: #4a6bff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(74, 107, 255, 0.2);
+}
+
+.signup-next-button:hover {
+  background-color: #3955d0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(74, 107, 255, 0.3);
+}
+
+.signup-next-button:active {
+  transform: translateY(0);
+}
+
+.signup-next-button:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

@@ -1,0 +1,238 @@
+.community-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* 헤더 */
+.community-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.board-logo {
+  height: 45px;
+  margin-right: 16px;
+}
+
+.board-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.home-icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.home-icon:hover {
+  transform: scale(1.1);
+}
+
+/* 구분선 */
+hr {
+  margin: 0 0 25px 0;
+  border: none;
+  height: 2px;
+  background-color: #4a6bff;
+}
+
+/* 배너 */
+.community-banner {
+  background: linear-gradient(135deg, #4a6bff 0%, #2b48e0 100%);
+  padding: 30px;
+  border-radius: 16px;
+  color: white;
+  text-align: center;
+  margin: 20px 0 30px;
+  box-shadow: 0 10px 25px rgba(74, 107, 255, 0.15);
+}
+
+.banner-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.community-banner h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.community-banner p {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+/* 글쓰기 버튼 */
+.write-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 25px;
+}
+
+.write-button {
+  background-color: #4a6bff;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(74, 107, 255, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.write-button:hover {
+  background-color: #3955d0;
+  transform: translateY(-2px);
+}
+
+.write-button:active {
+  transform: translateY(0);
+}
+
+/* 게시글 목록 */
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.post-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 4px solid #4a6bff;
+}
+
+.post-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.post-title {
+  font-size: 18px;
+  margin: 10px 0 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.footer-left {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.footer-right {
+  color: #888;
+  font-size: 13px;
+}
+
+/* 페이지네이션 */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 40px 0 25px;
+}
+
+.pagination button {
+  padding: 8px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-size: 14px;
+}
+
+.pagination button:hover {
+  background-color: #4a6bff;
+  color: white;
+  border-color: #4a6bff;
+}
+
+.pagination .active {
+  background-color: #4a6bff;
+  color: white;
+  border-color: #4a6bff;
+}
+
+/* 하단 검색창 */
+.bottom-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.bottom-search select {
+  padding: 10px 15px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.bottom-search input {
+  padding: 10px 15px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 300px;
+}
+
+.bottom-search button {
+  background-color: #4a6bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.bottom-search button:hover {
+  background-color: #3955d0;
+}
