@@ -34,7 +34,8 @@ public class LoginController {
             response.put("token", token);
             response.put("username", user.getUserName());
 
-            return ResponseEntity.ok(Collections.singletonMap("token", token));
+
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }

@@ -50,7 +50,7 @@ public class FindPasswordController {
         String code = UUID.randomUUID().toString().substring(0, 6);
 
         // 이메일 전송
-        mailService.sendVerificationEmail(email, code);  // email = userID
+        mailService.sendPasswordVerificationEmail(email, code);  // email = userID
 
         // 인증 정보 저장
         EmailAuth auth = EmailAuth.builder()

@@ -30,22 +30,7 @@ public class SecurityConfig {
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-//    @Bean  // DB가 아닌 메모리에 임시로 등록한 사용자만 인증 대상 -> DB 조회 로직 무시
-//    public static UserDetailsService userDetailsService() {
-//        return new InMemoryUserDetailsManager(); // 또는 직접 구현한 CustomUserDetailsService
-//    }
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .cors(Customizer.withDefaults())
-//                .csrf(AbstractHttpConfigurer::disable) // token을 사용하므로 csrf disable
-//                .sessionManagement((sessionManagement) -> // Spring Security가 Session을 아예 배재(생성, 사용 X)
-//                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
-//
-//        return http.build();
-//    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -75,19 +60,5 @@ public class SecurityConfig {
         return http.build();
 }
 
-/*
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("http://13.124.105.231")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
-                        .exposedHeaders("Authorization") // 프론트가 토큰 읽을 수 있게
-                        .allowCredentials(true);
-            }
-        };
-    }*/
+
 }

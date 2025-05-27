@@ -35,7 +35,7 @@ public class JwtProvider {
         // ✅ 문자열을 byte[]로 바꾸고 Key 객체로 생성
         this.secretKey = Keys.hmacShaKeyFor(RAW_SECRET.getBytes(StandardCharsets.UTF_8));
 
-        //log.info("🔐 SecretKey 초기화 완료 (HS256)");
+
     }
 
     // JWT 생성
@@ -78,7 +78,7 @@ public class JwtProvider {
                     .parseClaimsJws(pureToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
-            //log.warn("❌ JWT 검증 실패: {}", e.getMessage());
+
             return false;
         }
     }
