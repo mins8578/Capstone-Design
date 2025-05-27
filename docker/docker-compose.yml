@@ -2,6 +2,12 @@ version: '3'
 
 services:
   frontend:
-    image: wtgs9817/test-capston-design-frontend04
+    image: k2c1/capston-design-frontend
     ports:
       - "80:80"
+    networks:
+      - capston-design-network
+
+networks:
+  capston-design-network:
+    external: true
