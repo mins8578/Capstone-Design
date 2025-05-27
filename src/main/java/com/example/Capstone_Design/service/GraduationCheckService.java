@@ -169,29 +169,6 @@ public class GraduationCheckService {
             return false;
         }
 
-
-
-
-        /*
-        try{
-            StudentSubjectDTO dto = new StudentSubjectDTO();
-            dto.setStudentNumber(studentNumber);
-            dto.setSubjectName(subjectName);
-
-            SubjectEntity subjectEntity = subjectRepository.findBySubjectName(dto.getSubjectName());
-
-            StudentSubjectEntity studentSubjectEntity = StudentSubjectEntity.toStudentSubjectEntity(dto);
-            studentSubjectEntity.setSubjectEntity(subjectEntity);
-            studentSubjectRepository.save(studentSubjectEntity);
-
-            return true;
-        }
-
-        catch(Exception e){
-            return false;
-        }
-
-         */
     }
 
     //수강하고 있는 과목 조회
@@ -206,20 +183,6 @@ public class GraduationCheckService {
                 .distinct()                               // ← 중복 제거
                 .collect(Collectors.toList());
 
-        /*
-        List<String> subjectList = new ArrayList<>();
-
-        if(list == null || list.isEmpty() || list.size() == 0) {
-            subjectList.add("수강과목 없음.");
-
-            return subjectList;
-        }
-
-        for(GraduationCheckDTO dto : list) {
-            subjectList.add(dto.getSubjectName());
-        }
-
-         */
 
         return subjects;
     }

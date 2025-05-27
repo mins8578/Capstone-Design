@@ -39,12 +39,6 @@ public class UserController {
     private final UserRepository userRepository;
 
 
-    // 회원가입 페이지 출력 요청 - GetMapping으로 출력 요청 -> PostMapping에서 form에 대한 action 수행
-//    @GetMapping("/save")
-//    public String saveForm() {
-//        return "save";
-//    }
-
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
         System.out.println("✅ 받은 비밀번호: " + userDTO.getPwd());
@@ -58,7 +52,6 @@ public class UserController {
             return ResponseEntity.badRequest().body("이미 가입된 이메일입니다.");
         }
 
-        //Optional<EmailAuth> emailAuthOptional = emailAuthRepository.findByEmail(email);
         List<EmailAuth> authList = emailAuthRepository.findAllByEmailOrderByCreatedAtDesc(userDTO.getUserID());
         if (authList.isEmpty() || !authList.get(0).isVerified()) {
             return ResponseEntity.badRequest().body("이메일 인증이 완료되지 않았습니다.");
@@ -134,20 +127,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    /*
-    @PostMapping("/user-name")
-    public ResponseEntity<Map<String, String>> getUserName(@AuthenticationPrincipal UserDetails userDetails) {
-        Map<String, String> map = new HashMap<>();
-
-        String userID = userDetails.getUsername();
-        UserDTO userDTO  = userService.getUser(userID);
-        String userName = userDTO.getUserName();
-
-        map.put("userName", userName);
-
-        return ResponseEntity.ok(map);
-    }
-     */
 
     @GetMapping("/mypage/user")
     public ResponseEntity<MyPageResponse> getMyPageUser(@AuthenticationPrincipal UserDetails userDetails) {
