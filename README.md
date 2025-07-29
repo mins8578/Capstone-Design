@@ -3,16 +3,14 @@
 한림대학교 정보과학대학 소프트웨어학부 학생들을 위한  
 졸업 자가진단 및 정보 커뮤니티 플랫폼입니다.
 
----
 
 ## 👨‍👩‍👧‍👦 팀 정보
 
-|BE김민석|FE최승혁|BE김명찬|
+| BE 김민석 | FE 최승혁 | BE 김명찬 |
 |:---:|:---:|:---:|
-|소프트웨어학부 빅데이터전 전공|소프트웨어학부 빅데이터 전공|소프트웨어학부 빅데이터 전공|
-|[mins8578](https://github.com/mins8578)|[Choi-sh01](https://github.com/Choi-sh01)|[wtgs9817](https://github.com/wtgs9817)|
-|![](https://avatars.githubusercontent.com/u/124144536?v=4)|![](https://avatars.githubusercontent.com/u/149940585?v=4)|![](https://avatars.githubusercontent.com/u/87848350?v=4)|
-- **지도교수**: 신미영 교수님
+| 소프트웨어학부 빅데이터전 전공 20학번 | 소프트웨어학부 빅데이터 전공 20학번| 소프트웨어학부 빅데이터 전공 17학번|
+| [mins8578](https://github.com/mins8578) | [Choi-sh01](https://github.com/Choi-sh01) | [wtgs9817](https://github.com/wtgs9817) |
+| <img src="https://avatars.githubusercontent.com/u/124144536?v=4" width="200"/> | <img src="https://avatars.githubusercontent.com/u/149940585?v=4" width="200"/> | <img src="https://avatars.githubusercontent.com/u/87848350?v=4" width="200"/> |
 
 ---
 
