@@ -7,9 +7,11 @@
 
 ## 👨‍👩‍👧‍👦 팀 정보
 
-- **팀명**: K2C1  
-- **팀장**: 최승혁 (콘텐츠IT 20)  
-- **팀원**: 김민석 (빅데이터 20), 김명찬 (빅데이터 17)  
+|BE김민석|FE최승혁|BE김명찬|
+|:---:|:---:|:---:|
+|소프트웨어학부 빅데이터전 전공|소프트웨어학부 빅데이터 전공|소프트웨어학부 빅데이터 전공|
+|[mins8578](https://github.com/mins8578)|[Choi-sh01](https://github.com/Choi-sh01)|[wtgs9817](https://github.com/wtgs9817)|
+|![](https://avatars.githubusercontent.com/u/124144536?v=4)|![](https://avatars.githubusercontent.com/u/149940585?v=4)|![](https://avatars.githubusercontent.com/u/87848350?v=4)|
 - **지도교수**: 신미영 교수님
 
 ---
