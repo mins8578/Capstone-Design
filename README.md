@@ -97,9 +97,13 @@
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/1fe8d737-c4b2-48eb-923b-45f750b506a3" width="90%" />
+  <img width="1502" height="865" alt="Image" src="https://github.com/user-attachments/assets/698f502d-d702-439e-9ee8-6f76e8ec87ac" />
+  <img width="556" height="280" alt="Image" src="https://github.com/user-attachments/assets/c5147cd1-f2cf-4a6e-bfab-cde1ce35b0da" />
 </p>
 
-- 사용자는 학교 이메일을 통해 본인 인증 후 회원가입을 진행한다.  
+
+- 사용자는 학교 이메일을 입력하고 인증코드를 입력해 학생 인증을 완료한다.
+- 인증되 사용자는 주전공, 복수전공을 선택하여 회원가입을 완료한다.
 - 가입 완료 후 로그인하여 서비스를 이용할 수 있다.
 
 ---
