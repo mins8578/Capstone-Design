@@ -13,6 +13,9 @@
 | [mins8578](https://github.com/mins8578) | [Choi-sh01](https://github.com/Choi-sh01) | [wtgs9817](https://github.com/wtgs9817) |
 | <img src="https://avatars.githubusercontent.com/u/124144536?v=4" width="200"/> | <img src="https://avatars.githubusercontent.com/u/149940585?v=4" width="200"/> | <img src="https://avatars.githubusercontent.com/u/87848350?v=4" width="200"/> |
 
+Notion link :
+https://www.notion.so/1b4877d9e0958069924de4981963c771#234877d9e09580978eb6f996da79133c
+
 ---
 ## 마주한 문제점
 
@@ -106,7 +109,9 @@ Nginx(웹서버, 리버스 프록시)는 React가 빌드한 정적 파일을 클
 ![image](https://github.com/user-attachments/assets/5a7ae3d4-05db-40f0-9717-511959af14c8)
 
 ---
-
+### API 명세서
+<img width="593" height="747" alt="Image" src="https://github.com/user-attachments/assets/4c9783b9-4bd1-4366-8308-25b5f5be5a02" />
+---
 
 ### 🎉 메인화면
 
