@@ -8,6 +8,7 @@
 
 | BE 김민석 | FE 최승혁 | BE 김명찬 |
 |:---:|:---:|:---:|
+| 백엔드(로그인, 회원가입, 게시판 로직 구현 및 배포 보조) | 프론트엔드(UX/UI, 와이어프레임 구성) | 백엔드(DB설계, 자기진단 로직 구현 배포 |
 | 소프트웨어학부 빅데이터전 전공 20학번 | 소프트웨어학부 빅데이터 전공 20학번| 소프트웨어학부 빅데이터 전공 17학번|
 | [mins8578](https://github.com/mins8578) | [Choi-sh01](https://github.com/Choi-sh01) | [wtgs9817](https://github.com/wtgs9817) |
 | <img src="https://avatars.githubusercontent.com/u/124144536?v=4" width="200"/> | <img src="https://avatars.githubusercontent.com/u/149940585?v=4" width="200"/> | <img src="https://avatars.githubusercontent.com/u/87848350?v=4" width="200"/> |
