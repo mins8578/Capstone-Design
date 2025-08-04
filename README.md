@@ -111,6 +111,7 @@ Nginx(웹서버, 리버스 프록시)는 React가 빌드한 정적 파일을 클
 ---
 ### API 명세서
 <img width="593" height="747" alt="Image" src="https://github.com/user-attachments/assets/4c9783b9-4bd1-4366-8308-25b5f5be5a02" />
+
 ---
 
 ### 🎉 메인화면
